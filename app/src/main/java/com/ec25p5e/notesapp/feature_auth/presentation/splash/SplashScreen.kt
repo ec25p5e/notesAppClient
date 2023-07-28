@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.util.UiEvent
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.core.util.Constants
 import kotlinx.coroutines.*
@@ -47,7 +49,15 @@ fun SplashScreen(
     }
 
     LaunchedEffect(key1 = true) {
-
+        /* viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEvent.Navigate -> {
+                    onPopBackStack()
+                    onNavigate(event.route)
+                }
+                else -> Unit
+            }
+        } */
     }
 
     Box(

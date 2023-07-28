@@ -16,6 +16,7 @@ import androidx.navigation.navDeepLink
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
 
 @Composable
@@ -31,6 +32,19 @@ fun Navigation(
             SplashScreen(
                 onPopBackStack = navController::popBackStack,
                 onNavigate = navController::navigate
+            )
+        }
+
+        composable(Screen.LoginScreen.route) {
+            LoginScreen(
+                onNavigate = navController::navigate,
+                onLogin = {
+                    navController.popBackStack(
+                        route = Screen.LoginScreen.route,
+                        inclusive = true
+                    )
+                    navController.navigate(route = Screen.MainFeedScreen.route)
+                }
             )
         }
     }

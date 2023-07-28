@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
@@ -20,6 +21,7 @@ import coil.imageLoader
 import com.ec25p5e.notesapp.core.presentation.components.Navigation
 import com.ec25p5e.notesapp.core.presentation.components.StandardScaffold
 import com.ec25p5e.notesapp.core.presentation.ui.theme.NotesAppTheme
+import com.ec25p5e.notesapp.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,11 +39,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val scaffoldState = remember { SnackbarHostState() }
 
                     StandardScaffold(
                         navController = navController,
-                        showBottomBar = true,
+                        showBottomBar = shouldShowBottomBar(navBackStackEntry),
                         modifier = Modifier.fillMaxSize(),
                         onFabClick = {
 
@@ -52,5 +53,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean {
+        val doesRouteMatch = backStackEntry?.destination?.route in listOf(
+            Screen.MainFeedScreen.route
+        )
+
+        return doesRouteMatch
     }
 }

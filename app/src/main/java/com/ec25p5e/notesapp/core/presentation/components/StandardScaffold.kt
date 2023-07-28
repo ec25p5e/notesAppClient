@@ -43,7 +43,7 @@ fun StandardScaffold(
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
                     NavigationBar {
-                        bottomNavItems.forEachIndexed { i, bottomNavItem ->
+                        bottomNavItems.forEachIndexed { _, bottomNavItem ->
                             StandardBottomNavItem(
                                 icon = bottomNavItem.icon,
                                 contentDescription = bottomNavItem.contentDescription,
