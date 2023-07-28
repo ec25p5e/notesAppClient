@@ -2,4 +2,6 @@
     <string name="app_name">NotesApp</string>
     <string name="make_post">makeposz</string>
     <string name="error_unknown">Unknown error occurred!</string>
+    <string name="error_couldnt_reach_server">Couldn\'t reach the server</string>
+    <string name="oops_something_went_wrong">Oops! Something went wrong</string>
 </resources>

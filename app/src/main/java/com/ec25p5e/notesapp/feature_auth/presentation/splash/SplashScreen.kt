@@ -24,7 +24,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun SplashScreen(
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     onPopBackStack: () -> Unit = {},
-    onNavigate: (String) -> Unit = {}
+    onNavigate: (String) -> Unit = {},
+    viewModel: SplashScreenViewModel = hiltViewModel()
 ) {
     val scale = remember {
         Animatable(0f)
@@ -49,7 +50,7 @@ fun SplashScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        /* viewModel.eventFlow.collectLatest { event ->
+        viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.Navigate -> {
                     onPopBackStack()
@@ -57,7 +58,7 @@ fun SplashScreen(
                 }
                 else -> Unit
             }
-        } */
+        }
     }
 
     Box(
