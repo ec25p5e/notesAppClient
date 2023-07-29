@@ -25,7 +25,7 @@ class SplashScreenViewModel @Inject constructor(
             when(authenticateUseCase()) {
                 is Resource.Success -> {
                     _eventFlow.emit(
-                        UiEvent.Navigate(Screen.MainFeedScreen.route)
+                        UiEvent.Navigate(Screen.DashboardScreen.route)
                     )
                 }
                 is Resource.Error -> {

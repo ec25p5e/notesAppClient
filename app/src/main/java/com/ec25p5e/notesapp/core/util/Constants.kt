@@ -6,8 +6,11 @@ object Constants {
 
     const val MAX_POST_DESCRIPTION_LINES = 3
 
+    const val MAX_EMAIL_LENGTH = 128
     const val MIN_USERNAME_LENGTH = 3
+    const val MAX_USERNAME_LENGTH = 16
     const val MIN_PASSWORD_LENGTH = 3
+    const val MAX_PASSWORD_LENGTH = 48
 
     const val DEFAULT_PAGE_SIZE = 20
 

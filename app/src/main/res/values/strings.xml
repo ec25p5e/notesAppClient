@@ -1,7 +1,22 @@
 <resources>
     <string name="app_name">NotesApp</string>
-    <string name="make_post">makeposz</string>
+    <string name="make_post">Make post</string>
     <string name="error_unknown">Unknown error occurred!</string>
     <string name="error_couldnt_reach_server">Couldn\'t reach the server</string>
     <string name="oops_something_went_wrong">Oops! Something went wrong</string>
+    <string name="sign_in_btn_text">Sign In</string>
+    <string name="label_email_input">Email adress</string>
+    <string name="password_visible_content_description">Password visible</string>
+    <string name="password_hidden_content_description">Password hidden</string>
+    <string name="field_empty_text_error">This field is required</string>
+    <string name="label_password_input">Password</string>
+    <string name="success_registration">Registered successfully!</string>
+    <string name="label_username_input">Username</string>
+    <string name="sign_up_btn_text">Sign Up</string>
+    <string name="reset_password_button">Reset password\n</string>
+    <string name="create_account_button">Create An Account</string>
+    <string name="have_an_account_button">Already have an account?</string>
+    <string name="min_pass_lenght">The minimun password length is %d</string>
+    <string name="regexp_password_format_invalid">The password needs to contain at least one uppercase letter and one number</string>
+    <string name="invalid_email_text">This is not a valid email</string>
 </resources>

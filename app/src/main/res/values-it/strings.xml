@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NotesApp</string>
+    <string name="error_unknown">Errore sconosciuto</string>
+    <string name="error_couldnt_reach_server">Impossibile comunicare con il server</string>
+    <string name="oops_something_went_wrong">Qualcosa è andato storto</string>
+    <string name="sign_in_btn_text">Accedi</string>
+    <string name="label_email_input">Indirizzo email</string>
+    <string name="password_visible_content_description">Password visibile</string>
+    <string name="password_hidden_content_description">Password nascosta</string>
+    <string name="field_empty_text_error">Questo campo è richiesto!</string>
+    <string name="label_password_input">Password</string>
+    <string name="success_registration">Utente creato con successo</string>
+    <string name="label_username_input">Nome utente</string>
+    <string name="sign_up_btn_text">Registrati</string>
+    <string name="reset_password_button">Nuova password?</string>
+    <string name="create_account_button">Crea un\'account</string>
+    <string name="have_an_account_button">Hai già un\'account?</string>
+    <string name="min_pass_lenght">La lunghezza minima della password è %d</string>
+    <string name="make_post">Make post</string>
+    <string name="regexp_password_format_invalid">La password deve contenere almeno una lettera maiuscola e un numero</string>
+</resources>

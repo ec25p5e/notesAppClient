@@ -5,6 +5,8 @@ import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_auth.data.repository.AuthRepositoryImpl
 import com.ec25p5e.notesapp.feature_auth.domain.repository.AuthRepository
 import com.ec25p5e.notesapp.feature_auth.domain.use_case.AuthenticateUseCase
+import com.ec25p5e.notesapp.feature_auth.domain.use_case.LoginUseCase
+import com.ec25p5e.notesapp.feature_auth.domain.use_case.RegisterUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +37,17 @@ object AuthModule {
         return AuthRepositoryImpl(api, sharedPreferences)
     }
 
+    @Provides
+    @Singleton
+    fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase {
+        return RegisterUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLoginUseCase(repository: AuthRepository): LoginUseCase {
+        return LoginUseCase(repository)
+    }
 
     @Provides
     @Singleton

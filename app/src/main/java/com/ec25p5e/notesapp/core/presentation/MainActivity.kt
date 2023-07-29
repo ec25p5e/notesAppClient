@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val scaffoldState = remember { SnackbarHostState() }
 
                     StandardScaffold(
                         navController = navController,
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
 
                         }
                     ) {
-                        Navigation(navController)
+                        Navigation(navController, scaffoldState)
                     }
                 }
             }
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
     private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean {
         val doesRouteMatch = backStackEntry?.destination?.route in listOf(
-            Screen.MainFeedScreen.route
+            Screen.DashboardScreen.route
         )
 
         return doesRouteMatch

@@ -24,9 +24,10 @@ fun StandardScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
+    showFab: Boolean = false,
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = Screen.MainFeedScreen.route,
+            route = Screen.DashboardScreen.route,
             icon = Icons.Outlined.Home,
             contentDescription = "Home"
         )
@@ -61,7 +62,7 @@ fun StandardScaffold(
             }
         },
         floatingActionButton = {
-            if (showBottomBar) {
+            if (showBottomBar && showFab) {
                 FloatingActionButton(
                     modifier = Modifier.background(MaterialTheme.colorScheme.primary),
                     onClick = onFabClick
