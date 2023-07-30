@@ -7,6 +7,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Message
+import androidx.compose.material.icons.outlined.Notes
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +20,7 @@ import androidx.navigation.NavController
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.models.BottomNavItem
 import com.ec25p5e.notesapp.core.util.Screen
+import com.google.android.engage.social.datamodel.Profile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -30,6 +35,21 @@ fun StandardScaffold(
             route = Screen.MainFeedScreen.route,
             icon = Icons.Outlined.Home,
             contentDescription = "Home"
+        ),
+        BottomNavItem(
+            route = Screen.MessageScreen.route,
+            icon = Icons.Outlined.Message,
+            contentDescription = "Messages"
+        ),
+        BottomNavItem(
+            route = Screen.ProfileScreen.route,
+            icon = Icons.Outlined.Person,
+            contentDescription = "Profiles"
+        ),
+        BottomNavItem(
+            route = Screen.NotesScreen.route,
+            icon = Icons.Outlined.Notes,
+            contentDescription = "Notes"
         )
     ),
     onFabClick: () -> Unit = {},
