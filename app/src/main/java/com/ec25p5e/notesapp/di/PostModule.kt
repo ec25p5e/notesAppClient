@@ -4,6 +4,7 @@ import com.ec25p5e.notesapp.feature_post.data.remote.PostApi
 import com.ec25p5e.notesapp.feature_post.data.repository.PostRepositoryImpl
 import com.ec25p5e.notesapp.feature_post.domain.repository.PostRepository
 import com.ec25p5e.notesapp.feature_post.domain.use_case.CreateCommentUseCase
+import com.ec25p5e.notesapp.feature_post.domain.use_case.CreatePostUseCase
 import com.ec25p5e.notesapp.feature_post.domain.use_case.GetPostsForFollowsUseCase
 import com.ec25p5e.notesapp.feature_post.domain.use_case.PostUseCases
 import com.google.gson.Gson
@@ -46,6 +47,7 @@ object PostModule {
         return PostUseCases(
             getPostsForFollows = GetPostsForFollowsUseCase(repository),
             createComment = CreateCommentUseCase(repository),
+            createPostUseCase = CreatePostUseCase(repository)
         )
     }
 }

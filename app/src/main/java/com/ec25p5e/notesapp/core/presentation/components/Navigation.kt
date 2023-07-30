@@ -12,6 +12,7 @@ import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
+import com.ec25p5e.notesapp.feature_post.presentation.create_post.CreatePostScreen
 import com.ec25p5e.notesapp.feature_post.presentation.main_feed.MainFeedScreen
 
 @Composable
@@ -56,6 +57,15 @@ fun Navigation(
 
         composable(Screen.MainFeedScreen.route) {
             MainFeedScreen(
+                scaffoldState = scaffoldState,
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
+            )
+        }
+
+        composable(Screen.CreatePostScreen.route) {
+            CreatePostScreen(
                 scaffoldState = scaffoldState,
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,

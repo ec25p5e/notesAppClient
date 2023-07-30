@@ -21,4 +21,13 @@
     <string name="invalid_email_text">This is not a valid email</string>
     <string name="your_feed_title">Your Feed</string>
     <string name="back">Back</string>
+    <string name="create_a_new_post">Create New Post</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="post_created">Post Created Successfully</string>
+    <string name="error_no_image_picked">No Image Picked</string>
+    <string name="error_description_blank">Description is required!</string>
+    <string name="description">Description</string>
+    <string name="post_image">Post Image</string>
+    <string name="error_field_empty">Field is required</string>
+    <string name="post">Publish Post</string>
 </resources>
