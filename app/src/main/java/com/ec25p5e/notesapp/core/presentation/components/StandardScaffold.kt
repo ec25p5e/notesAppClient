@@ -3,24 +3,19 @@ package com.ec25p5e.notesapp.core.presentation.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Message
 import androidx.compose.material.icons.outlined.Notes
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.models.BottomNavItem
 import com.ec25p5e.notesapp.core.util.Screen
-import com.google.android.engage.social.datamodel.Profile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,17 +24,22 @@ fun StandardScaffold(
     navController: NavController,
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
-    showFab: Boolean = false,
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
             route = Screen.MainFeedScreen.route,
             icon = Icons.Outlined.Home,
-            contentDescription = "Home"
+            contentDescription = stringResource(id = R.string.cont_descr_home),
+            showFab = true,
+            fabClick = {
+                navController.navigate(Screen.CreatePostScreen.route)
+            },
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
         BottomNavItem(
             route = Screen.MessageScreen.route,
             icon = Icons.Outlined.Message,
-            contentDescription = "Messages"
+            contentDescription = "Messages",
+            alertCount = 100
         ),
         BottomNavItem(
             route = Screen.ProfileScreen.route,
@@ -49,10 +49,14 @@ fun StandardScaffold(
         BottomNavItem(
             route = Screen.NotesScreen.route,
             icon = Icons.Outlined.Notes,
-            contentDescription = "Notes"
+            contentDescription = stringResource(id = R.string.cont_descr_notes),
+            showFab = true,
+            fabClick = {
+                navController.navigate(Screen.CreateNoteScreen.route)
+            },
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         )
     ),
-    onFabClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -82,19 +86,21 @@ fun StandardScaffold(
             }
         },
         floatingActionButton = {
-            if (showBottomBar && showFab) {
-                FloatingActionButton(
-                    modifier = Modifier.background(MaterialTheme.colorScheme.primary),
-                    onClick = onFabClick
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.make_post)
-                    )
+            bottomNavItems.forEachIndexed { _, bottomFab ->
+                if(bottomFab.showFab && navController.currentDestination?.route?.startsWith(bottomFab.route) == true) {
+                    FloatingActionButton(
+                        modifier = bottomFab.modifierFab,
+                        onClick = bottomFab.fabClick
+                    ) {
+                        Icon(
+                            imageVector = bottomFab.fabIcon,
+                            contentDescription = bottomFab.fabContentDescription
+                        )
+                    }
                 }
             }
         },
-        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButtonPosition = FabPosition.End,
         modifier = modifier
     ) {
         content()

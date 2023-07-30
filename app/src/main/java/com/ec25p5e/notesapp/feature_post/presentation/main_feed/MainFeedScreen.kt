@@ -70,7 +70,7 @@ fun MainFeedScreen(
                 }) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "",
+                        contentDescription = "Search",
                         tint = MaterialTheme.colorScheme.onBackground
                     )
                 }

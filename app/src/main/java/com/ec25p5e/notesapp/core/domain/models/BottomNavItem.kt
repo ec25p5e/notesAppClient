@@ -1,10 +1,18 @@
 package com.ec25p5e.notesapp.core.domain.models
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BottomNavItem(
     val route: String,
     val icon: ImageVector? = null,
     val contentDescription: String? = null,
-    val alertCount: Int? = null
+    val alertCount: Int? = null,
+    val showFab: Boolean = false,
+    val fabClick: () -> Unit = {},
+    val fabIcon: ImageVector = Icons.Outlined.Add,
+    val fabContentDescription: String? = "",
+    val modifierFab: Modifier = Modifier
 )

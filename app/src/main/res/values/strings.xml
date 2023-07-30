@@ -30,4 +30,14 @@
     <string name="post_image">Post Image</string>
     <string name="error_field_empty">Field is required</string>
     <string name="post">Publish Post</string>
+    <string name="all_your_notes_title">Your notes</string>
+    <string name="cont_descr_notes">Notes</string>
+    <string name="cont_descr_home">Home</string>
+    <string name="order_section_title">Title</string>
+    <string name="order_section_date">Date</string>
+    <string name="order_section_color">Color</string>
+    <string name="order_section_asc">Ascending</string>
+    <string name="order_section_desc">Descending</string>
+    <string name="error_note_title_empty">The title of the note can\'t be empty.</string>
+    <string name="error_note_content_empty">The content of the note can\'t be empty.</string>
 </resources>

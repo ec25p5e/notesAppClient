@@ -12,6 +12,8 @@ import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
+import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
 import com.ec25p5e.notesapp.feature_post.presentation.create_post.CreatePostScreen
 import com.ec25p5e.notesapp.feature_post.presentation.main_feed.MainFeedScreen
 
@@ -23,7 +25,7 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = Screen.MainFeedScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         composable(Screen.SplashScreen.route) {
@@ -70,6 +72,23 @@ fun Navigation(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader
+            )
+        }
+
+        composable(Screen.ChatScreen.route) {
+            ChatScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
+            )
+        }
+
+        composable(Screen.NotesScreen.route) {
+            NotesScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
             )
         }
     }
