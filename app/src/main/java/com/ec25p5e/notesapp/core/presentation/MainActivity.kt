@@ -34,6 +34,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var imageLoader: ImageLoader
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -55,7 +58,7 @@ class MainActivity : ComponentActivity() {
 
                         }
                     ) {
-                        Navigation(navController, scaffoldState)
+                        Navigation(navController, scaffoldState, imageLoader)
                     }
                 }
             }
@@ -64,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
     private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean {
         val doesRouteMatch = backStackEntry?.destination?.route in listOf(
-            Screen.DashboardScreen.route
+            Screen.MainFeedScreen.route
         )
 
         return doesRouteMatch

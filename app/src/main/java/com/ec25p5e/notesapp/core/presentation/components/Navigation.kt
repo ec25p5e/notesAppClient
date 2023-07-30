@@ -7,20 +7,22 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import coil.ImageLoader
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
-import com.ec25p5e.notesapp.feature_nfc.presentation.dashboard.DashboardScreen
+import com.ec25p5e.notesapp.feature_post.presentation.main_feed.MainFeedScreen
 
 @Composable
 fun Navigation(
     navController: NavHostController,
-    scaffoldState: SnackbarHostState
+    scaffoldState: SnackbarHostState,
+    imageLoader: ImageLoader
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = Screen.MainFeedScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         composable(Screen.SplashScreen.route) {
@@ -38,7 +40,7 @@ fun Navigation(
                         route = Screen.LoginScreen.route,
                         inclusive = true
                     )
-                    navController.navigate(route = Screen.DashboardScreen.route)
+                    navController.navigate(route = Screen.MainFeedScreen.route)
                 },
                 scaffoldState = scaffoldState
             )
@@ -52,11 +54,12 @@ fun Navigation(
             )
         }
 
-        composable(Screen.DashboardScreen.route) {
-            DashboardScreen(
+        composable(Screen.MainFeedScreen.route) {
+            MainFeedScreen(
                 scaffoldState = scaffoldState,
                 onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
             )
         }
     }

@@ -19,4 +19,6 @@
     <string name="min_pass_lenght">The minimun password length is %d</string>
     <string name="regexp_password_format_invalid">The password needs to contain at least one uppercase letter and one number</string>
     <string name="invalid_email_text">This is not a valid email</string>
+    <string name="your_feed_title">Your Feed</string>
+    <string name="back">Back</string>
 </resources>

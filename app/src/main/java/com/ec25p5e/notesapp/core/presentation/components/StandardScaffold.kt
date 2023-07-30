@@ -27,7 +27,7 @@ fun StandardScaffold(
     showFab: Boolean = false,
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = Screen.DashboardScreen.route,
+            route = Screen.MainFeedScreen.route,
             icon = Icons.Outlined.Home,
             contentDescription = "Home"
         )
