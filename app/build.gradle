@@ -35,6 +35,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += ["-Xjvm-default=all"]
     }
     buildFeatures {
         compose true
@@ -67,6 +68,7 @@ dependencies {
     implementation 'com.google.android.engage:engage-core:+'
     // Room
     implementation "androidx.room:room-runtime:2.3.0"
+    implementation 'androidx.databinding:databinding-runtime:7.1.2'
     kapt "androidx.room:room-compiler:2.3.0"
 
     // Kotlin Extensions and Coroutines support for Room
@@ -102,6 +104,7 @@ dependencies {
     testImplementation 'com.google.dagger:hilt-android-testing:2.47'
     kaptTest 'com.google.dagger:hilt-compiler:2.47'
     implementation 'androidx.hilt:hilt-navigation-compose:1.1.0-alpha01'
+    implementation "androidx.compose.material3:material3:1.1.1"
     // Fragment / viewmodel
     def lifecycle = "2.3.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${lifecycle}"

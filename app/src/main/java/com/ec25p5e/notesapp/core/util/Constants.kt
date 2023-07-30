@@ -2,6 +2,8 @@ package com.ec25p5e.notesapp.core.util
 
 object Constants {
 
+    const val MAX_NOTE_DESCRIPTION_LENGTH: Int = 8000
+    const val MAX_NOTE_TITLE_LENGTH: Int = 32
     const val SPLASH_SCREEN_DURATION = 2000L
 
     const val MAX_POST_DESCRIPTION_LINES = 3

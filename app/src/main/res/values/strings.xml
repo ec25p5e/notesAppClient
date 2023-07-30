@@ -40,4 +40,11 @@
     <string name="order_section_desc">Descending</string>
     <string name="error_note_title_empty">The title of the note can\'t be empty.</string>
     <string name="error_note_content_empty">The content of the note can\'t be empty.</string>
+    <string name="cont_descr_save_note">Save Note</string>
+    <string name="label_note_title_input">Note Title</string>
+    <string name="label_note_description_input">Note Description</string>
+    <string name="undo_text_btn">Undo</string>
+    <string name="note_advanced_options">Show advanced options</string>
+    <string name="note_hide_advanced_options">Hide advanced options</string>
+    <string name="cont_descr_image_all_task_done">All task are done</string>
 </resources>

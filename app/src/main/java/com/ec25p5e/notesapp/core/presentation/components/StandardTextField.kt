@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.presentation.ui.theme.HintGray
 import com.ec25p5e.notesapp.core.presentation.ui.theme.IconSizeMedium
 import com.ec25p5e.notesapp.core.presentation.util.TestTags
 
@@ -51,6 +53,7 @@ fun StandardTextFieldState(
     text: String = "",
     label: String = "",
     hint: String = "",
+    isHintVisible: Boolean = false,
     maxLength: Int = 400,
     error: String = "",
     style: TextStyle = TextStyle(
@@ -65,6 +68,7 @@ fun StandardTextFieldState(
     isPasswordVisible: Boolean = false,
     onPasswordToggleClick: (Boolean) -> Unit = {},
     onValueChange: (String) -> Unit,
+    onFocusChange: (FocusState) -> Unit = {},
     focusRequester: FocusRequester = FocusRequester(),
     imeAction: ImeAction,
 ) {
@@ -92,11 +96,13 @@ fun StandardTextFieldState(
             textStyle = style,
             colors = TextFieldDefaults.textFieldColors(backgroundColor),
             placeholder = {
-                Text(
-                    text = hint,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelMedium
-                )
+                if(isHintVisible) {
+                    Text(
+                        text = hint,
+                        color = HintGray,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
             },
             keyboardOptions = KeyboardOptions(
                 imeAction = imeAction,
