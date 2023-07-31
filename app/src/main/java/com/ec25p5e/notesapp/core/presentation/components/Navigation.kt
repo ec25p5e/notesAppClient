@@ -16,6 +16,8 @@ import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
+import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
+import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoriesScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
 import com.ec25p5e.notesapp.feature_post.presentation.create_post.CreatePostScreen
 import com.ec25p5e.notesapp.feature_post.presentation.main_feed.MainFeedScreen
@@ -28,7 +30,7 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.MainFeedScreen.route,
+        startDestination = Screen.NotesScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         composable(Screen.SplashScreen.route) {
@@ -88,6 +90,24 @@ fun Navigation(
 
         composable(Screen.NotesScreen.route) {
             NotesScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.CategoryScreen.route) {
+            CategoriesScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.ArchiveScreen.route) {
+            ArchiveScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,

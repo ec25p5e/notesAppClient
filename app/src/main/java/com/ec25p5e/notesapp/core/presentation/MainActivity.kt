@@ -53,10 +53,7 @@ class MainActivity : ComponentActivity() {
                     StandardScaffold(
                         navController = navController,
                         showBottomBar = shouldShowBottomBar(navBackStackEntry),
-                        modifier = Modifier.fillMaxSize(),
-                        /* onFabClick = {
-                            navController.navigate(Screen.CreatePostScreen.route)
-                        } */
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         Navigation(navController, scaffoldState, imageLoader)
                     }
@@ -67,10 +64,11 @@ class MainActivity : ComponentActivity() {
 
     private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean {
         val doesRouteMatch = backStackEntry?.destination?.route in listOf(
-            Screen.MainFeedScreen.route,
-            Screen.MessageScreen.route,
+            Screen.NotesScreen.route,
+            Screen.TodoScreen.route,
+            Screen.ArchiveScreen.route,
+            Screen.CategoryScreen.route,
             Screen.ProfileScreen.route,
-            Screen.NotesScreen.route
         )
 
         return doesRouteMatch

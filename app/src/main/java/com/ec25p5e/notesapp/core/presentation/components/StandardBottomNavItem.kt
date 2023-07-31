@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +27,7 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 @Throws(IllegalArgumentException::class)
 fun RowScope.StandardBottomNavItem(
     modifier: Modifier = Modifier,
-    icon: ImageVector? = null,
+    icon: Painter? = null,
     contentDescription: String? = null,
     selected: Boolean = false,
     alertCount: Int? = null,
@@ -78,7 +79,7 @@ fun RowScope.StandardBottomNavItem(
             ) {
                 if(icon != null) {
                     Icon(
-                        imageVector = icon,
+                        painter = icon,
                         contentDescription = contentDescription,
                         modifier = Modifier
                             .align(Alignment.Center)

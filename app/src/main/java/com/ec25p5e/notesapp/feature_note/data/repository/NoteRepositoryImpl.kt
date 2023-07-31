@@ -13,6 +13,10 @@ class NoteRepositoryImpl(
         return dao.getNotes()
     }
 
+    override fun getNotesForArchive(): Flow<List<Note>> {
+        return dao.getNotesForArchive()
+    }
+
     override fun getNoteById(id: Int): Note? {
         return dao.getNoteById(id)
     }
@@ -23,5 +27,13 @@ class NoteRepositoryImpl(
 
     override fun deleteNote(note: Note) {
         dao.deleteNote(note)
+    }
+
+    override fun archiveNote(id: Int) {
+        dao.archiveNote(id)
+    }
+
+    override fun dearchiveNote(id: Int) {
+        dao.dearchiveNote(id)
     }
 }

@@ -6,11 +6,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +49,8 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
+import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -59,12 +63,14 @@ fun AddEditNoteScreen(
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     noteColor: Int,
-    viewModel: AddEditNoteViewModel = hiltViewModel()
+    viewModel: AddEditNoteViewModel = hiltViewModel(),
+    viewModelCategory: CategoryViewModel = hiltViewModel()
 ) {
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
+    val categoryState = viewModelCategory.state.value
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-    var scaffoldStateBottomSheet = rememberBottomSheetScaffoldState()
+    val scaffoldStateBottomSheet = rememberBottomSheetScaffoldState()
     val noteBackgroundAnimatable = remember {
         Animatable(
             Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
@@ -86,7 +92,6 @@ fun AddEditNoteScreen(
             }
         }
     }
-
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -184,6 +189,13 @@ fun AddEditNoteScreen(
                 }
             }
 
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.Black)
+            )
+
             Column(
                 Modifier
                     .fillMaxWidth()
@@ -193,15 +205,15 @@ fun AddEditNoteScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Note.noteColors.forEach { color ->
                         val colorInt = color.toArgb()
                         Box(
                             modifier = Modifier
-                                .size(50.dp)
-                                .shadow(15.dp, CircleShape)
+                                .size(25.dp)
+                                .shadow(7.5.dp, CircleShape)
                                 .clip(CircleShape)
                                 .background(color)
                                 .border(
@@ -226,6 +238,45 @@ fun AddEditNoteScreen(
                     }
                 }
             }
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.Black)
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            LazyRow(
+                modifier = Modifier
+                    .padding(bottom = 10.dp)) {
+                items(categoryState.categories) { category ->
+                    CategoryItem(
+                        category = category,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .shadow(7.5.dp, CircleShape)
+                            .clip(CircleShape)
+                            .border(
+                                width = 3.dp,
+                                color = if (viewModel.noteCategory.value.number == category.id) {
+                                    Color.Black
+                                } else Color.Transparent,
+                                shape = CircleShape
+                            )
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+            }
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.Black)
+            )
         }
     ) {}
 }

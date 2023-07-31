@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.ec25p5e.notesapp.R
@@ -26,9 +27,19 @@ fun StandardScaffold(
     showBottomBar: Boolean = true,
     bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = Screen.MainFeedScreen.route,
-            icon = Icons.Outlined.Home,
-            contentDescription = stringResource(id = R.string.cont_descr_home),
+            route = Screen.NotesScreen.route,
+            icon = painterResource(id = R.drawable.ic_note),
+            contentDescription = stringResource(id = R.string.cont_descr_notes),
+            showFab = true,
+            fabClick = {
+                navController.navigate(Screen.CreateNoteScreen.route)
+            },
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
+        ),
+        BottomNavItem(
+            route = Screen.TodoScreen.route,
+            icon = painterResource(id = R.drawable.ic_todo),
+            contentDescription = stringResource(id = R.string.cont_todo_home),
             showFab = true,
             fabClick = {
                 navController.navigate(Screen.CreatePostScreen.route)
@@ -36,25 +47,25 @@ fun StandardScaffold(
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
         BottomNavItem(
-            route = Screen.MessageScreen.route,
-            icon = Icons.Outlined.Message,
-            contentDescription = "Messages",
-            alertCount = 100
+            route = Screen.ArchiveScreen.route,
+            icon = painterResource(id = R.drawable.ic_baseline_archive_24),
+            contentDescription = stringResource(id = R.string.cont_archive_home),
+            showFab = true,
+            fabClick = {
+                navController.navigate(Screen.CreatePostScreen.route)
+            },
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
+        ),
+        BottomNavItem(
+            route = Screen.CategoryScreen.route,
+            icon = painterResource(id = R.drawable.ic_category),
+            contentDescription = stringResource(id = R.string.new_category_title),
+            showFab = true
         ),
         BottomNavItem(
             route = Screen.ProfileScreen.route,
-            icon = Icons.Outlined.Person,
-            contentDescription = "Profiles"
-        ),
-        BottomNavItem(
-            route = Screen.NotesScreen.route,
-            icon = Icons.Outlined.Notes,
-            contentDescription = stringResource(id = R.string.cont_descr_notes),
-            showFab = true,
-            fabClick = {
-                navController.navigate(Screen.CreateNoteScreen.route)
-            },
-            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
+            icon = painterResource(id = R.drawable.ic_profile),
+            contentDescription = stringResource(id = R.string.cont_profile_home)
         )
     ),
     content: @Composable () -> Unit

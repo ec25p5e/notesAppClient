@@ -44,4 +44,25 @@
     <string name="cont_descr_save_note">Salva la nota</string>
     <string name="label_note_title_input">Titolo della nota</string>
     <string name="label_note_description_input">Contenuto della nota</string>
+    <string name="undo_text_btn">Indietro</string>
+    <string name="note_advanced_options">Mostra opzioni avanzate</string>
+    <string name="note_hide_advanced_options">Nascondi opzioni avanzate</string>
+    <string name="cont_descr_image_all_task_done">Tutte le task sono state completate</string>
+    <string name="deleted_note">Nota eliminata!</string>
+    <string name="cont_todo_home">Todo List</string>
+    <string name="cont_archive_home">Archivio</string>
+    <string name="cont_trash_home">Cestino</string>
+    <string name="cont_profile_home">Profilo</string>
+    <string name="all_your_notes_archived_title">Le tue note archiviate</string>
+    <string name="text_search_note">Ricerca note...</string>
+    <string name="more_vert_text">Più opzioni</string>
+    <string name="dialog_filter_title">Filtra note</string>
+    <string name="apply_btn_text">Applica</string>
+    <string name="dismiss_btn_text">Chiudi</string>
+    <string name="cont_descr_filter_menu">Filtro</string>
+    <string name="new_category_title">Nuova categoria</string>
+    <string name="cont_descr_new_category_menu">Nuova categoria</string>
+    <string name="dialog_new_category_title">Nuova categoria</string>
+    <string name="save_btn_text">Salva</string>
+    <string name="order_note_title">Filtra note</string>
 </resources>

@@ -7,9 +7,15 @@ interface NoteRepository {
 
     fun getNotes(): Flow<List<Note>>
 
+    fun getNotesForArchive(): Flow<List<Note>>
+
     fun getNoteById(id: Int): Note?
 
     fun insertNote(note: Note)
 
     fun deleteNote(note: Note)
+
+    fun archiveNote(id: Int)
+
+    fun dearchiveNote(id: Int)
 }

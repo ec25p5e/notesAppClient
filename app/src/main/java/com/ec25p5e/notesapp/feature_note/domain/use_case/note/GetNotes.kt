@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_note.domain.use_case
+package com.ec25p5e.notesapp.feature_note.domain.use_case.note
 
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository

@@ -47,4 +47,23 @@
     <string name="note_advanced_options">Show advanced options</string>
     <string name="note_hide_advanced_options">Hide advanced options</string>
     <string name="cont_descr_image_all_task_done">All task are done</string>
+    <string name="deleted_note">Note deleted</string>
+    <string name="cont_todo_home">ToDo List</string>
+    <string name="cont_archive_home">Archive</string>
+    <string name="cont_trash_home">Trash</string>
+    <string name="cont_profile_home">Profile</string>
+    <string name="all_your_notes_archived_title">Your archived notes</string>
+    <string name="text_search_note">Search note...</string>
+    <string name="more_vert_text">More vert text</string>
+    <string name="dialog_filter_title">Filter Notes</string>
+    <string name="apply_btn_text">Apply</string>
+    <string name="dismiss_btn_text">Close</string>
+    <string name="cont_descr_filter_menu">Filter</string>
+    <string name="new_category_title">New category</string>
+    <string name="cont_descr_new_category_menu">New category</string>
+    <string name="dialog_new_category_title">New Category</string>
+    <string name="save_btn_text">Save</string>
+    <string name="order_note_title">Filter</string>
+    <string name="label_category_title_input">Category Name</string>
+    <string name="label_select_category">Select category</string>
 </resources>

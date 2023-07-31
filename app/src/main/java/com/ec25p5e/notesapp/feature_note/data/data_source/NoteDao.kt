@@ -11,11 +11,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
 
-    @Query("SELECT * FROM note")
+    @Query("SELECT * FROM note WHERE isArchived = 0")
     fun getNotes(): Flow<List<Note>>
+
+    @Query("SELECT * FROM note WHERE isArchived = 1")
+    fun getNotesForArchive(): Flow<List<Note>>
 
     @Query("SELECT * FROM note WHERE id = :id")
     fun getNoteById(id: Int): Note?
+
+    @Query("UPDATE note SET isArchived = 1 WHERE id = :id")
+    fun archiveNote(id: Int)
+
+    @Query("UPDATE note SET isArchived = 0 WHERE id = :id")
+    fun dearchiveNote(id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: Note)
