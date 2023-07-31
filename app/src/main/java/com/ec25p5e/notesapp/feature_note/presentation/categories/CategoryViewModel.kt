@@ -5,7 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.util.UiText
+import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
+import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidNoteException
 import com.ec25p5e.notesapp.feature_note.domain.model.Category
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
@@ -30,11 +34,14 @@ class CategoryViewModel @Inject constructor(
     private val _categoryTitle = mutableStateOf(StandardTextFieldState())
     val categoryTitle: State<StandardTextFieldState> = _categoryTitle
 
-    private val _categoryColor = mutableStateOf(Note.noteColors.random().toArgb())
+    private val _categoryColor = mutableStateOf(Category.noteColors.random().toArgb())
     val categoryColor: State<Int> = _categoryColor
 
-    private val _eventFlowCategory = MutableSharedFlow<UiEventNote>()
-    val eventFlowCategory = _eventFlowCategory.asSharedFlow()
+    private val _categoryId = mutableStateOf(0)
+    val categoryId: State<Int> = _categoryId
+
+    private val _eventFlow = MutableSharedFlow<UiEventNote>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentCategoryId: Int? = null
 
@@ -61,7 +68,9 @@ class CategoryViewModel @Inject constructor(
             is CategoryEvent.ChangeColor -> {
                 _categoryColor.value = event.color
             }
-
+            is CategoryEvent.ChangeCategorySelected -> {
+                _categoryId.value = event.id
+            }
             is CategoryEvent.DeleteCategory -> {
                 viewModelScope.launch {
                     TODO("Implement delete of category")
@@ -70,6 +79,45 @@ class CategoryViewModel @Inject constructor(
             }
             is CategoryEvent.RestoreCategory -> {
 
+            }
+            is CategoryEvent.ToggleCategoryCreation -> {
+                _state.value = state.value.copy(
+                    isCreationVisible = !state.value.isCreationVisible
+                )
+            }
+            is CategoryEvent.SaveCategory -> {
+                viewModelScope.launch {
+                    try {
+                        categoryUseCases.addCategory(
+                            Category(
+                                name = categoryTitle.value.text,
+                                color = categoryColor.value,
+                                timestamp = System.currentTimeMillis(),
+                                id = currentCategoryId
+                            )
+                        )
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(
+                            UiText.StringResource(id = R.string.category_created)
+                        ))
+
+                        _categoryTitle.value = _categoryTitle.value.copy(
+                            text = "",
+                            number = null,
+                            hint = "",
+                            isHintVisible = false,
+                            error = null
+                        )
+
+                        val newColor = Category.noteColors.random().toArgb()
+                        _categoryColor.value = newColor
+                    } catch(e: InvalidCategoryException) {
+                        _eventFlow.emit(
+                            UiEventNote.ShowSnackbar(
+                                UiText.DynamicString(e.message ?: "Couldn't save the category")
+                            )
+                        )
+                    }
+                }
             }
         }
     }

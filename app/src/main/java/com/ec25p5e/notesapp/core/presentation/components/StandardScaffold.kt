@@ -57,12 +57,6 @@ fun StandardScaffold(
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
         BottomNavItem(
-            route = Screen.CategoryScreen.route,
-            icon = painterResource(id = R.drawable.ic_category),
-            contentDescription = stringResource(id = R.string.new_category_title),
-            showFab = true
-        ),
-        BottomNavItem(
             route = Screen.ProfileScreen.route,
             icon = painterResource(id = R.drawable.ic_profile),
             contentDescription = stringResource(id = R.string.cont_profile_home)

@@ -1,6 +1,9 @@
 package com.ec25p5e.notesapp.feature_note.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +26,8 @@ import com.ec25p5e.notesapp.feature_note.domain.model.Category
 @Composable
 fun CategoryItem(
     category: Category,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    clickable: () -> Unit
 ) {
     Box(
         modifier = modifier,
@@ -38,6 +42,9 @@ fun CategoryItem(
                 .background(Color(category.color), shape = RoundedCornerShape(10.dp))
                 .clip(shape = RoundedCornerShape(10.dp))
                 .wrapContentHeight(align = Alignment.CenterVertically)
+                .clickable {
+                    clickable()
+                }
         ) {
             Text(
                 text = category.name,

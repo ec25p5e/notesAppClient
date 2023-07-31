@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
+import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,9 +50,11 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceLarge
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.feature_note.domain.model.Category
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
+import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -77,17 +81,18 @@ fun AddEditNoteScreen(
         )
     }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
-                is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
-                    scaffoldState.showSnackbar(
-                        message = event.message
-                    )
+                is UiEventNote.ShowSnackbar -> {
+                    Toast.makeText(context, event.uiText.toString(), Toast.LENGTH_SHORT).show()
                 }
-                is AddEditNoteViewModel.UiEvent.SaveNote -> {
+                is UiEventNote.SaveNote -> {
                     onNavigateUp()
+                }
+                else -> {
                 }
             }
         }
@@ -208,7 +213,7 @@ fun AddEditNoteScreen(
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Note.noteColors.forEach { color ->
+                    Category.noteColors.forEach { color ->
                         val colorInt = color.toArgb()
                         Box(
                             modifier = Modifier
@@ -256,15 +261,16 @@ fun AddEditNoteScreen(
                         category = category,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .shadow(7.5.dp, CircleShape)
-                            .clip(CircleShape)
                             .border(
                                 width = 3.dp,
                                 color = if (viewModel.noteCategory.value.number == category.id) {
                                     Color.Black
                                 } else Color.Transparent,
                                 shape = CircleShape
-                            )
+                            ),
+                        clickable = {
+
+                        }
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))

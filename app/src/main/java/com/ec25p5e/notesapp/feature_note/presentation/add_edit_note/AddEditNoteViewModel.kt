@@ -7,11 +7,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidNoteException
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoriesState
+import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,10 +41,11 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteCategory = mutableStateOf(StandardTextFieldState())
     val noteCategory: State<StandardTextFieldState> = _noteCategory
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Int? = null
+    private var categoryId: Int = 1
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -105,26 +108,22 @@ class AddEditNoteViewModel @Inject constructor(
                                 content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
-                                id = currentNoteId
+                                id = currentNoteId,
+                                categoryId = categoryId
                             )
                         )
 
-                        _eventFlow.emit(UiEvent.SaveNote)
+                        _eventFlow.emit(UiEventNote.SaveNote)
                     } catch(e: InvalidNoteException) {
                         _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save the note"
+                            UiEventNote.ShowSnackbar(
+                                UiText.DynamicString(e.message ?: "Couldn't save the note")
                             )
                         )
                     }
                 }
             }
         }
-    }
-
-    sealed class UiEvent {
-        data class ShowSnackbar(val message: String): UiEvent()
-        object SaveNote: UiEvent()
     }
 
 }

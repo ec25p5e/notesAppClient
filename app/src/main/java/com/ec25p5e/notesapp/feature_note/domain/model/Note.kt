@@ -26,7 +26,7 @@ data class Note(
     val timestamp: Long,
     val color: Int,
     val isArchived: Boolean = false,
-    val categoryId: Int? = 1,
+    val categoryId: Int = 1,
     @PrimaryKey val id: Int? = null
 ) {
 

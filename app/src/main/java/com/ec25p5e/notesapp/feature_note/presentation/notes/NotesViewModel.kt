@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.notes
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,11 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
-import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.domain.util.NoteOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
-import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoriesState
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -30,6 +29,9 @@ class NotesViewModel @Inject constructor(
     private val _state = mutableStateOf(NotesState())
     val state: State<NotesState> = _state
 
+    private var _filterCategory: Int = -1
+    private var _noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending)
+
     private var recentlyDeletedNote: Note? = null
     private var getNotesJob: Job? = null
 
@@ -37,18 +39,26 @@ class NotesViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        getNotes(NoteOrder.Date(OrderType.Descending))
+        getNotes(_noteOrder)
     }
 
     fun onEvent(event: NotesEvent) {
         when(event) {
             is NotesEvent.Order -> {
+                _noteOrder = event.noteOrder
+
                 if(state.value.noteOrder::class == event.noteOrder::class &&
                         state.value.noteOrder.orderType == event.noteOrder.orderType) {
                     return
                 }
 
-                getNotes(event.noteOrder)
+                if(_filterCategory == -1) {
+                    getNotes(_noteOrder)
+                } else {
+                    viewModelScope.launch {
+                        getNotesByCategory(_filterCategory, _noteOrder)
+                    }
+                }
             }
             is NotesEvent.DeleteNote -> {
                 viewModelScope.launch {
@@ -71,7 +81,17 @@ class NotesViewModel @Inject constructor(
                     recentlyDeletedNote = null
                 }
             }
+            is NotesEvent.FilterNotesByCategory -> {
+                _filterCategory = event.categoryId
 
+                viewModelScope.launch {
+                    if(event.categoryId == 1) {
+                        getNotes(_noteOrder)
+                    } else {
+                        getNotesByCategory(_filterCategory, _noteOrder)
+                    }
+                }
+            }
             is NotesEvent.ToggleOrderSection -> {
                 _state.value = state.value.copy(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
@@ -87,6 +107,18 @@ class NotesViewModel @Inject constructor(
                 _state.value = state.value.copy(
                     notes = notes,
                     noteOrder = noteOrder
+                )
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun getNotesByCategory(categoryId: Int, noteOrder: NoteOrder) {
+        getNotesJob?.cancel()
+        getNotesJob = noteUseCases.getNotesByCategory(categoryId, noteOrder)
+            .onEach { notes ->
+                _state.value = state.value.copy(
+                    notes = notes,
+                    noteOrder = NoteOrder.Date(OrderType.Ascending)
                 )
             }
             .launchIn(viewModelScope)

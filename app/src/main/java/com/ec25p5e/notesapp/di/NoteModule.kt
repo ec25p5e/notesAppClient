@@ -8,12 +8,14 @@ import com.ec25p5e.notesapp.feature_note.data.repository.NoteRepositoryImpl
 import com.ec25p5e.notesapp.feature_note.domain.model.Category
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
+import com.ec25p5e.notesapp.feature_note.domain.use_case.category.AddCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategories
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.AddNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.ArchiveNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DeleteNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNote
+import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNoteByCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotes
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotesForArchive
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
@@ -60,7 +62,8 @@ object NoteModule {
             addNote = AddNote(repository),
             getNote = GetNote(repository),
             archiveNote = ArchiveNote(repository),
-            getNotesForArchive = GetNotesForArchive(repository)
+            getNotesForArchive = GetNotesForArchive(repository),
+            getNotesByCategory = GetNoteByCategory(repository)
         )
     }
 
@@ -68,7 +71,8 @@ object NoteModule {
     @Singleton
     fun provideCategoryUseCases(repository: CategoryRepository): CategoryUseCases {
         return CategoryUseCases(
-            getCategories = GetCategories(repository)
+            getCategories = GetCategories(repository),
+            addCategory = AddCategory(repository)
         )
     }
 }

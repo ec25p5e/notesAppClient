@@ -17,6 +17,10 @@ class NoteRepositoryImpl(
         return dao.getNotesForArchive()
     }
 
+    override fun getNotesByCategory(categoryId: Int): Flow<List<Note>> {
+        return dao.getNotesByCategory(categoryId)
+    }
+
     override fun getNoteById(id: Int): Note? {
         return dao.getNoteById(id)
     }

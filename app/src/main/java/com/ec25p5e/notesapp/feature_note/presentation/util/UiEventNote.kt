@@ -8,4 +8,5 @@ sealed class UiEventNote: Event() {
     data class Navigate(val route: String): UiEventNote()
 
     object NavigateUp: UiEventNote()
+    object SaveNote: UiEventNote()
 }

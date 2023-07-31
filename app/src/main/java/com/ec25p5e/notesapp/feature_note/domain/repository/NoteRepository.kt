@@ -9,6 +9,8 @@ interface NoteRepository {
 
     fun getNotesForArchive(): Flow<List<Note>>
 
+    fun getNotesByCategory(categoryId: Int): Flow<List<Note>>
+
     fun getNoteById(id: Int): Note?
 
     fun insertNote(note: Note)

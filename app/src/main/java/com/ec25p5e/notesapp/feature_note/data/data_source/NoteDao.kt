@@ -17,6 +17,9 @@ interface NoteDao {
     @Query("SELECT * FROM note WHERE isArchived = 1")
     fun getNotesForArchive(): Flow<List<Note>>
 
+    @Query("SELECT * FROM note WHERE categoryId = :categoryId and isArchived = 0")
+    fun getNotesByCategory(categoryId: Int): Flow<List<Note>>
+
     @Query("SELECT * FROM note WHERE id = :id")
     fun getNoteById(id: Int): Note?
 

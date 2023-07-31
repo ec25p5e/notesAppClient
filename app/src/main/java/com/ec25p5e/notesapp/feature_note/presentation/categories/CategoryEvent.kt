@@ -8,7 +8,12 @@ sealed class CategoryEvent {
     data class ChangeTitleFocus(val focusState: FocusState): CategoryEvent()
     data class ChangeColor(val color: Int): CategoryEvent()
 
+    data class ChangeCategorySelected(val id: Int): CategoryEvent()
+
+
     data class DeleteCategory(val category: Category): CategoryEvent()
 
     object RestoreCategory: CategoryEvent()
+    object ToggleCategoryCreation: CategoryEvent()
+    object SaveCategory: CategoryEvent()
 }
