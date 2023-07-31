@@ -96,11 +96,10 @@ fun NotesScreen(
     var active by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var noteColor = -1
 
     val categoryBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else viewModelCategory.categoryColor.value)
+            Color(viewModelCategory.categoryColor.value)
         )
     }
 
@@ -415,8 +414,10 @@ fun NotesScreen(
             if(state.notes.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 10.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.8f)
+                        .padding(bottom = 10.dp),
+                    contentPadding = PaddingValues(10.dp)
                 ) {
                     items(
                         items = state.notes,

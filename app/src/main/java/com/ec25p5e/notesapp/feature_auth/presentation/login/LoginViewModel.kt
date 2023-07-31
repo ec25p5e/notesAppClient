@@ -76,8 +76,6 @@ class LoginViewModel @Inject constructor(
                         )
                     }
 
-                    Log.i("LoginViewModel", loginResult.result.toString())
-
                     when(loginResult.result) {
                         is Resource.Success -> {
                             _eventFlow.emit(UiEvent.OnLogin)

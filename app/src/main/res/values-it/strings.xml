@@ -65,4 +65,8 @@
     <string name="dialog_new_category_title">Nuova categoria</string>
     <string name="save_btn_text">Salva</string>
     <string name="order_note_title">Filtra note</string>
+    <string name="label_category_title_input">Nome della categoria</string>
+    <string name="label_select_category">Seleziona categoria</string>
+    <string name="error_category_name_empty">Il nome della categoria non può essere vuoto</string>
+    <string name="category_created">Categoria creata</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomSheetScaffold
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import ch.qos.logback.core.util.Loader.getResources
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
@@ -52,6 +54,7 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_note.domain.model.Category
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
@@ -80,6 +83,11 @@ fun AddEditNoteScreen(
             Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
         )
     }
+    val categoryBackgroundAnimatable = remember {
+        Animatable(
+            Color(viewModelCategory.categoryColor.value)
+        )
+    }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -87,7 +95,11 @@ fun AddEditNoteScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEventNote.ShowSnackbar -> {
-                    Toast.makeText(context, event.uiText.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.resources.getText(event.uiText.toString().toInt()),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 is UiEventNote.SaveNote -> {
                     onNavigateUp()
@@ -171,6 +183,8 @@ fun AddEditNoteScreen(
         scaffoldState = scaffoldStateBottomSheet,
         sheetPeekHeight = 48.dp,
         sheetContent = {
+            openBottomSheet = true
+
             Box(
                 Modifier
                     .fillMaxWidth()
@@ -263,13 +277,24 @@ fun AddEditNoteScreen(
                             .fillMaxWidth()
                             .border(
                                 width = 3.dp,
-                                color = if (viewModel.noteCategory.value.number == category.id) {
+                                color = if (category.id == viewModel.noteCategory.value) {
                                     Color.Black
                                 } else Color.Transparent,
-                                shape = CircleShape
+                                shape = RoundedCornerShape(10.dp)
                             ),
                         clickable = {
+                            scope.launch {
+                                categoryBackgroundAnimatable.animateTo(
+                                    targetValue = Color(category.color),
+                                    animationSpec = tween(
+                                        durationMillis = 500
+                                    )
+                                )
+                            }
 
+                            category.id?.let {
+                                AddEditNoteEvent.ChangeCategoryColor(it)
+                            }?.let { viewModel.onEvent(it) }
                         }
                     )
 

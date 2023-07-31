@@ -38,14 +38,13 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteColor = mutableStateOf(Note.noteColors.random().toArgb())
     val noteColor: State<Int> = _noteColor
 
-    private val _noteCategory = mutableStateOf(StandardTextFieldState())
-    val noteCategory: State<StandardTextFieldState> = _noteCategory
+    private val _noteCategory = mutableStateOf(1)
+    val noteCategory: State<Int> = _noteCategory
 
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Int? = null
-    private var categoryId: Int = 1
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -62,10 +61,7 @@ class AddEditNoteViewModel @Inject constructor(
                             isHintVisible = false
                         )
                         _noteColor.value = note.color
-                        _noteCategory.value = _noteCategory.value.copy(
-                            number = note.categoryId,
-                            isHintVisible = false
-                        )
+                        _noteCategory.value = note.categoryId
                     }
                 }
             }
@@ -99,6 +95,9 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.ChangeColor -> {
                 _noteColor.value = event.color
             }
+            is AddEditNoteEvent.ChangeCategoryColor -> {
+                _noteCategory.value = event.categoryId
+            }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
@@ -109,7 +108,7 @@ class AddEditNoteViewModel @Inject constructor(
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
                                 id = currentNoteId,
-                                categoryId = categoryId
+                                categoryId = noteCategory.value
                             )
                         )
 
