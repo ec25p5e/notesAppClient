@@ -116,8 +116,10 @@ class RegisterViewModel @Inject constructor(
                     )
                     _registerState.value = RegisterState(isLoading = false)
                 }
-                null -> {
+                is Resource.Loading -> {
                     _registerState.value = RegisterState(isLoading = false)
+                }
+                else -> {
                 }
             }
         }

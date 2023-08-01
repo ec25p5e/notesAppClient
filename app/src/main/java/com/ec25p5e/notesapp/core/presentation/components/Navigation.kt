@@ -18,8 +18,6 @@ import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
-import com.ec25p5e.notesapp.feature_post.presentation.create_post.CreatePostScreen
-import com.ec25p5e.notesapp.feature_post.presentation.main_feed.MainFeedScreen
 
 @Composable
 fun Navigation(
@@ -58,24 +56,6 @@ fun Navigation(
                 navController = navController,
                 scaffoldState = scaffoldState,
                 onPopBackStack = navController::popBackStack
-            )
-        }
-
-        composable(Screen.MainFeedScreen.route) {
-            MainFeedScreen(
-                scaffoldState = scaffoldState,
-                onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate,
-                imageLoader = imageLoader
-            )
-        }
-
-        composable(Screen.CreatePostScreen.route) {
-            CreatePostScreen(
-                scaffoldState = scaffoldState,
-                onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate,
-                imageLoader = imageLoader
             )
         }
 

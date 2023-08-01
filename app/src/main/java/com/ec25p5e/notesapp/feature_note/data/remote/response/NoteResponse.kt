@@ -4,7 +4,6 @@ import com.ec25p5e.notesapp.feature_note.domain.model.Note
 
 data class NoteResponse(
     val id: String,
-    val userId: String,
     val title: String,
     val content: String,
     val timestamp: Long,

@@ -5,6 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.ec25p5e.notesapp.core.util.Resource
+import com.ec25p5e.notesapp.feature_note.data.remote.response.NoteResponse
 import com.ec25p5e.notesapp.feature_note.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -16,6 +18,9 @@ interface NoteDao {
 
     @Query("SELECT * FROM note WHERE isArchived = 1")
     fun getNotesForArchive(): Flow<List<Note>>
+
+    @Query("SELECT * FROM note WHERE isArchived = 0")
+    fun getLocalNotes(): List<NoteResponse>
 
     @Query("SELECT * FROM note WHERE categoryId = :categoryId and isArchived = 0")
     fun getNotesByCategory(categoryId: Int): Flow<List<Note>>
@@ -31,6 +36,9 @@ interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: Note)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertBulkNote(notes: List<Note>)
 
     @Delete
     fun deleteNote(note: Note)

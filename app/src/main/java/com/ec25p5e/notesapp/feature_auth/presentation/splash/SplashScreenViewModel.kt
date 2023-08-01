@@ -33,6 +33,8 @@ class SplashScreenViewModel @Inject constructor(
                         UiEvent.Navigate(Screen.LoginScreen.route)
                     )
                 }
+                else -> {
+                }
             }
         }
     }
