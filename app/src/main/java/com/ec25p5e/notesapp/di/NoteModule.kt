@@ -1,8 +1,11 @@
 package com.ec25p5e.notesapp.di
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.room.Room
+import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
+import com.ec25p5e.notesapp.feature_note.data.remote.NoteApi
 import com.ec25p5e.notesapp.feature_note.data.repository.CategoryRepositoryImpl
 import com.ec25p5e.notesapp.feature_note.data.repository.NoteRepositoryImpl
 import com.ec25p5e.notesapp.feature_note.domain.model.Category
@@ -23,6 +26,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -43,8 +49,21 @@ object NoteModule {
 
     @Provides
     @Singleton
-    fun provideNoteRepository(db: NoteDatabase): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao)
+    fun provideNoteApi(client: OkHttpClient): NoteApi {
+        return Retrofit.Builder()
+            .baseUrl(NoteApi.BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NoteApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNoteRepository(db: NoteDatabase,
+                              api: NoteApi,
+                              sharedPreferences: SharedPreferences): NoteRepository {
+        return NoteRepositoryImpl(db.noteDao, api, sharedPreferences)
     }
 
     @Provides
