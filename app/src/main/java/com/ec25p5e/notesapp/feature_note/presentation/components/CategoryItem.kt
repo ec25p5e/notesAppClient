@@ -1,8 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 
 @Composable
 fun CategoryItem(

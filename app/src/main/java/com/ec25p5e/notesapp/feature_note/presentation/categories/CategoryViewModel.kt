@@ -9,9 +9,7 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
-import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidNoteException
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +37,9 @@ class CategoryViewModel @Inject constructor(
 
     private val _categoryId = mutableStateOf(0)
     val categoryId: State<Int> = _categoryId
+
+    private val _isCreating = mutableStateOf(false)
+    val isCreating: State<Boolean> = _isCreating
 
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -85,10 +86,18 @@ class CategoryViewModel @Inject constructor(
                     isCreationVisible = !state.value.isCreationVisible
                 )
             }
+            is CategoryEvent.FetchCategory -> {
+
+            }
+            is CategoryEvent.IsCreateCategory -> {
+                _isCreating.value = !_isCreating.value
+            }
             is CategoryEvent.SaveCategory -> {
                 viewModelScope.launch {
+                    _eventFlow.emit(UiEventNote.ShowLoader)
+
                     try {
-                        categoryUseCases.addCategory(
+                        val response = categoryUseCases.addCategory(
                             Category(
                                 name = categoryTitle.value.text,
                                 color = categoryColor.value,
@@ -96,13 +105,15 @@ class CategoryViewModel @Inject constructor(
                                 id = currentCategoryId
                             )
                         )
-                        _eventFlow.emit(UiEventNote.ShowSnackbar(
-                            UiText.StringResource(id = R.string.category_created)
-                        ))
+
+                        if(response.uiText != null) {
+                            _eventFlow.emit(UiEventNote.ShowSnackbar(response.uiText))
+                        } else {
+                            _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(R.string.category_created)))
+                        }
 
                         _categoryTitle.value = _categoryTitle.value.copy(
                             text = "",
-                            number = null,
                             hint = "",
                             isHintVisible = false,
                             error = null
@@ -117,19 +128,23 @@ class CategoryViewModel @Inject constructor(
                             )
                         )
                     }
+
+                    _eventFlow.emit(UiEventNote.ShowLoader)
                 }
             }
         }
     }
 
     fun loadCategories() {
-        getCategoriesJob?.cancel()
-        getCategoriesJob = categoryUseCases.getCategories()
-            .onEach { category ->
-                _state.value = state.value.copy(
-                    categories = category
-                )
-            }
-            .launchIn(viewModelScope)
+        viewModelScope.launch {
+            getCategoriesJob?.cancel()
+            getCategoriesJob = categoryUseCases.getCategories(true)
+                .onEach { category ->
+                    _state.value = state.value.copy(
+                        categories = category
+                    )
+                }
+                .launchIn(viewModelScope)
+        }
     }
 }

@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,4 +15,10 @@ interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCategory(category: Category)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertBulkCategories(categories: List<Category>?)
+
+    @Query("DELETE FROM category")
+    fun clearAll()
 }

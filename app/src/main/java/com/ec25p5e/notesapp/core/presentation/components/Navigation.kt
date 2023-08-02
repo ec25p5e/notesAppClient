@@ -27,7 +27,7 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.NotesScreen.route,
+        startDestination = Screen.SplashScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         composable(Screen.SplashScreen.route) {
@@ -45,7 +45,7 @@ fun Navigation(
                         route = Screen.LoginScreen.route,
                         inclusive = true
                     )
-                    navController.navigate(route = Screen.MainFeedScreen.route)
+                    navController.navigate(route = Screen.NotesScreen.route)
                 },
                 scaffoldState = scaffoldState
             )

@@ -69,4 +69,8 @@
     <string name="label_select_category">Seleziona categoria</string>
     <string name="error_category_name_empty">Il nome della categoria non può essere vuoto</string>
     <string name="category_created">Categoria creata</string>
+    <string name="dialog_save_en_cours">Salvataggio nota...</string>
+    <string name="loading">Caricamento in corso...</string>
+    <string name="success_text">Successo</string>
+    <string name="note_created_text">Nota creata!</string>
 </resources>

@@ -3,12 +3,11 @@ package com.ec25p5e.notesapp.di
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
-import com.ec25p5e.notesapp.feature_note.data.remote.NoteApi
+import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
+import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
 import com.ec25p5e.notesapp.feature_note.data.repository.CategoryRepositoryImpl
 import com.ec25p5e.notesapp.feature_note.data.repository.NoteRepositoryImpl
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.AddCategory
@@ -60,6 +59,17 @@ object NoteModule {
 
     @Provides
     @Singleton
+    fun provideCategoryApi(client: OkHttpClient): CategoryApi {
+        return Retrofit.Builder()
+            .baseUrl(CategoryApi.BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CategoryApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideNoteRepository(db: NoteDatabase,
                               api: NoteApi,
                               sharedPreferences: SharedPreferences): NoteRepository {
@@ -68,8 +78,12 @@ object NoteModule {
 
     @Provides
     @Singleton
-    fun provideCategoryRepository(db: NoteDatabase): CategoryRepository {
-        return CategoryRepositoryImpl(db.categoryDao)
+    fun provideCategoryRepository(
+        db: NoteDatabase,
+        api: CategoryApi,
+        sharedPreferences: SharedPreferences
+    ): CategoryRepository {
+        return CategoryRepositoryImpl(db.categoryDao, api, sharedPreferences)
     }
 
     @Provides

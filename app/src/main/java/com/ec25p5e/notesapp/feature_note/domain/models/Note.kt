@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_note.domain.model
+package com.ec25p5e.notesapp.feature_note.domain.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,10 +9,14 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
 import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
 
 @Entity
-data class Category(
-    val name: String,
-    val color: Int,
+data class Note(
+    val title: String,
+    val content: String,
     val timestamp: Long,
+    val color: Int,
+    val isArchived: Boolean = false,
+    val categoryId: Int = 1,
+    val remoteId: String = "",
     @PrimaryKey val id: Int? = null
 ) {
 
@@ -22,7 +26,8 @@ data class Category(
             LightGreen,
             Violet,
             BabyBlue,
-            RedPink,
+            RedPink
         )
     }
 }
+

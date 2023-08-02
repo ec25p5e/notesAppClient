@@ -21,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,26 +38,28 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ch.qos.logback.core.util.Loader.getResources
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceLarge
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
-import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
+import com.ec25p5e.notesapp.core.util.Constants.MIN_NOTE_TITLE_LENGTH
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
+import com.ec25p5e.notesapp.feature_note.presentation.util.AddEditNoteError
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -71,16 +74,17 @@ fun AddEditNoteScreen(
     onNavigateUp: () -> Unit = {},
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
-    viewModelCategory: CategoryViewModel = hiltViewModel()
+    viewModelCategory: CategoryViewModel = hiltViewModel(),
 ) {
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
+    val titleState = viewModel.titleState.value
+    val contentState = viewModel.contentState.value
     val categoryState = viewModelCategory.state.value
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val isSavingState = viewModel.isSaving.value
     val scaffoldStateBottomSheet = rememberBottomSheetScaffoldState()
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
+            Color(if (noteColor != -1) noteColor else viewModel.colorState.value)
         )
     }
     val categoryBackgroundAnimatable = remember {
@@ -97,17 +101,34 @@ fun AddEditNoteScreen(
                 is UiEventNote.ShowSnackbar -> {
                     Toast.makeText(
                         context,
-                        context.resources.getText(event.uiText.toString().toInt()),
+                        event.uiText!!.asString(context),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
                 is UiEventNote.SaveNote -> {
                     onNavigateUp()
                 }
+                is UiEventNote.ShowLoader -> {
+                    viewModel.onEvent(AddEditNoteEvent.IsSaveNote)
+                }
                 else -> {
                 }
             }
         }
+    }
+
+    if(isSavingState) {
+        StandardLoadingAlert(
+            modifier = Modifier.fillMaxWidth(),
+            icon = {
+                Icon(painterResource(id = R.drawable.ic_save), contentDescription = null) },
+            confirmButton = {
+            },
+            onDismissRequest = {
+            },
+            title = {
+            }
+        )
     }
 
     Column(
@@ -155,6 +176,11 @@ fun AddEditNoteScreen(
                 },
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text,
+                error = when(titleState.error) {
+                    is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                    is AddEditNoteError.InputTooShort -> stringResource(id = R.string.field_too_short_text_error, MIN_NOTE_TITLE_LENGTH)
+                    else -> ""
+                }
             )
 
             Spacer(modifier = Modifier.height(SpaceMedium))
@@ -175,6 +201,11 @@ fun AddEditNoteScreen(
                 singleLine = false,
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Text,
+                error = when(contentState.error) {
+                    is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                    is AddEditNoteError.InputTooShort -> stringResource(id = R.string.field_too_short_text_error, MIN_NOTE_TITLE_LENGTH)
+                    else -> ""
+                }
             )
         }
     }
@@ -237,7 +268,7 @@ fun AddEditNoteScreen(
                                 .background(color)
                                 .border(
                                     width = 3.dp,
-                                    color = if (viewModel.noteColor.value == colorInt) {
+                                    color = if (viewModel.colorState.value == colorInt) {
                                         Color.Black
                                     } else Color.Transparent,
                                     shape = CircleShape

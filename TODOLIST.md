@@ -14,6 +14,7 @@
 
 ### In corso:
 - Fare la sincronizzazione con l'API
+- Aggiungere il pulsante sincronizza
 
 
 

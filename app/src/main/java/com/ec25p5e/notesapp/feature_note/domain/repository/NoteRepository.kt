@@ -1,25 +1,25 @@
 package com.ec25p5e.notesapp.feature_note.domain.repository
 
 import com.ec25p5e.notesapp.core.util.Resource
-import com.ec25p5e.notesapp.feature_note.data.remote.response.NoteResponse
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.core.util.SimpleResource
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
 
-    fun getNotes(): Flow<List<Note>>
-
     fun getNotesForArchive(): Flow<List<Note>>
 
-    fun getAllNotes(fetchFromRemote: Boolean): Flow<Resource<List<Note>>>
+    suspend fun getAllNotes(fetchFromRemote: Boolean): Resource<Flow<List<Note>>>
+
+    suspend fun pushNotes(): SimpleResource
 
     fun getNotesByCategory(categoryId: Int): Flow<List<Note>>
 
     fun getNoteById(id: Int): Note?
 
-    fun insertNote(note: Note)
+    suspend fun insertNote(note: Note): SimpleResource
 
-    fun deleteNote(note: Note)
+    suspend fun deleteNote(note: Note): SimpleResource
 
     fun archiveNote(id: Int)
 

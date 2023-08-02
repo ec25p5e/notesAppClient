@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 
 @Composable
 fun NoteItem(

@@ -4,9 +4,11 @@ import com.ec25p5e.notesapp.core.util.Event
 import com.ec25p5e.notesapp.core.util.UiText
 
 sealed class UiEventNote: Event() {
-    data class ShowSnackbar(val uiText: UiText): UiEventNote()
+    data class ShowSnackbar(val uiText: UiText?): UiEventNote()
     data class Navigate(val route: String): UiEventNote()
+    object ShowLoader: UiEventNote()
 
     object NavigateUp: UiEventNote()
     object SaveNote: UiEventNote()
+    object IsLoadingPage: UiEventNote()
 }

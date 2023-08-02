@@ -1,23 +1,24 @@
 package com.ec25p5e.notesapp.feature_note.domain.use_case.note
 
-import android.content.res.Resources
-import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidNoteException
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.core.util.SimpleResource
+import com.ec25p5e.notesapp.feature_note.domain.models.AddEditNoteResult
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
+import com.ec25p5e.notesapp.feature_note.presentation.util.AddEditNoteError
 
 class AddNote(
     private val repository: NoteRepository
 ) {
 
-    @Throws(InvalidNoteException::class)
-    suspend operator fun invoke(note: Note) {
-        if(note.title.isBlank())
-            throw InvalidNoteException(Resources.getSystem().getString(R.string.error_note_title_empty))
+    suspend operator fun invoke(note: Note): AddEditNoteResult {
+        val titleError = if(note.title.isBlank()) AddEditNoteError.FieldEmpty else null
+        val contentError = if(note.content.isBlank()) AddEditNoteError.FieldEmpty else null
 
-        if(note.content.isBlank())
-            throw InvalidNoteException(Resources.getSystem().getString(R.string.error_note_content_empty))
+        if(titleError != null || contentError != null)
+            return AddEditNoteResult(titleError, contentError)
 
-        repository.insertNote(note)
+        return AddEditNoteResult(
+            result = repository.insertNote(note)
+        )
     }
 }

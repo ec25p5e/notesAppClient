@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.util.UiText
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.domain.util.NoteOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
@@ -32,6 +32,9 @@ class NotesViewModel @Inject constructor(
     private var _filterCategory: Int = -1
     private var _noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending)
 
+    private val _isLoading = mutableStateOf(false)
+    var isLoading: State<Boolean> = _isLoading
+
     private var recentlyDeletedNote: Note? = null
     private var getNotesJob: Job? = null
 
@@ -39,7 +42,9 @@ class NotesViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        viewModelScope.launch {  _eventFlow.emit(UiEventNote.IsLoadingPage) }
         getNotes(_noteOrder)
+        viewModelScope.launch {  _eventFlow.emit(UiEventNote.IsLoadingPage) }
     }
 
     fun onEvent(event: NotesEvent) {
@@ -62,13 +67,18 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.DeleteNote -> {
                 viewModelScope.launch {
-                    noteUseCases.deleteNote(event.note)
+                    val deleteResponse = noteUseCases.deleteNote(event.note)
                     recentlyDeletedNote = event.note
 
-                    _eventFlow.emit(UiEventNote.ShowSnackbar(
-                        UiText.StringResource(R.string.deleted_note)
-                    ))
+                    if(deleteResponse.uiText != null) {
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(deleteResponse.uiText))
+                    } else {
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(R.string.deleted_note)))
+                    }
                 }
+            }
+            is NotesEvent.FetchNote -> {
+
             }
             is NotesEvent.ArchiveNote -> {
                 viewModelScope.launch {
@@ -92,6 +102,9 @@ class NotesViewModel @Inject constructor(
                     }
                 }
             }
+            is NotesEvent.IsLoadingPage -> {
+                _isLoading.value = !_isLoading.value
+            }
             is NotesEvent.ToggleOrderSection -> {
                 _state.value = state.value.copy(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
@@ -101,18 +114,22 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun getNotes(noteOrder: NoteOrder) {
-        getNotesJob?.cancel()
-        getNotesJob = noteUseCases.getNotes(noteOrder)
-            .onEach { notes ->
-                _state.value = state.value.copy(
-                    notes = notes,
-                    noteOrder = noteOrder
-                )
-            }
-            .launchIn(viewModelScope)
+        viewModelScope.launch {
+            getNotesJob?.cancel()
+            getNotesJob = noteUseCases.getNotes(noteOrder, true)
+                .onEach { notes ->
+                    _state.value = state.value.copy(
+                        notes = notes,
+                        noteOrder = noteOrder
+                    )
+                }
+                .launchIn(viewModelScope)
+        }
     }
 
     private fun getNotesByCategory(categoryId: Int, noteOrder: NoteOrder) {
+        Log.i("NotesViewModel", categoryId.toString())
+
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotesByCategory(categoryId, noteOrder)
             .onEach { notes ->

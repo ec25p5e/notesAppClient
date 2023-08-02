@@ -1,6 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.domain.use_case.note
 
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import com.ec25p5e.notesapp.feature_note.domain.util.NoteOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType

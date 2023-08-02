@@ -68,4 +68,11 @@
     <string name="label_select_category">Select category</string>
     <string name="error_category_name_empty">The name of the category couldn\'t be empty</string>
     <string name="category_created">Category created</string>
+    <string name="dialog_save_en_cours">Saving note...</string>
+    <string name="loading">Loading...</string>
+    <string name="success_text">Success</string>
+    <string name="note_created_text">Note created</string>
+    <string name="update_data_title">Fetch data</string>
+    <string name="note_updated_text">Note updated\n</string>
+    <string name="field_too_short_text_error">Minimum length for this field is %s</string>
 </resources>

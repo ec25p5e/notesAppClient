@@ -1,8 +1,6 @@
 package com.ec25p5e.notesapp.core.presentation.components
 
-import android.text.style.TabStopSpan.Standard
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,10 +16,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -41,10 +35,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.ui.theme.HintGray
 import com.ec25p5e.notesapp.core.presentation.ui.theme.IconSizeMedium
-import com.ec25p5e.notesapp.core.presentation.util.TestTags
+import com.ec25p5e.notesapp.core.util.TestTags
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable

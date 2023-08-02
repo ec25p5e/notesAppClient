@@ -1,7 +1,7 @@
 package com.ec25p5e.notesapp.feature_note.presentation.categories
 
 import androidx.compose.ui.focus.FocusState
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 
 sealed class CategoryEvent {
     data class EnteredTitle(val value: String): CategoryEvent()
@@ -16,4 +16,6 @@ sealed class CategoryEvent {
     object RestoreCategory: CategoryEvent()
     object ToggleCategoryCreation: CategoryEvent()
     object SaveCategory: CategoryEvent()
+    object FetchCategory: CategoryEvent()
+    object IsCreateCategory: CategoryEvent()
 }

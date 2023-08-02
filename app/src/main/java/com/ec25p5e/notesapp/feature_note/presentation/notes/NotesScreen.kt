@@ -58,6 +58,8 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.components.LoadingAnimation
+import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
@@ -65,10 +67,9 @@ import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
-import com.ec25p5e.notesapp.feature_note.domain.model.Category
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
-import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
@@ -90,7 +91,9 @@ fun NotesScreen(
 ) {
     val state = viewModel.state.value
     val categoryState = viewModelCategory.state.value
+    val isCreatingCategory = viewModelCategory.isCreating.value
     val categoryTitleState = viewModelCategory.categoryTitle.value
+    val isLoadingPage = viewModel.isLoading.value
 
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
@@ -107,7 +110,14 @@ fun NotesScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEventNote.ShowSnackbar -> {
-                    Toast.makeText(context, (event.uiText to context).toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is UiEventNote.IsLoadingPage -> {
+                    viewModel.onEvent(NotesEvent.IsLoadingPage)
                 }
                 else -> {
                 }
@@ -119,12 +129,33 @@ fun NotesScreen(
         viewModelCategory.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEventNote.ShowSnackbar -> {
-                    Toast.makeText(context, (event.uiText to context).toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is UiEventNote.ShowLoader -> {
+                    viewModelCategory.onEvent(CategoryEvent.IsCreateCategory)
                 }
                 else -> {
                 }
             }
         }
+    }
+
+    if(isCreatingCategory) {
+        StandardLoadingAlert(
+            modifier = Modifier.fillMaxWidth(),
+            icon = {
+                Icon(painterResource(id = R.drawable.ic_save), contentDescription = null) },
+            confirmButton = {
+            },
+            onDismissRequest = {
+            },
+            title = {
+            }
+        )
     }
 
     Column(
@@ -163,6 +194,20 @@ fun NotesScreen(
                                 Text(stringResource(id = R.string.new_category_title)) },
                             onClick = {
                                 viewModelCategory.onEvent(CategoryEvent.ToggleCategoryCreation)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_category),
+                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.update_data_title)) },
+                            onClick = {
+                                viewModelCategory.onEvent(CategoryEvent.FetchCategory)
+                                viewModel.onEvent(NotesEvent.FetchNote)
                             },
                             leadingIcon = {
                                 Icon(
@@ -291,7 +336,11 @@ fun NotesScreen(
                                                     )
                                                 )
                                             }
-                                            viewModelCategory.onEvent(CategoryEvent.ChangeColor(colorInt))
+                                            viewModelCategory.onEvent(
+                                                CategoryEvent.ChangeColor(
+                                                    colorInt
+                                                )
+                                            )
                                         }
                                 )
                             }
@@ -369,111 +418,138 @@ fun NotesScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LazyRow(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)) {
-                items(categoryState.categories) { category ->
-                    val catId = category.id
-                    val colorInt = category.color
-
-                    CategoryItem(
-                        category = category,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(
-                                width = 1.5.dp,
-                                color = if ((viewModelCategory.categoryId.value == catId) ||
-                                    (catId == 1 && viewModelCategory.categoryId.value == 0)) {
-                                    Color.Black
-                                } else Color.Transparent,
-                                shape = RoundedCornerShape(10.dp)
-                            ),
-                        clickable = {
-                            scope.launch {
-                                categoryBackgroundAnimatable.animateTo(
-                                    targetValue = Color(colorInt),
-                                    animationSpec = tween(
-                                        durationMillis = 500
-                                    )
-                                )
-                            }
-                            catId?.let {
-                                CategoryEvent.ChangeCategorySelected(it)
-                            }?.let { viewModelCategory.onEvent(it) }
-
-                            catId?.let {
-                                NotesEvent.FilterNotesByCategory(it)
-                            }?.let {viewModel.onEvent(it) }
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
-            }
-
-            if(state.notes.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.8f)
-                        .padding(bottom = 10.dp),
-                    contentPadding = PaddingValues(10.dp)
+            if(isLoadingPage) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(
-                        items = state.notes,
-                        key = { note -> note.id!! },
-                        itemContent = { note ->
-                            val currentItem by rememberUpdatedState(note)
-                            val dismissState = rememberDismissState(
-                                confirmValueChange = {
-                                    when (it) {
-                                        DismissValue.DismissedToEnd -> {
-                                            viewModel.onEvent(NotesEvent.ArchiveNote(currentItem))
-                                            true
-                                        }
-                                        DismissValue.DismissedToStart -> {
-                                            viewModel.onEvent(NotesEvent.DeleteNote(currentItem))
-                                            true
-                                        }
-                                        else -> { false }
-                                    }
-                                }
-                            )
+                    Row {
+                        LoadingAnimation()
+                    }
 
-                            SwipeToDismiss(
-                                state = dismissState,
-                                modifier = Modifier
-                                    .padding(vertical = 1.dp)
-                                    .animateItemPlacement(),
-                                background = {
-                                    SwipeBackground(dismissState)
-                                },
-                                dismissContent = {
-                                    NoteItem(
-                                        note = note,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable {
-                                                onNavigate(
-                                                    Screen.CreateNoteScreen.route +
-                                                            "?noteId=${currentItem.id}&noteColor=${currentItem.color}"
-                                                )
-                                            },
-                                    )
-                                }
-                            )
-                        }
-                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Row {
+                        Text(
+                            text = stringResource(id = R.string.loading),
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
                 }
             } else {
-                Image(
-                    painter = painterResource(id = R.drawable.all_task_done),
-                    contentDescription = stringResource(id = R.string.cont_descr_image_all_task_done),
+                LazyRow(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.CenterHorizontally)
-                        .scale(0.5f)
-                )
+                        .padding(bottom = 10.dp)
+                ) {
+                    items(categoryState.categories) { category ->
+                        val catId = category.id
+                        val colorInt = category.color
+
+                        CategoryItem(
+                            category = category,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .border(
+                                    width = 1.5.dp,
+                                    color = if ((viewModelCategory.categoryId.value == catId) ||
+                                        (catId == 1 && viewModelCategory.categoryId.value == 0)
+                                    ) {
+                                        Color.Black
+                                    } else Color.Transparent,
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                            clickable = {
+                                scope.launch {
+                                    categoryBackgroundAnimatable.animateTo(
+                                        targetValue = Color(colorInt),
+                                        animationSpec = tween(
+                                            durationMillis = 500
+                                        )
+                                    )
+                                }
+                                catId?.let {
+                                    CategoryEvent.ChangeCategorySelected(it)
+                                }?.let { viewModelCategory.onEvent(it) }
+
+                                catId?.let {
+                                    NotesEvent.FilterNotesByCategory(it)
+                                }?.let { viewModel.onEvent(it) }
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                }
+
+                if (state.notes.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.8f)
+                            .padding(bottom = 10.dp),
+                        contentPadding = PaddingValues(10.dp)
+                    ) {
+                        items(
+                            items = state.notes,
+                            key = { note -> note.id!! },
+                            itemContent = { note ->
+                                val currentItem by rememberUpdatedState(note)
+                                val dismissState = rememberDismissState(
+                                    confirmValueChange = {
+                                        when (it) {
+                                            DismissValue.DismissedToEnd -> {
+                                                viewModel.onEvent(NotesEvent.ArchiveNote(currentItem))
+                                                true
+                                            }
+
+                                            DismissValue.DismissedToStart -> {
+                                                viewModel.onEvent(NotesEvent.DeleteNote(currentItem))
+                                                true
+                                            }
+
+                                            else -> {
+                                                false
+                                            }
+                                        }
+                                    }
+                                )
+
+                                SwipeToDismiss(
+                                    state = dismissState,
+                                    modifier = Modifier
+                                        .padding(vertical = 1.dp)
+                                        .animateItemPlacement(),
+                                    background = {
+                                        SwipeBackground(dismissState)
+                                    },
+                                    dismissContent = {
+                                        NoteItem(
+                                            note = note,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clickable {
+                                                    onNavigate(
+                                                        Screen.CreateNoteScreen.route +
+                                                                "?noteId=${currentItem.id}&noteColor=${currentItem.color}"
+                                                    )
+                                                },
+                                        )
+                                    }
+                                )
+                            }
+                        )
+                    }
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.all_task_done),
+                        contentDescription = stringResource(id = R.string.cont_descr_image_all_task_done),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.CenterHorizontally)
+                            .scale(0.5f)
+                    )
+                }
             }
         }
     }

@@ -1,9 +1,10 @@
 package com.ec25p5e.notesapp.feature_note.data.remote.response
 
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 
 data class NoteResponse(
     val id: String,
+    val noteId: String,
     val title: String,
     val content: String,
     val timestamp: Long,
@@ -14,13 +15,13 @@ data class NoteResponse(
 
     fun toNote(): Note {
         return Note(
-            id = id.toInt(),
             title = title,
             content = content,
             timestamp = timestamp,
             color = color,
             isArchived = isArchived,
-            categoryId = categoryId
+            categoryId = categoryId,
+            remoteId = noteId // Remote note ID
         )
     }
 }

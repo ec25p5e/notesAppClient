@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ec25p5e.notesapp.feature_note.domain.model.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.domain.util.ArchiveOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
