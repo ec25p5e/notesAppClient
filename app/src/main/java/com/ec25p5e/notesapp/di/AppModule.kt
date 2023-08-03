@@ -31,25 +31,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(sharedPreferences: SharedPreferences): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor {
-                val token = sharedPreferences.getString(Constants.KEY_JWT_TOKEN, "")
-                val modifiedRequest = it.request().newBuilder()
-                    .addHeader("Authorization", "Bearer $token")
-                    .build()
-                it.proceed(modifiedRequest)
-            }
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-            )
-            .build()
-    }
-
-    @Provides
-    @Singleton
     fun provideImageLoader(app: Application): ImageLoader {
         return ImageLoader.Builder(app)
             .crossfade(true)
@@ -72,5 +53,24 @@ object AppModule {
         gson: Gson
     ): PreferencesManager {
         return PreferencesManager(sharedPreferences, gson)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(preferencesManager: PreferencesManager): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor {
+                val token = preferencesManager.get<String>(Constants.KEY_JWT_TOKEN)
+                val modifiedRequest = it.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+                it.proceed(modifiedRequest)
+            }
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
+            .build()
     }
 }

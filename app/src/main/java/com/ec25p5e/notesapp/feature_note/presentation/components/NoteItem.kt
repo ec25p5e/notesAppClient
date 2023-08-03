@@ -92,7 +92,8 @@ fun NoteItem(
                     .padding(top = 8.dp)
             ) {
                 Row {
-                    if(!note.image.isNullOrBlank()) {
+                    if(
+                        note.image.contains("content")) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_image),
                             contentDescription = stringResource(id = R.string.is_image_present),

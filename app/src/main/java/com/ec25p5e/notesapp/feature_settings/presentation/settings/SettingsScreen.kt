@@ -15,7 +15,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -27,8 +26,6 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
-import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
-import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsClickableComp
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGroup
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp
@@ -131,15 +128,13 @@ fun SettingsScreen(
              * General section
              */
             SettingsGroup(name = R.string.settings_general) {
-                state.settings!!.isAutoSaveEnabled?.let {
-                    SettingsSwitchComp(
-                        name = R.string.settings_general_auto_save,
-                        icon = R.drawable.ic_save,
-                        iconDesc = R.string.settings_general_auto_save,
-                        state = it
-                    ) {
-                        viewModel.onEvent(SettingsEvent.ToggleAutoSave)
-                    }
+                SettingsSwitchComp(
+                    name = R.string.settings_general_auto_save,
+                    icon = R.drawable.ic_save,
+                    iconDesc = R.string.settings_general_auto_save,
+                    state = state.settings!!.isAutoSaveEnabled
+                ) {
+                    viewModel.onEvent(SettingsEvent.ToggleAutoSave)
                 }
 
                 SettingsClickableComp(
@@ -177,16 +172,17 @@ fun SettingsScreen(
                     }
                 )
 
-                /* SettingsSwitchComp(
+                SettingsSwitchComp(
                     name = R.string.settings_advanced_screenshot_note,
                     icon = R.drawable.ic_screenshot,
                     iconDesc = R.string.settings_advanced_screenshot_note,
-                    state = viewModel.isSwitchOn
+                    state = state.settings!!.isScreenshotEnabled
                 ) {
-                    viewModel.toggleSwitch()
+                    viewModel.onEvent(SettingsEvent.ToggleScreenShotMode)
                 }
 
-                SettingsSwitchComp(
+
+                /* SettingsSwitchComp(
                     name = R.string.settings_advanced_block_sharing,
                     icon = R.drawable.ic_block_sharing,
                     iconDesc = R.string.settings_advanced_block_sharing,

@@ -1,17 +1,20 @@
 package com.ec25p5e.notesapp.feature_settings.data.repository
 
-import android.content.SharedPreferences
+import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
 import com.ec25p5e.notesapp.feature_settings.domain.repository.SettingsRepository
 
 class SettingsRepositoryImpl(
-    private val sharedPreferences: SharedPreferences
+    private val preferencesManager: PreferencesManager
 ): SettingsRepository {
 
     override fun editSharedPref(settings: Settings) {
-        sharedPreferences.edit()
-            .putString(Constants.KEY_SETTINGS, settings.toString())
+        preferencesManager.put(settings, Constants.KEY_SETTINGS)
+    }
+
+    override fun getSharedPreferences(key: String): Settings {
+        return preferencesManager.get<Settings>(key)!!
     }
 
     override fun deleteSharedPref() {

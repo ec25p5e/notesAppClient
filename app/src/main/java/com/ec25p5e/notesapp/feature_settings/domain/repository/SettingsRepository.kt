@@ -6,5 +6,7 @@ interface SettingsRepository {
 
     fun editSharedPref(settings: Settings)
 
+    fun getSharedPreferences(key: String): Settings
+
     fun deleteSharedPref()
 }

@@ -11,6 +11,7 @@ fun NoteResponse.toNote(): Note {
         color = color,
         isArchived = isArchived,
         categoryId = categoryId,
-        remoteId = noteId // Remote note ID
+        remoteId = noteId, // Remote note ID,
+        image = image
     )
 }

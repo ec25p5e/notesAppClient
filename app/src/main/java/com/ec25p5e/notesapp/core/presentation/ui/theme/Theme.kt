@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,6 +38,25 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val AcquaTheme = lightColorScheme(
+    primary = At_Primary,
+    secondary = At_Secondary,
+    tertiary = At_Third
+)
+
+private val NatureTheme = lightColorScheme(
+    primary = Nt_Primary,
+    secondary = Nt_Secondary,
+    tertiary = Nt_Third,
+    background = Nt_Primary,
+    surface = Nt_Secondary,
+    onPrimary = Nt_Primary,
+    onSecondary = Nt_Secondary,
+    onTertiary = Nt_Third,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F)
+)
+
 @Composable
 fun NotesAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -51,7 +71,7 @@ fun NotesAppTheme(
         }
 
         darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        else -> NatureTheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {

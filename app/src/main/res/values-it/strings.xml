@@ -106,6 +106,12 @@
     <string name="settings_about_us_info">Informazioni sull\'app</string>
     <string name="settings_general_theme">Tema</string>
     <string name="settings_general_unlock_method">Metodi di sblocco</string>
-    <string name="settings_advanced_screenshot_note">Blocca l\'acquisizione dello schermo</string>
+    <string name="settings_advanced_screenshot_note">Consenti acquisizione schermo</string>
     <string name="settings_advanced_block_sharing">Bloccare la condivisione delle note</string>
+    <string name="auto_save_enabled">Salvataggio automatico attivo</string>
+    <string name="auto_save_disabled">Salvataggio automatico disattivato</string>
+    <string name="all_notes_string">Tutte le note</string>
+    <string name="screenshot_mode_disabled">Acquisizione dello schermo attivata</string>
+    <string name="screenshot_mode_enabled">Acquisizione dello schermo disattivata</string>
+    <string name="auto_save_btn_text">Salvataggio automatico</string>
 </resources>

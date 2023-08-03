@@ -10,11 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidNoteException
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
+import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
+    private val settingsUseCases: SettingsUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -39,8 +42,10 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteCategory = mutableStateOf(1)
     val noteCategory: State<Int> = _noteCategory
 
-    private val _isSaving = mutableStateOf(false)
-    val isSaving: State<Boolean> = _isSaving
+    private val _state = mutableStateOf(AddEditNoteState(
+        isAutoSaveEnabled = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isAutoSaveEnabled
+    ))
+    val state: State<AddEditNoteState> = _state
 
     private val _chosenImageUri = mutableStateOf<Uri?>(null)
     val chosenImageUri: State<Uri?> = _chosenImageUri
@@ -98,7 +103,9 @@ class AddEditNoteViewModel @Inject constructor(
                 )
             }
             is AddEditNoteEvent.IsSaveNote -> {
-                _isSaving.value = !_isSaving.value
+                _state.value = _state.value.copy(
+                    isSaving = _state.value.isSaving.not()
+                )
             }
             is AddEditNoteEvent.ChangeColor -> {
                 _colorState.value = event.color

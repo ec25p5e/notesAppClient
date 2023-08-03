@@ -1,8 +1,10 @@
 package com.ec25p5e.notesapp.feature_auth.data.repository
 
 import android.content.SharedPreferences
+import androidx.compose.ui.platform.LocalContext
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.data.util.PreferencesManager
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
@@ -11,12 +13,20 @@ import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_auth.data.remote.request.CreateAccountRequest
 import com.ec25p5e.notesapp.feature_auth.data.remote.request.LoginRequest
 import com.ec25p5e.notesapp.feature_auth.domain.repository.AuthRepository
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
+import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
+import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
+import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
+import com.google.common.io.Resources
 import retrofit2.HttpException
 import java.io.IOException
 
 class AuthRepositoryImpl(
     private val api: AuthApi,
-    private val sharedPreferencesManager: PreferencesManager
+    private val sharedPreferencesManager: PreferencesManager,
+    private val categoryRepository: CategoryRepository,
+    private val noteRepository: NoteRepository
 ): AuthRepository {
 
     override suspend fun register(
@@ -57,16 +67,33 @@ class AuthRepositoryImpl(
                 response.data?.let { authResponse ->
                     println("Overriding token with ${authResponse.token}")
 
-                    sharedPreferencesManager.put(Constants.KEY_JWT_TOKEN, authResponse.token)
-                    sharedPreferencesManager.put(Constants.KEY_USER_ID, authResponse.userId)
+                    sharedPreferencesManager.put(authResponse.token, Constants.KEY_JWT_TOKEN)
+                    sharedPreferencesManager.put(authResponse.userId, Constants.KEY_USER_ID)
+                    sharedPreferencesManager.put(Settings(
+                        isAutoSaveEnabled = false,
+                        isScreenshotEnabled = true
+                    ), Constants.KEY_SETTINGS)
 
-                    /* sharedPreferences.edit()
-                        .putString(Constants.KEY_JWT_TOKEN, authResponse.token)
-                        .putString(Constants.KEY_USER_ID, authResponse.userId)
-                        .apply() */
+                    categoryRepository.insertCategory(
+                        Category(
+                            name = "All notes",
+                            color = -8266006,
+                            timestamp = System.currentTimeMillis()
+                        )
+                    )
+
+                    noteRepository.insertNote(
+                        Note(
+                            title = "Simple note",
+                            content = "This is a content of simple note",
+                            color = -8266006,
+                            timestamp = System.currentTimeMillis(),
+                            isArchived = false,
+                            categoryId = 1,
+                            image = ""
+                        )
+                    )
                 }
-
-
 
                 Resource.Success(Unit)
             } else {

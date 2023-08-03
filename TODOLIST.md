@@ -14,7 +14,8 @@
 
 
 
-### IImplementare la schermata "impostazioni"n corso:
+### In corso
+- Salvataggio automatico
 - 
   
 
@@ -37,3 +38,4 @@
     - Converti in audio
   - Spostare il pulsante di salvataggio in basso
   - Ridurre lo spessore dello spazio quando si seleziona una categoria
+  - Implementare la schermata "impostazioni"

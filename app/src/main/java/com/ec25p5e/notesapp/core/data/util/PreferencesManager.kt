@@ -10,9 +10,7 @@ class PreferencesManager(
 ) {
 
     fun <T> put(`object`: T, key: String) {
-        val jsonString = GsonBuilder()
-            .create()
-            .toJson(`object`)
+        val jsonString = gson.toJson(`object`)
 
         sharedPreferences.edit()
             .putString(key, jsonString)
@@ -22,7 +20,6 @@ class PreferencesManager(
 
     inline fun <reified T> get(key: String): T? {
         val value = sharedPreferences.getString(key, null)
-
         return gson.fromJson(value,T::class.java)
     }
 }

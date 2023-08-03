@@ -11,4 +11,5 @@ data class NoteResponse(
     val color: Int,
     val isArchived: Boolean,
     val categoryId: Int,
+    val image: String,
 )

@@ -19,7 +19,7 @@ data class Note(
     val isArchived: Boolean = false,
     val categoryId: Int = 1,
     val remoteId: String = "",
-    val image: String? = "",
+    val image: String,
     @PrimaryKey val id: Int? = null
 ) {
 

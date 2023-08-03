@@ -94,7 +94,7 @@ fun AddEditNoteScreen(
     val contentState = viewModel.contentState.value
     val categoryState = viewModelCategory.state.value
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-    val isSavingState = viewModel.isSaving.value
+    val state = viewModel.state.value
     val scaffoldStateBottomSheet = rememberBottomSheetScaffoldState()
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -135,7 +135,7 @@ fun AddEditNoteScreen(
         }
     }
 
-    if(isSavingState) {
+    if(state.isSaving) {
         StandardLoadingAlert(
             modifier = Modifier.fillMaxWidth(),
             icon = {
@@ -153,7 +153,10 @@ fun AddEditNoteScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         StandardToolbar(
-            onNavigateUp = onNavigateUp,
+            onNavigateUp = {
+                viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                onNavigateUp()
+            },
             title = {
                 Text(
                     text = titleState.text,
@@ -242,15 +245,20 @@ fun AddEditNoteScreen(
                 onClick = {
                     viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
-                enabled = !viewModel.isSaving.value,
+                enabled = (!state.isSaving && !state.isAutoSaveEnabled),
                 modifier = Modifier.align(Alignment.End),
             ) {
                 Text(
-                    text = stringResource(id = R.string.save_btn_text),
+                    text = stringResource(id =
+                        if(!state.isAutoSaveEnabled) {
+                            R.string.save_btn_text
+                        }else {
+                           R.string.auto_save_btn_text
+                        }),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.width(SpaceSmall))
-                if (viewModel.isSaving.value) {
+                if (state.isSaving) {
                     CircularProgressIndicator(
                         color = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier

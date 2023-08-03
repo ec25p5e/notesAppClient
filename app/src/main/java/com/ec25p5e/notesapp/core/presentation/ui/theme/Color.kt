@@ -24,3 +24,11 @@ val RedPink = Color(0xfff48fb1)
 val BabyBlue = Color(0xff81deea)
 val Violet = Color(0xffcf94da)
 val LightGreen = Color(0xffe7ed9b)
+
+val At_Primary = Color(0xff516fd6)
+val At_Secondary = Color(0xff2e96de)
+val At_Third = Color(0xff1090e1)
+
+val Nt_Primary = Color(0xff209d90)
+val Nt_Secondary = Color(0xff6fcaa9)
+val Nt_Third = Color(0xff85b85b)

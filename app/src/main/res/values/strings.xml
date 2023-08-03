@@ -105,8 +105,12 @@
     <string name="settings_about_us_info">Info on Notes App</string>
     <string name="settings_general_theme">App theme</string>
     <string name="settings_general_unlock_method">Unlock note method</string>
-    <string name="settings_advanced_screenshot_note">Block note screenshot</string>
+    <string name="settings_advanced_screenshot_note">Consent note screenshot</string>
     <string name="settings_advanced_block_sharing">Block note sharing</string>
     <string name="auto_save_enabled">Auto save enabled</string>
     <string name="auto_save_disabled">Auto save disabled</string>
+    <string name="all_notes_string">All notes</string>
+    <string name="screenshot_mode_disabled">Screenshot mode disabled</string>
+    <string name="screenshot_mode_enabled">Screenshot mode enabled</string>
+    <string name="auto_save_btn_text">Auto save enabled</string>
 </resources>

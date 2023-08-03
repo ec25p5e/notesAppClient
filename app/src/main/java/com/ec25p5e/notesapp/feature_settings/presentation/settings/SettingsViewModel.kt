@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
 import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
@@ -24,9 +25,6 @@ class SettingsViewModel @Inject constructor(
     private val settingsUseCases: SettingsUseCases
 ) : ViewModel() {
 
-    private val _isSwitchOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var isSwitchOn = _isSwitchOn.asStateFlow()
-
     private val _textPreference: MutableStateFlow<String> = MutableStateFlow("")
     var textPreference = _textPreference.asStateFlow()
 
@@ -36,7 +34,9 @@ class SettingsViewModel @Inject constructor(
     // to get separator for the locale
     private val separatorChar = DecimalFormatSymbols.getInstance(Locale.ENGLISH).decimalSeparator
 
-    private val _state = mutableStateOf(SettingsState())
+    private val _state = mutableStateOf(SettingsState(
+        settings = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS)
+    ))
     val state: State<SettingsState> = _state
 
     private val _eventFlow = MutableSharedFlow<UiEventSettings>()
@@ -50,9 +50,12 @@ class SettingsViewModel @Inject constructor(
 
                     _state.value = _state.value.copy(
                         settings = Settings(
-                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled.not()
+                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled.not(),
+                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled
                         )
                     )
+
+                    settingsUseCases.editSharedPreferences(_state.value.settings!!)
 
                     _eventFlow.emit(UiEventSettings.ShowSnackbar(
                         UiText.StringResource(id =
@@ -61,15 +64,35 @@ class SettingsViewModel @Inject constructor(
                             } else {
                                 R.string.auto_save_enabled
                             }
-                    )))
+                        )
+                    ))
+                }
+            }
+            is SettingsEvent.ToggleScreenShotMode -> {
+                viewModelScope.launch {
+                    val oldValue = _state.value.settings!!.isScreenshotEnabled
+
+                    _state.value = _state.value.copy(
+                        settings = Settings(
+                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled,
+                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled.not()
+                        )
+                    )
+
+                    settingsUseCases.editSharedPreferences(_state.value.settings!!)
+
+                    _eventFlow.emit(UiEventSettings.ShowSnackbar(
+                        UiText.StringResource(id =
+                        if(oldValue) {
+                            R.string.screenshot_mode_enabled
+                        } else {
+                            R.string.screenshot_mode_disabled
+                        }
+                        )
+                    ))
                 }
             }
         }
-    }
-
-    fun toggleSwitch(){
-        _isSwitchOn.value = _isSwitchOn.value.not()
-        // here is place for permanent storage handling - switch
     }
 
     fun saveText(finalText: String) {
@@ -94,10 +117,6 @@ class SettingsViewModel @Inject constructor(
     fun saveNumber(text: String) {
         val value = text.toDoubleOrNull()
             ?: 0 // default value / handle the error in some way - show toast or something
-    }
-
-    companion object {
-        const val TAG = "SettingsViewModel"
     }
 
 }
