@@ -123,6 +123,12 @@ class NotesViewModel @Inject constructor(
                     isDeleting = true
                 )
             }
+            is NotesEvent.ExportCsv -> {
+
+            }
+            is NotesEvent.ConvertInAudio -> {
+
+            }
         }
     }
 

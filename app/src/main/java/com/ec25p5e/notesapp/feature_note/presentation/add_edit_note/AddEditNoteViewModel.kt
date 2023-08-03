@@ -48,7 +48,7 @@ class AddEditNoteViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentNoteId: Int? = null
+    var currentNoteId: Int? = null
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -66,6 +66,7 @@ class AddEditNoteViewModel @Inject constructor(
                         )
                         _colorState.value = note.color
                         _noteCategory.value = note.categoryId
+                        _chosenImageUri.value = Uri.parse(note.image)
                     }
                 }
             }
@@ -117,6 +118,7 @@ class AddEditNoteViewModel @Inject constructor(
                         color = colorState.value,
                         id = currentNoteId,
                         categoryId = noteCategory.value,
+                        image = _chosenImageUri.value.toString()
                     )
 
                     val addingResult = noteUseCases.addNote(noteInsert)
@@ -149,5 +151,7 @@ class AddEditNoteViewModel @Inject constructor(
             }
         }
     }
+
+
 
 }

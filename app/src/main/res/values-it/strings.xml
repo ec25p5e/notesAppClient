@@ -81,4 +81,11 @@
     <string name="dialog_delete_note_confirm">Elimina nota</string>
     <string name="delete_note_description">Questa operazzione è irreversibile!!! Confermando eliminerete la nota localmente. Se precedentemente era stata caricata sul server si dovrà effettuare una sincronizzazione per applicare la modifica.</string>
     <string name="confirm_btn_text">Conferma</string>
+    <string name="is_image_present">Un\'immagine è inserita nella nota</string>
+    <string name="is_document_present">Un documento è inserito nella nota</string>
+    <string name="is_audio_present">Un elemento audio è inserito nella nota</string>
+    <string name="delete_note_text">Elimina nota</string>
+    <string name="export_csv_text">Esporta in CSV</string>
+    <string name="convert_in_audio_text">Converti in file audio</string>
+    <string name="cont_descr_to_audio">Conversione in file audio</string>
 </resources>

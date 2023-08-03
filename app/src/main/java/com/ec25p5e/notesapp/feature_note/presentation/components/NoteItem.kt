@@ -1,7 +1,11 @@
 package com.ec25p5e.notesapp.feature_note.presentation.components
 
+import com.ec25p5e.notesapp.R
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +16,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -79,6 +85,33 @@ fun NoteItem(
                 maxLines = 10,
                 overflow = TextOverflow.Ellipsis
             )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Row {
+                    if(!note.image.isNullOrBlank()) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_image),
+                            contentDescription = stringResource(id = R.string.is_image_present),
+                        )
+                    }
+
+                    if(false) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_attachment),
+                            contentDescription = stringResource(id = R.string.is_document_present),
+                        )
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_audio),
+                            contentDescription = stringResource(id = R.string.is_audio_present),
+                        )
+                    }
+                }
+            }
         }
     }
 }

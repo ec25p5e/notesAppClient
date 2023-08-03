@@ -6,7 +6,6 @@
 - Correggere il problema sull'ordinamento delle note
 
 - Aggiungere esportazione in CSV delle categorie - backend
-- Implementare la schermata "profilo"
 - Implementare la schermata "impostazioni"
 
 
@@ -16,14 +15,7 @@
 
 
 ### In corso:
-- Aggiungere seguenti possibilità sull'inserimento delle note:
-  - Aggiungere 1 immagine
-  - Aggiunta di link, 1 o più
-  - Aggiunta del menu opzioni con:
-    - Esporta in CSV
-    - Converti in audio
-    - Elimina (solo se nota già esistente)
-  - Spostare il pulsante di salvataggio in basso
+- Implementare la schermata "profilo"
   
 
 
@@ -39,3 +31,9 @@
 - Aggiungere esportazione in CSV delle note - backend
 - Aggiungere seguenti possibilità sull'inserimento delle note:
   - Convertire in textarea il campo del contenuto
+- Aggiungere seguenti possibilità sull'inserimento delle note:
+  - Aggiungere 1 immagine
+  - Aggiunta del menu opzioni con:
+    - Converti in audio
+  - Spostare il pulsante di salvataggio in basso
+  - Ridurre lo spessore dello spazio quando si seleziona una categoria

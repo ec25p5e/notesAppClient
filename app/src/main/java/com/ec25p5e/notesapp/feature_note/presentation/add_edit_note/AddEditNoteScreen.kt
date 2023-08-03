@@ -22,6 +22,7 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,9 +54,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
+import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceLarge
@@ -65,15 +68,17 @@ import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Constants.MIN_NOTE_TITLE_LENGTH
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
+import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.util.AddEditNoteError
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
 fun AddEditNoteScreen(
     imageLoader: ImageLoader,
@@ -83,6 +88,7 @@ fun AddEditNoteScreen(
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
     viewModelCategory: CategoryViewModel = hiltViewModel(),
+    viewModelNotes: NotesViewModel = hiltViewModel()
 ) {
     val titleState = viewModel.titleState.value
     val contentState = viewModel.contentState.value
@@ -95,17 +101,17 @@ fun AddEditNoteScreen(
             Color(if (noteColor != -1) noteColor else viewModel.colorState.value)
         )
     }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val categoryBackgroundAnimatable = remember {
         Animatable(
             Color(viewModelCategory.categoryColor.value)
         )
     }
     val imageUri = viewModel.chosenImageUri.value
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         viewModel.onEvent(AddEditNoteEvent.PickImage(uri))
     }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -158,7 +164,23 @@ fun AddEditNoteScreen(
             modifier = Modifier.fillMaxWidth(),
             showBackArrow = true,
             navActions = {
-
+                StandardOptionsMenu(
+                    menuItem = {
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.convert_in_audio_text)) },
+                            onClick = {
+                                viewModelNotes.onEvent(NotesEvent.ConvertInAudio(viewModel.currentNoteId!!))
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_audio),
+                                    contentDescription = stringResource(id = R.string.cont_descr_to_audio)
+                                )
+                            }
+                        )
+                    }
+                )
             }
         )
 
@@ -299,7 +321,7 @@ fun AddEditNoteScreen(
                                 .clip(CircleShape)
                                 .background(color)
                                 .border(
-                                    width = 3.dp,
+                                    width = 1.5.dp,
                                     color = if (viewModel.colorState.value == colorInt) {
                                         Color.Black
                                     } else Color.Transparent,
@@ -384,7 +406,7 @@ fun AddEditNoteScreen(
                         shape = MaterialTheme.shapes.medium
                     )
                     .clickable {
-                        launcher.launch(
+                        galleryLauncher.launch(
                             PickVisualMediaRequest(
                                 mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
                             )

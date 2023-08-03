@@ -7,7 +7,7 @@ import com.ec25p5e.notesapp.feature_note.domain.models.Note
 
 @Database(
     entities = [Note::class, Category::class],
-    version = 3
+    version = 1
 )
 abstract class NoteDatabase: RoomDatabase() {
 

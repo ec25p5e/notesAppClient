@@ -15,4 +15,5 @@ sealed class AddEditNoteEvent {
 
     object SaveNote: AddEditNoteEvent()
 
+
 }

@@ -80,4 +80,11 @@
     <string name="dialog_delete_note_confirm">Delete note</string>
     <string name="delete_note_description">This operation isn\'t reversible.\nAfter executing the note were be deleted from local database.\nWhen you push data from server the note inside server will be deleted.\nDo you continue?</string>
     <string name="confirm_btn_text">Confirm</string>
+    <string name="is_image_present">An image is associated to note</string>
+    <string name="is_document_present">A document is inserted into note</string>
+    <string name="is_audio_present">An audio element is inserted into note</string>
+    <string name="delete_note_text">Delete Note</string>
+    <string name="export_csv_text">Export in CSV</string>
+    <string name="convert_in_audio_text">Convert to audio</string>
+    <string name="cont_descr_to_audio">Convert in audio file</string>
 </resources>
