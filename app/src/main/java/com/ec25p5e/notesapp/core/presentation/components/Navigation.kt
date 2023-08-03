@@ -12,9 +12,9 @@ import androidx.navigation.navArgument
 import coil.ImageLoader
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
+import com.ec25p5e.notesapp.feature_auth.presentation.onboarding.OnBoardingScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
-import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
@@ -24,6 +24,7 @@ import com.ec25p5e.notesapp.feature_settings.presentation.contact_me.ContactMeSc
 import com.ec25p5e.notesapp.feature_settings.presentation.import_data.ImportDataScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.info_app.InfoAppScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.select_color.SelectColorScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
 
@@ -64,14 +65,6 @@ fun Navigation(
                 navController = navController,
                 scaffoldState = scaffoldState,
                 onPopBackStack = navController::popBackStack
-            )
-        }
-
-        composable(Screen.ChatScreen.route) {
-            ChatScreen(
-                onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate,
-                imageLoader = imageLoader
             )
         }
 
@@ -193,6 +186,22 @@ fun Navigation(
 
         composable(Screen.ContactMeScreen.route) {
             ContactMeScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.OnBoardingScreen.route) {
+            OnBoardingScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigate = navController::navigate,
+            )
+        }
+
+        composable(Screen.SelectColorScreen.route) {
+            SelectColorScreen(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,

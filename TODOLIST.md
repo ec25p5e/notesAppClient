@@ -4,7 +4,6 @@
   - Bottom Sheet per conferma (come eliminazione nota)
   - Bottom Sheer per la modifica
 - Correggere il problema sull'ordinamento delle note
-
 - Aggiungere esportazione in CSV delle categorie - backend
 - Implementare la schermata "profilo"
 
@@ -15,8 +14,7 @@
 
 
 ### In corso
-- Salvataggio automatico
-- 
+- Implementare la schermata di informazioni sull'app
   
 
 
@@ -39,3 +37,4 @@
   - Spostare il pulsante di salvataggio in basso
   - Ridurre lo spessore dello spazio quando si seleziona una categoria
   - Implementare la schermata "impostazioni"
+- Implementare il salvataggio automatico

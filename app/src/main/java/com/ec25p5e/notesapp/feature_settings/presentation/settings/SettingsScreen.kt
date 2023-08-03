@@ -154,6 +154,15 @@ fun SettingsScreen(
                         onNavigate(Screen.SelectThemeScreen.route)
                     }
                 )
+
+                SettingsClickableComp(
+                    name = R.string.settings_general_color,
+                    icon = R.drawable.ic_color,
+                    iconDesc = R.string.settings_general_color,
+                    onClick = {
+                        onNavigate(Screen.SelectColorScreen.route)
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(SpaceMedium))

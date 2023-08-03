@@ -114,4 +114,7 @@
     <string name="screenshot_mode_disabled">Acquisizione dello schermo attivata</string>
     <string name="screenshot_mode_enabled">Acquisizione dello schermo disattivata</string>
     <string name="auto_save_btn_text">Salvataggio automatico</string>
+    <string name="onboarding_note_feature">Note</string>
+    <string name="onboarding_todo_feature">ToDo</string>
+    <string name="settings_general_color">Colori associabili</string>
 </resources>

@@ -3,6 +3,7 @@ buildscript {
     ext {
         compose_version = '1.0.2'
         scarletVersion = '0.1.12'
+        accompanist_version = '0.24.2-alpha'
     }
 
     repositories {

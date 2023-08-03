@@ -113,4 +113,9 @@
     <string name="screenshot_mode_disabled">Screenshot mode disabled</string>
     <string name="screenshot_mode_enabled">Screenshot mode enabled</string>
     <string name="auto_save_btn_text">Auto save enabled</string>
+    <string name="onboarding_note_feature">Notes</string>
+    <string name="onboarding_note_description">" "</string>
+    <string name="onboarding_todo_feature">ToDo</string>
+    <string name="onboarding_todo_description">" "</string>
+    <string name="settings_general_color">Usable colors</string>
 </resources>
