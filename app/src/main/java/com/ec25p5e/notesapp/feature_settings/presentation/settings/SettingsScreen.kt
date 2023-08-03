@@ -1,0 +1,212 @@
+package com.ec25p5e.notesapp.feature_settings.presentation.settings
+
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
+import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
+import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
+import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsClickableComp
+import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGroup
+import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp
+import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsTextComp
+
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun SettingsScreen(
+    scaffoldState: SnackbarHostState,
+    imageLoader: ImageLoader,
+    onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
+    vm: SettingsViewModel = hiltViewModel()
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        StandardToolbar(
+            onNavigateUp = onNavigateUp,
+            title = {
+                Text(
+                    text = stringResource(id = R.string.settings_screen_title),
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+            showBackArrow = true,
+            navActions = {
+            }
+        )
+
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(SpaceMedium)
+
+        ) {
+            /* SettingsGroup(name = R.string.settings_first_category) {
+                SettingsSwitchComp(
+                    name = R.string.settings_switch,
+                    icon = R.drawable.ic_save,
+                    iconDesc = R.string.cont_archive_home,
+                    state = vm.isSwitchOn.collectAsState()
+                ) {
+                    vm.toggleSwitch()
+                }
+
+                SettingsClickableComp(
+                    name = R.string.title,
+                    icon = R.drawable.ic_save,
+                    iconDesc = R.string.cont_archive_home,
+                ) {
+                    // here you can do anything - navigate - open other settings, ...
+                }
+
+                SettingsTextComp(
+                    name = R.string.title,
+                    icon = R.drawable.ic_save,
+                    iconDesc = R.string.cont_archive_home,
+                    state = vm.textPreference.collectAsState(),
+                    onSave = { finalText -> vm.saveText(finalText) },
+                    onCheck = { text -> vm.checkTextInput(text) },
+                )
+
+                SettingsTextComp(
+                    name = R.string.save_btn_text,
+                    icon = R.drawable.ic_save,
+                    iconDesc = R.string.cont_archive_home,
+                    state = vm.textPreference.collectAsState(),
+                    onSave = { finalText -> vm.saveText(finalText) },
+                    onCheck = { text -> vm.checkTextInput(text) },
+                )
+            } */
+
+            /**
+             * General section
+             */
+            SettingsGroup(name = R.string.settings_general) {
+                SettingsSwitchComp(
+                    name = R.string.settings_general_auto_save,
+                    icon = R.drawable.ic_save,
+                    iconDesc = R.string.settings_general_auto_save,
+                    state = vm.isSwitchOn.collectAsState()
+                ) {
+                    vm.toggleSwitch()
+                }
+
+                SettingsClickableComp(
+                    name = R.string.settings_general_unlock_method,
+                    icon = R.drawable.ic_unlock,
+                    iconDesc = R.string.settings_general_unlock_method,
+                    onClick = {
+                        onNavigate(Screen.UnlockMethodScreen.route)
+                    }
+                )
+
+                SettingsClickableComp(
+                    name = R.string.settings_general_theme,
+                    icon = R.drawable.ic_theme,
+                    iconDesc = R.string.settings_general_theme,
+                    onClick = {
+                        onNavigate(Screen.SelectThemeScreen.route)
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(SpaceMedium))
+
+
+            /**
+             * Advanced section
+             */
+            SettingsGroup(name = R.string.settings_advanced) {
+                SettingsClickableComp(
+                    name = R.string.settings_advanced_import_note,
+                    icon = R.drawable.ic_import,
+                    iconDesc = R.string.settings_advanced_import_note,
+                    onClick = {
+                        onNavigate(Screen.ImportDataScreen.route)
+                    }
+                )
+
+                SettingsSwitchComp(
+                    name = R.string.settings_advanced_screenshot_note,
+                    icon = R.drawable.ic_screenshot,
+                    iconDesc = R.string.settings_advanced_screenshot_note,
+                    state = vm.isSwitchOn.collectAsState()
+                ) {
+                    vm.toggleSwitch()
+                }
+
+                SettingsSwitchComp(
+                    name = R.string.settings_advanced_block_sharing,
+                    icon = R.drawable.ic_block_sharing,
+                    iconDesc = R.string.settings_advanced_block_sharing,
+                    state = vm.isSwitchOn.collectAsState()
+                ) {
+                    vm.toggleSwitch()
+                }
+            }
+
+            Spacer(modifier = Modifier.height(SpaceMedium))
+
+            /**
+             * Privacy section
+             */
+            SettingsGroup(name = R.string.settings_privacy) {
+                SettingsClickableComp(
+                    name = R.string.settings_privacy_info,
+                    icon = R.drawable.ic_privacy,
+                    iconDesc = R.string.settings_privacy_info,
+                    onClick = {
+                        onNavigate(Screen.PrivacyAdviceScreen.route)
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(SpaceMedium))
+
+            /**
+             * About us section
+             */
+            SettingsGroup(name = R.string.settings_about_us) {
+                SettingsClickableComp(
+                    name = R.string.settings_about_us_info,
+                    icon = R.drawable.ic_info,
+                    iconDesc = R.string.settings_about_us_info,
+                    onClick = {
+                        onNavigate(Screen.InfoAppScreen.route)
+                    }
+                )
+
+                SettingsClickableComp(
+                    name = R.string.settings_about_us_contact,
+                    icon = R.drawable.ic_support,
+                    iconDesc = R.string.settings_about_us_contact,
+                    onClick = {
+                        onNavigate(Screen.ContactMeScreen.route)
+                    }
+                )
+            }
+        }
+    }
+}

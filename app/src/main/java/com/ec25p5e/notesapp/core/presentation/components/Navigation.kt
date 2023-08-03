@@ -19,6 +19,13 @@ import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteS
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
 import com.ec25p5e.notesapp.feature_profile.presentation.profile.ProfileScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.choose_theme.ChooseThemeScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.contact_me.ContactMeScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.import_data.ImportDataScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.info_app.InfoAppScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
 
 @Composable
 fun Navigation(
@@ -107,6 +114,15 @@ fun Navigation(
             )
         }
 
+        composable(Screen.SettingsScreen.route) {
+            SettingsScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate
+            )
+        }
+
         composable(
             route = Screen.CreateNoteScreen.route + "?noteId={noteId}&noteColor={noteColor}",
             arguments = listOf(
@@ -132,6 +148,54 @@ fun Navigation(
                 imageLoader = imageLoader,
                 scaffoldState = scaffoldState,
                 noteColor = color
+            )
+        }
+
+        composable(Screen.SelectThemeScreen.route) {
+            ChooseThemeScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.UnlockMethodScreen.route) {
+            UnlockMethodScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.ImportDataScreen.route) {
+            ImportDataScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.PrivacyAdviceScreen.route) {
+            PrivacyAdviceScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.InfoAppScreen.route) {
+            InfoAppScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.ContactMeScreen.route) {
+            ContactMeScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
             )
         }
     }

@@ -3,6 +3,7 @@ package com.ec25p5e.notesapp.feature_profile.presentation.profile
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.core.presentation.ui.theme.ProfilePictureSizeLarge
+import com.ec25p5e.notesapp.core.util.Screen
 
 @Composable
 fun ProfileScreen(
@@ -40,6 +42,15 @@ fun ProfileScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         ) {
+
+
+            Button(
+                onClick = {
+                    onNavigate(Screen.SettingsScreen.route)
+                }
+            ) {
+                Text("Open settings")
+            }
 
         }
     }

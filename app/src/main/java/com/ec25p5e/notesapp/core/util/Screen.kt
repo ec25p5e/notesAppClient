@@ -14,4 +14,11 @@ sealed class Screen(val route: String) {
     object TodoScreen: Screen("todo_screen")
     object ArchiveScreen: Screen("archive_screen")
     object CategoryScreen: Screen("category_screen")
+    object SettingsScreen: Screen("settings_screen")
+    object SelectThemeScreen: Screen("select_theme_screen")
+    object UnlockMethodScreen: Screen("unlock_method_screen")
+    object ImportDataScreen: Screen("import_data_screen")
+    object PrivacyAdviceScreen: Screen("privacy_advice_screen")
+    object InfoAppScreen: Screen("info_app_screen")
+    object ContactMeScreen: Screen("contact_me_screen")
 }

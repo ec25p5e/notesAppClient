@@ -88,4 +88,24 @@
     <string name="export_csv_text">Esporta in CSV</string>
     <string name="convert_in_audio_text">Converti in file audio</string>
     <string name="cont_descr_to_audio">Conversione in file audio</string>
+    <string name="settings_screen_title">Impostazioni generali</string>
+    <string name="ic_arrow_forward">Inoltra</string>
+    <string name="next">Prossimo</string>
+    <string name="settings_first_category">Prima categoria</string>
+    <string name="settings_switch">Switch di impostazioni</string>
+    <string name="title">Titolo</string>
+    <string name="settings_about_us">Informazioni su</string>
+    <string name="settings_about_us_contact">Contattaci</string>
+    <string name="settings_privacy_info">Avviso sulla privacy</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_advanced">Avanzate</string>
+    <string name="settings_advanced_bloc_go_back">Blocca puls. indietro in modifica</string>
+    <string name="settings_general">Generali</string>
+    <string name="settings_general_auto_save">Salvataggio automatico</string>
+    <string name="settings_advanced_import_note">Importa note</string>
+    <string name="settings_about_us_info">Informazioni sull\'app</string>
+    <string name="settings_general_theme">Tema</string>
+    <string name="settings_general_unlock_method">Metodi di sblocco</string>
+    <string name="settings_advanced_screenshot_note">Blocca l\'acquisizione dello schermo</string>
+    <string name="settings_advanced_block_sharing">Bloccare la condivisione delle note</string>
 </resources>
