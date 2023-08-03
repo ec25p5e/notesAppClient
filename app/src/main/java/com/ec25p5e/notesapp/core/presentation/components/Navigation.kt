@@ -18,6 +18,7 @@ import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
+import com.ec25p5e.notesapp.feature_profile.presentation.profile.ProfileScreen
 
 @Composable
 fun Navigation(
@@ -79,6 +80,27 @@ fun Navigation(
         composable(Screen.ArchiveScreen.route) {
             ArchiveScreen(
                 onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
+            )
+        }
+
+        composable(
+            route = Screen.ProfileScreen.route/*,
+            arguments = listOf(
+                navArgument(name = "userId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        */) {
+            ProfileScreen(
+                userId = null /* it.arguments?.getString("userId") */,
+                onLogout = {
+                    navController.navigate(route = Screen.LoginScreen.route)
+                },
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,
                 scaffoldState = scaffoldState

@@ -18,7 +18,6 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.models.BottomNavItem
 import com.ec25p5e.notesapp.core.util.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun StandardScaffold(
@@ -56,11 +55,11 @@ fun StandardScaffold(
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
-        /* BottomNavItem(
+        BottomNavItem(
             route = Screen.ProfileScreen.route,
             icon = painterResource(id = R.drawable.ic_profile),
             contentDescription = stringResource(id = R.string.cont_profile_home)
-        ) */
+        )
     ),
     content: @Composable () -> Unit
 ) {

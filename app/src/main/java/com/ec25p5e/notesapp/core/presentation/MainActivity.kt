@@ -67,7 +67,6 @@ class MainActivity : ComponentActivity() {
             Screen.NotesScreen.route,
             Screen.TodoScreen.route,
             Screen.ArchiveScreen.route,
-            Screen.CategoryScreen.route,
             Screen.ProfileScreen.route,
         )
 

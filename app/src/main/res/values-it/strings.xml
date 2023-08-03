@@ -74,7 +74,7 @@
     <string name="success_text">Successo</string>
     <string name="note_created_text">Nota creata!</string>
     <string name="update_data_title">Scarica dal server</string>
-    <string name="note_updated_text">Note aggiornate</string>
+    <string name="note_updated_text">Nota aggiornata</string>
     <string name="field_too_short_text_error">La lunghezza minima per il campo è di %s</string>
     <string name="dearchived_successfully">Nota rimossa dall\'archivio</string>
     <string name="text_search_note_archive">Ricerca note archiviate...</string>
