@@ -28,6 +28,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,7 +74,7 @@ import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
-import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackground
+import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundNotes
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -93,7 +94,6 @@ fun NotesScreen(
     val categoryState = viewModelCategory.state.value
     val isCreatingCategory = viewModelCategory.isCreating.value
     val categoryTitleState = viewModelCategory.categoryTitle.value
-    val isLoadingPage = viewModel.isLoading.value
 
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
@@ -194,20 +194,6 @@ fun NotesScreen(
                                 Text(stringResource(id = R.string.new_category_title)) },
                             onClick = {
                                 viewModelCategory.onEvent(CategoryEvent.ToggleCategoryCreation)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_category),
-                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.update_data_title)) },
-                            onClick = {
-                                viewModelCategory.onEvent(CategoryEvent.FetchCategory)
-                                viewModel.onEvent(NotesEvent.FetchNote)
                             },
                             leadingIcon = {
                                 Icon(
@@ -418,7 +404,7 @@ fun NotesScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            if(isLoadingPage) {
+            if(state.isLoading) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -504,8 +490,8 @@ fun NotesScreen(
                                             }
 
                                             DismissValue.DismissedToStart -> {
-                                                viewModel.onEvent(NotesEvent.DeleteNote(currentItem))
-                                                true
+                                                viewModel.onEvent(NotesEvent.SetNoteToDelete(currentItem))
+                                                state.isDeleting
                                             }
 
                                             else -> {
@@ -521,7 +507,7 @@ fun NotesScreen(
                                         .padding(vertical = 1.dp)
                                         .animateItemPlacement(),
                                     background = {
-                                        SwipeBackground(dismissState)
+                                        SwipeBackgroundNotes(dismissState)
                                     },
                                     dismissContent = {
                                         NoteItem(
@@ -550,6 +536,42 @@ fun NotesScreen(
                             .scale(0.5f)
                     )
                 }
+            }
+
+            if(state.isDeleting) {
+                AlertDialog(
+                    onDismissRequest = {
+                        viewModel.onEvent(NotesEvent.IsDeletingNote)
+                    },
+                    icon = {
+                        Icon(painterResource(id = R.drawable.ic_delete), contentDescription = null) },
+                    title = {
+                        Text(text = stringResource(id = R.string.dialog_delete_note_confirm))
+                    },
+                    text = {
+                        Text(text = stringResource(id = R.string.delete_note_description))
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                viewModel.onEvent(NotesEvent.DeleteNote)
+                            }
+                        ) {
+                            Text(stringResource(id = R.string.confirm_btn_text))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                viewModel.onEvent(NotesEvent.IsDeletingNote)
+                            }
+                        ) {
+                            Text(stringResource(id = R.string.dismiss_btn_text))
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
             }
         }
     }

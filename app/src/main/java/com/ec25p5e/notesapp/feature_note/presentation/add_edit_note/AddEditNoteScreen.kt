@@ -1,8 +1,12 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,8 +16,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,7 +28,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -46,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
+import coil.compose.rememberImagePainter
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
@@ -91,6 +99,10 @@ fun AddEditNoteScreen(
         Animatable(
             Color(viewModelCategory.categoryColor.value)
         )
+    }
+    val imageUri = viewModel.chosenImageUri.value
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        viewModel.onEvent(AddEditNoteEvent.PickImage(uri))
     }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -146,15 +158,7 @@ fun AddEditNoteScreen(
             modifier = Modifier.fillMaxWidth(),
             showBackArrow = true,
             navActions = {
-                IconButton(onClick = {
-                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Save,
-                        contentDescription = stringResource(id = R.string.cont_descr_save_note),
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
+
             }
         )
 
@@ -188,10 +192,12 @@ fun AddEditNoteScreen(
             StandardTextFieldState(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.8f),
+                    .fillMaxHeight(0.5f)
+                    .height(400.dp),
                 text = contentState.text,
                 label = stringResource(id = R.string.label_note_description_input),
                 maxLength = Constants.MAX_NOTE_DESCRIPTION_LENGTH,
+                maxLines = 20,
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
                 },
@@ -207,6 +213,32 @@ fun AddEditNoteScreen(
                     else -> ""
                 }
             )
+
+            Spacer(modifier = Modifier.height(SpaceMedium))
+
+            Button(
+                onClick = {
+                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                },
+                enabled = !viewModel.isSaving.value,
+                modifier = Modifier.align(Alignment.End),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.save_btn_text),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                Spacer(modifier = Modifier.width(SpaceSmall))
+                if (viewModel.isSaving.value) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .align(CenterVertically)
+                    )
+                } else {
+                    Icon(imageVector = Icons.Default.Save, contentDescription = null)
+                }
+            }
         }
     }
 
@@ -339,6 +371,43 @@ fun AddEditNoteScreen(
                     .height(2.dp)
                     .background(Color.Black)
             )
+
+            Box(
+                modifier = Modifier
+                    .aspectRatio(16f / 9f)
+                    .fillMaxWidth()
+                    .padding(15.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .clickable {
+                        launcher.launch(
+                            PickVisualMediaRequest(
+                                mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(id = R.string.choose_image),
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+                imageUri?.let { uri ->
+                    Image(
+                        painter = rememberImagePainter(
+                            data = uri,
+                            imageLoader = imageLoader
+                        ),
+                        contentDescription = stringResource(id = R.string.post_image),
+                        modifier = Modifier.matchParentSize()
+                    )
+                }
+            }
         }
     ) {}
 }

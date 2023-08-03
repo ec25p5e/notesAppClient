@@ -10,15 +10,16 @@ class AddNote(
     private val repository: NoteRepository
 ) {
 
-    suspend operator fun invoke(note: Note): AddEditNoteResult {
+    operator fun invoke(note: Note): AddEditNoteResult {
         val titleError = if(note.title.isBlank()) AddEditNoteError.FieldEmpty else null
         val contentError = if(note.content.isBlank()) AddEditNoteError.FieldEmpty else null
 
         if(titleError != null || contentError != null)
             return AddEditNoteResult(titleError, contentError)
 
+        repository.insertNote(note)
         return AddEditNoteResult(
-            result = repository.insertNote(note)
+            result = true
         )
     }
 }

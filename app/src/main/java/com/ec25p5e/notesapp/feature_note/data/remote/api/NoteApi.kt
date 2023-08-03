@@ -1,8 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.data.remote.api
 
 import com.ec25p5e.notesapp.core.data.dto.response.BasicApiResponse
-import com.ec25p5e.notesapp.feature_note.data.remote.request.CreateNoteRequest
-import com.ec25p5e.notesapp.feature_note.data.remote.request.DeleteNoteRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.request.SimpleNoteRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.response.NoteResponse
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
@@ -15,16 +13,6 @@ interface NoteApi {
     suspend fun getNotes(
         @Body request: SimpleNoteRequest
     ): BasicApiResponse<List<NoteResponse>>
-
-    @POST("/api/note/create")
-    suspend fun createNote(
-        @Body request: CreateNoteRequest
-    ): BasicApiResponse<Unit>
-
-    @POST("/api/note/delete")
-    suspend fun deleteNote(
-        @Body request: DeleteNoteRequest
-    ): BasicApiResponse<Unit>
 
     @POST("/api/note/push")
     suspend fun pushNotes(

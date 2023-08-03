@@ -32,6 +32,7 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberUpdatedState
@@ -52,10 +53,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSectionArchive
-import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackground
+import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundArchive
+import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundNotes
+import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -70,6 +75,22 @@ fun ArchiveScreen(
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEventNote.ShowSnackbar -> {
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -137,7 +158,7 @@ fun ArchiveScreen(
                     onActiveChange = {
                         active = it
                     },
-                    placeholder = { Text(stringResource(id = R.string.text_search_note)) },
+                    placeholder = { Text(stringResource(id = R.string.text_search_note_archive)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -185,15 +206,14 @@ fun ArchiveScreen(
                                 confirmValueChange = {
                                     when (it) {
                                         DismissValue.DismissedToEnd -> {
-                                            viewModel.onEvent(ArchiveEvent.DeArchiveNote(currentItem))
-                                            Toast.makeText(context, "De-archied note", Toast.LENGTH_LONG).show()
+                                            currentItem.id?.let { it1 ->
+                                                ArchiveEvent.DeArchiveNote(
+                                                    it1
+                                                )
+                                            }?.let { it2 -> viewModel.onEvent(it2) }
                                             true
                                         }
-                                        DismissValue.DismissedToStart -> {
-                                            viewModel.onEvent(ArchiveEvent.DeleteNote(currentItem))
-                                            Toast.makeText(context, "Deleted Note", Toast.LENGTH_LONG).show()
-                                            true
-                                        }
+                                        DismissValue.DismissedToStart -> { false }
                                         else -> { false }
                                     }
                                 }
@@ -205,7 +225,7 @@ fun ArchiveScreen(
                                     .padding(vertical = 1.dp)
                                     .animateItemPlacement(),
                                 background = {
-                                    SwipeBackground(dismissState)
+                                    SwipeBackgroundArchive(dismissState)
                                 },
                                 dismissContent = {
                                     NoteItem(

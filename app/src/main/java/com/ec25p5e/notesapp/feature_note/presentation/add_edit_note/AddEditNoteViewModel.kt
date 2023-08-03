@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,9 @@ class AddEditNoteViewModel @Inject constructor(
 
     private val _isSaving = mutableStateOf(false)
     val isSaving: State<Boolean> = _isSaving
+
+    private val _chosenImageUri = mutableStateOf<Uri?>(null)
+    val chosenImageUri: State<Uri?> = _chosenImageUri
 
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -101,6 +105,9 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.ChangeCategoryColor -> {
                 _noteCategory.value = event.categoryId
             }
+            is AddEditNoteEvent.PickImage -> {
+                _chosenImageUri.value = event.uri
+            }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     val noteInsert = Note(
@@ -111,8 +118,6 @@ class AddEditNoteViewModel @Inject constructor(
                         id = currentNoteId,
                         categoryId = noteCategory.value,
                     )
-
-                    Log.i("AddEditNoteViewModel", noteCategory.value.toString())
 
                     val addingResult = noteUseCases.addNote(noteInsert)
 

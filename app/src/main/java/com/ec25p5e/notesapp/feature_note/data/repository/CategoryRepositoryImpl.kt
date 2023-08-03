@@ -7,9 +7,11 @@ import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.data.data_source.CategoryDao
+import com.ec25p5e.notesapp.feature_note.data.mapper.toCategory
 import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
 import com.ec25p5e.notesapp.feature_note.data.remote.request.CreateCategoryRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.request.GetCategoriesRequest
+import com.ec25p5e.notesapp.feature_note.data.remote.response.CategoryResponse
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
@@ -27,7 +29,6 @@ class CategoryRepositoryImpl(
 
     override suspend fun getAllCategories(fetchFromRemote: Boolean): Flow<List<Category>> {
         if(fetchFromRemote) {
-            val userId = sharedPreferences.getString(Constants.KEY_USER_ID, "").toString()
             val request = GetCategoriesRequest(userId)
 
             val remoteListings = try {
@@ -61,36 +62,7 @@ class CategoryRepositoryImpl(
         return dao.getCategories()
     }
 
-    override suspend fun insertCategory(category: Category): SimpleResource {
-        val request = CreateCategoryRequest(
-            userId = userId,
-            name = category.name,
-            color = category.color,
-            timestamp = category.timestamp
-        )
-
-        return try {
-            val response = api.createCategory(request)
-
-            if(response.successful) {
-                dao.insertCategory(category)
-                getAllCategories(true)
-                Resource.Success(Unit)
-            } else {
-                response.message?.let { msg ->
-                    Resource.Error(UiText.DynamicString(msg))
-                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
-            }
-        } catch(e: IOException) {
-            Resource.Error(
-                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
-            )
-        } catch(e: HttpException) {
-            Resource.Error(
-                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
-            )
-        }
-
-        // return dao.insertCategory(category)
+    override fun insertCategory(category: Category) {
+        dao.insertCategory(category)
     }
 }

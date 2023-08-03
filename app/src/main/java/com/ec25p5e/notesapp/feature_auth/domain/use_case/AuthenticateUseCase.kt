@@ -6,20 +6,10 @@ import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 
 class AuthenticateUseCase(
-    private val repository: AuthRepository,
-    private val noteRepository: NoteRepository,
-    private val categoryRepository: CategoryRepository
+    private val repository: AuthRepository
 ) {
 
     suspend operator fun invoke(): SimpleResource {
-        val authResponse = repository.authenticate()
-
-        if(authResponse.uiText == null) {
-            noteRepository.pushNotes()
-            categoryRepository.getAllCategories(true)
-            noteRepository.getAllNotes(true)
-        }
-
-        return authResponse
+        return repository.authenticate()
     }
 }

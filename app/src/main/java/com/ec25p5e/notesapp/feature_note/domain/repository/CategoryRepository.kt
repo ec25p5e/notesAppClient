@@ -8,5 +8,5 @@ interface CategoryRepository {
 
     suspend fun getAllCategories(fetchFromRemote: Boolean): Flow<List<Category>>
 
-    suspend fun insertCategory(category: Category): SimpleResource
+    fun insertCategory(category: Category)
 }

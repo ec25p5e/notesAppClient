@@ -7,5 +7,6 @@ data class NoteUseCases(
     val getNote: GetNote,
     val archiveNote: ArchiveNote,
     val getNotesForArchive: GetNotesForArchive,
-    val getNotesByCategory: GetNoteByCategory
+    val getNotesByCategory: GetNoteByCategory,
+    val dearchiveNote: DearchiveNote,
 )

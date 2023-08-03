@@ -8,6 +8,7 @@ import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDao
+import com.ec25p5e.notesapp.feature_note.data.mapper.toNote
 import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
 import com.ec25p5e.notesapp.feature_note.data.remote.request.CreateNoteRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.request.DeleteNoteRequest
@@ -101,63 +102,12 @@ class NoteRepositoryImpl(
         } */
     }
 
-    override suspend fun insertNote(note: Note): SimpleResource {
-        val request = CreateNoteRequest(
-            userId = userId,
-            title = note.title,
-            content = note.content,
-            timestamp = note.timestamp,
-            color = note.color,
-            isArchived = note.isArchived,
-            idCategory = note.categoryId
-        )
-
-        return try {
-            val response = api.createNote(request)
-
-            if(response.successful) {
-                dao.insertNote(note)
-                getAllNotes(true)
-                Resource.Success(Unit)
-            } else {
-                response.message?.let { msg ->
-                    Resource.Error(UiText.DynamicString(msg))
-                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
-            }
-        } catch(e: IOException) {
-            Resource.Error(
-                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
-            )
-        } catch(e: HttpException) {
-            Resource.Error(
-                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
-            )
-        }
+    override fun insertNote(note: Note) {
+        dao.insertNote(note)
     }
 
-    override suspend fun deleteNote(note: Note): SimpleResource {
-        val request = DeleteNoteRequest(note.remoteId, userId)
-
-        return try {
-            val response = api.deleteNote(request)
-
-            if(response.successful) {
-                dao.deleteNote(note)
-                Resource.Success(Unit)
-            }  else {
-                response.message?.let { msg ->
-                    Resource.Error(UiText.DynamicString(msg))
-                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
-            }
-        } catch(e: IOException) {
-            Resource.Error(
-                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
-            )
-        } catch(e: HttpException) {
-            Resource.Error(
-                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
-            )
-        }
+    override fun deleteNote(note: Note) {
+        dao.deleteNote(note)
     }
 
     override fun archiveNote(id: Int) {

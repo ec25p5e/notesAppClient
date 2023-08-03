@@ -11,17 +11,4 @@ data class NoteResponse(
     val color: Int,
     val isArchived: Boolean,
     val categoryId: Int,
-) {
-
-    fun toNote(): Note {
-        return Note(
-            title = title,
-            content = content,
-            timestamp = timestamp,
-            color = color,
-            isArchived = isArchived,
-            categoryId = categoryId,
-            remoteId = noteId // Remote note ID
-        )
-    }
-}
+)

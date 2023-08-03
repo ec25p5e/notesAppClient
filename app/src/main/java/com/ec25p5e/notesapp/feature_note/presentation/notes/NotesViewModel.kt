@@ -1,6 +1,5 @@
 package com.ec25p5e.notesapp.feature_note.presentation.notes
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -31,9 +30,6 @@ class NotesViewModel @Inject constructor(
 
     private var _filterCategory: Int = -1
     private var _noteOrder: NoteOrder = NoteOrder.Date(OrderType.Descending)
-
-    private val _isLoading = mutableStateOf(false)
-    var isLoading: State<Boolean> = _isLoading
 
     private var recentlyDeletedNote: Note? = null
     private var getNotesJob: Job? = null
@@ -66,13 +62,17 @@ class NotesViewModel @Inject constructor(
                 }
             }
             is NotesEvent.DeleteNote -> {
-                viewModelScope.launch {
-                    val deleteResponse = noteUseCases.deleteNote(event.note)
-                    recentlyDeletedNote = event.note
+                if(state.value.noteToDelete != null) {
+                    viewModelScope.launch {
+                        noteUseCases.deleteNote(state.value.noteToDelete!!)
+                        recentlyDeletedNote = state.value.noteToDelete!!
 
-                    if(deleteResponse.uiText != null) {
-                        _eventFlow.emit(UiEventNote.ShowSnackbar(deleteResponse.uiText))
-                    } else {
+                        _state.value = _state.value.copy(
+                            isNoteToDelete = true,
+                            isDeleting = false,
+                            noteToDelete = null
+                        )
+
                         _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(R.string.deleted_note)))
                     }
                 }
@@ -103,11 +103,24 @@ class NotesViewModel @Inject constructor(
                 }
             }
             is NotesEvent.IsLoadingPage -> {
-                _isLoading.value = !_isLoading.value
+                _state.value = _state.value.copy(
+                    isLoading = !_state.value.isLoading
+                )
             }
             is NotesEvent.ToggleOrderSection -> {
                 _state.value = state.value.copy(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
+                )
+            }
+            is NotesEvent.IsDeletingNote -> {
+                _state.value = _state.value.copy(
+                    isDeleting = !_state.value.isDeleting
+                )
+            }
+            is NotesEvent.SetNoteToDelete -> {
+                _state.value = _state.value.copy(
+                    noteToDelete = event.note,
+                    isDeleting = true
                 )
             }
         }
@@ -116,7 +129,7 @@ class NotesViewModel @Inject constructor(
     private fun getNotes(noteOrder: NoteOrder) {
         viewModelScope.launch {
             getNotesJob?.cancel()
-            getNotesJob = noteUseCases.getNotes(noteOrder, true)
+            getNotesJob = noteUseCases.getNotes(noteOrder, false)
                 .onEach { notes ->
                     _state.value = state.value.copy(
                         notes = notes,
@@ -128,8 +141,6 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun getNotesByCategory(categoryId: Int, noteOrder: NoteOrder) {
-        Log.i("NotesViewModel", categoryId.toString())
-
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotesByCategory(categoryId, noteOrder)
             .onEach { notes ->

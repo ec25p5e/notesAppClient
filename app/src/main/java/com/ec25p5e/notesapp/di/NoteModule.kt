@@ -3,11 +3,14 @@ package com.ec25p5e.notesapp.di
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.ec25p5e.notesapp.feature_note.data.csv.CSVParser
+import com.ec25p5e.notesapp.feature_note.data.csv.NoteParser
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
 import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
 import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
 import com.ec25p5e.notesapp.feature_note.data.repository.CategoryRepositoryImpl
 import com.ec25p5e.notesapp.feature_note.data.repository.NoteRepositoryImpl
+import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.AddCategory
@@ -15,12 +18,14 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCas
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategories
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.AddNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.ArchiveNote
+import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DearchiveNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DeleteNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNoteByCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotes
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotesForArchive
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -96,7 +101,8 @@ object NoteModule {
             getNote = GetNote(repository),
             archiveNote = ArchiveNote(repository),
             getNotesForArchive = GetNotesForArchive(repository),
-            getNotesByCategory = GetNoteByCategory(repository)
+            getNotesByCategory = GetNoteByCategory(repository),
+            dearchiveNote = DearchiveNote(repository)
         )
     }
 

@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,7 +25,9 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.DarkerGreen
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun SwipeBackground(dismissState: DismissState) {
+fun SwipeBackgroundNotes(
+    dismissState: DismissState
+) {
     val direction = dismissState.dismissDirection ?: return
 
     val color by animateColorAsState(
@@ -35,7 +35,7 @@ fun SwipeBackground(dismissState: DismissState) {
             DismissValue.Default -> Color.LightGray
             DismissValue.DismissedToEnd -> DarkerGreen
             DismissValue.DismissedToStart -> Color.Red
-        }
+        }, label = ""
     )
     val alignment = when (direction) {
         DismissDirection.StartToEnd -> Alignment.CenterStart
@@ -46,7 +46,7 @@ fun SwipeBackground(dismissState: DismissState) {
         DismissDirection.EndToStart -> Icons.Default.Delete
     }
     val scale by animateFloatAsState(
-        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f, label = ""
     )
 
     Box(

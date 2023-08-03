@@ -6,7 +6,7 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.AddEditNoteError
 data class AddEditNoteResult(
     val titleError: AddEditNoteError? = null,
     val contentError: AddEditNoteError? = null,
-    val result: SimpleResource? = null
+    val result: Boolean? = null
 ) {
 
     fun isCorrect(): Boolean {

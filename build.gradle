@@ -4,6 +4,13 @@ buildscript {
         compose_version = '1.0.2'
         scarletVersion = '0.1.12'
     }
+
+    repositories {
+        maven { url 'https://www.jitpack.io' }
+        google()
+        maven { url 'https://maven.google.com' }
+        jcenter()
+    }
 }
 
 plugins {

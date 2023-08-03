@@ -75,4 +75,9 @@
     <string name="update_data_title">Fetch data</string>
     <string name="note_updated_text">Note updated\n</string>
     <string name="field_too_short_text_error">Minimum length for this field is %s</string>
+    <string name="dearchived_successfully">Note de-archived successfully</string>
+    <string name="text_search_note_archive">Search note in archive...</string>
+    <string name="dialog_delete_note_confirm">Delete note</string>
+    <string name="delete_note_description">This operation isn\'t reversible.\nAfter executing the note were be deleted from local database.\nWhen you push data from server the note inside server will be deleted.\nDo you continue?</string>
+    <string name="confirm_btn_text">Confirm</string>
 </resources>

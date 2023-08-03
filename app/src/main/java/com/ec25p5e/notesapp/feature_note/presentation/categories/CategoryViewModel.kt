@@ -97,7 +97,7 @@ class CategoryViewModel @Inject constructor(
                     _eventFlow.emit(UiEventNote.ShowLoader)
 
                     try {
-                        val response = categoryUseCases.addCategory(
+                        categoryUseCases.addCategory(
                             Category(
                                 name = categoryTitle.value.text,
                                 color = categoryColor.value,
@@ -105,12 +105,6 @@ class CategoryViewModel @Inject constructor(
                                 id = currentCategoryId
                             )
                         )
-
-                        if(response.uiText != null) {
-                            _eventFlow.emit(UiEventNote.ShowSnackbar(response.uiText))
-                        } else {
-                            _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(R.string.category_created)))
-                        }
 
                         _categoryTitle.value = _categoryTitle.value.copy(
                             text = "",
@@ -138,7 +132,7 @@ class CategoryViewModel @Inject constructor(
     fun loadCategories() {
         viewModelScope.launch {
             getCategoriesJob?.cancel()
-            getCategoriesJob = categoryUseCases.getCategories(true)
+            getCategoriesJob = categoryUseCases.getCategories(false)
                 .onEach { category ->
                     _state.value = state.value.copy(
                         categories = category

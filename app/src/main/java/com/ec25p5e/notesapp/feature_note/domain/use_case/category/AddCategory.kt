@@ -12,10 +12,10 @@ class AddCategory(
 ) {
 
     @Throws(InvalidCategoryException::class)
-    suspend operator fun invoke(note: Category): SimpleResource {
+    operator fun invoke(note: Category) {
         if(note.name.isBlank())
             throw InvalidCategoryException(Resources.getSystem().getString(R.string.error_category_name_empty))
 
-        return repository.insertCategory(note)
+        repository.insertCategory(note)
     }
 }

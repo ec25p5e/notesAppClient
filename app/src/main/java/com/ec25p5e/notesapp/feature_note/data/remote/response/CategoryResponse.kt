@@ -8,13 +8,4 @@ data class CategoryResponse(
     val name: String,
     val color: Int,
     val timestamp: Long
-) {
-    fun toCategory(): Category {
-        return Category(
-            name = name,
-            color = color,
-            timestamp = timestamp,
-            remoteId = categoryId
-        )
-    }
-}
+)
