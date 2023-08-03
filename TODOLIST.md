@@ -6,16 +6,16 @@
 - Correggere il problema sull'ordinamento delle note
 
 - Aggiungere esportazione in CSV delle categorie - backend
-- Implementare la schermata "impostazioni"
-
-
-
-
-
-
-
-### In corso:
 - Implementare la schermata "profilo"
+
+
+
+
+
+
+
+### IImplementare la schermata "impostazioni"n corso:
+- 
   
 
 

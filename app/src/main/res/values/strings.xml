@@ -107,4 +107,6 @@
     <string name="settings_general_unlock_method">Unlock note method</string>
     <string name="settings_advanced_screenshot_note">Block note screenshot</string>
     <string name="settings_advanced_block_sharing">Block note sharing</string>
+    <string name="auto_save_enabled">Auto save enabled</string>
+    <string name="auto_save_disabled">Auto save disabled</string>
 </resources>

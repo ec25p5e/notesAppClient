@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import coil.ImageLoader
 import coil.decode.SvgDecoder
+import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.core.util.Constants
 import com.google.gson.Gson
 import dagger.Module
@@ -62,5 +63,14 @@ object AppModule {
     @Singleton
     fun provideGson(): Gson {
         return Gson()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferencesManager(
+        sharedPreferences: SharedPreferences,
+        gson: Gson
+    ): PreferencesManager {
+        return PreferencesManager(sharedPreferences, gson)
     }
 }

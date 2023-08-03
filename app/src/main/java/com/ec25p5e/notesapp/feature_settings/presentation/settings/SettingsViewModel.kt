@@ -1,16 +1,28 @@
 package com.ec25p5e.notesapp.feature_settings.presentation.settings
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.util.UiText
+import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
+import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
+import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.io.File.separatorChar
+import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val settingsUseCases: SettingsUseCases
+) : ViewModel() {
 
     private val _isSwitchOn: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isSwitchOn = _isSwitchOn.asStateFlow()
@@ -23,6 +35,37 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
 
     // to get separator for the locale
     private val separatorChar = DecimalFormatSymbols.getInstance(Locale.ENGLISH).decimalSeparator
+
+    private val _state = mutableStateOf(SettingsState())
+    val state: State<SettingsState> = _state
+
+    private val _eventFlow = MutableSharedFlow<UiEventSettings>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    fun onEvent(event: SettingsEvent) {
+        when(event) {
+            is SettingsEvent.ToggleAutoSave -> {
+                viewModelScope.launch {
+                    val oldValue = _state.value.settings!!.isAutoSaveEnabled
+
+                    _state.value = _state.value.copy(
+                        settings = Settings(
+                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled.not()
+                        )
+                    )
+
+                    _eventFlow.emit(UiEventSettings.ShowSnackbar(
+                        UiText.StringResource(id =
+                            if(oldValue) {
+                                R.string.auto_save_disabled
+                            } else {
+                                R.string.auto_save_enabled
+                            }
+                    )))
+                }
+            }
+        }
+    }
 
     fun toggleSwitch(){
         _isSwitchOn.value = _isSwitchOn.value.not()

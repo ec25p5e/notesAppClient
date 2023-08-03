@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.feature_settings.presentation.settings
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,11 +25,15 @@ import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
+import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsClickableComp
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGroup
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp
-import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsTextComp
+import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
+import kotlinx.coroutines.flow.collectLatest
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -36,8 +43,28 @@ fun SettingsScreen(
     imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    vm: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEventSettings.ShowSnackbar -> {
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,13 +131,15 @@ fun SettingsScreen(
              * General section
              */
             SettingsGroup(name = R.string.settings_general) {
-                SettingsSwitchComp(
-                    name = R.string.settings_general_auto_save,
-                    icon = R.drawable.ic_save,
-                    iconDesc = R.string.settings_general_auto_save,
-                    state = vm.isSwitchOn.collectAsState()
-                ) {
-                    vm.toggleSwitch()
+                state.settings!!.isAutoSaveEnabled?.let {
+                    SettingsSwitchComp(
+                        name = R.string.settings_general_auto_save,
+                        icon = R.drawable.ic_save,
+                        iconDesc = R.string.settings_general_auto_save,
+                        state = it
+                    ) {
+                        viewModel.onEvent(SettingsEvent.ToggleAutoSave)
+                    }
                 }
 
                 SettingsClickableComp(
@@ -148,23 +177,23 @@ fun SettingsScreen(
                     }
                 )
 
-                SettingsSwitchComp(
+                /* SettingsSwitchComp(
                     name = R.string.settings_advanced_screenshot_note,
                     icon = R.drawable.ic_screenshot,
                     iconDesc = R.string.settings_advanced_screenshot_note,
-                    state = vm.isSwitchOn.collectAsState()
+                    state = viewModel.isSwitchOn
                 ) {
-                    vm.toggleSwitch()
+                    viewModel.toggleSwitch()
                 }
 
                 SettingsSwitchComp(
                     name = R.string.settings_advanced_block_sharing,
                     icon = R.drawable.ic_block_sharing,
                     iconDesc = R.string.settings_advanced_block_sharing,
-                    state = vm.isSwitchOn.collectAsState()
+                    state = viewModel.isSwitchOn.collectAsState()
                 ) {
-                    vm.toggleSwitch()
-                }
+                    viewModel.toggleSwitch()
+                } */
             }
 
             Spacer(modifier = Modifier.height(SpaceMedium))

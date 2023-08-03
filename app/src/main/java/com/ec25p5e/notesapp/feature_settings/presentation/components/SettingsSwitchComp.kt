@@ -31,7 +31,7 @@ fun SettingsSwitchComp(
     @DrawableRes icon: Int,
     @StringRes iconDesc: Int,
     @StringRes name: Int,
-    state: State<Boolean>,
+    state: Boolean,
     onClick: () -> Unit
 ) {
     Column {
@@ -55,7 +55,7 @@ fun SettingsSwitchComp(
             }
             Spacer(modifier = Modifier.weight(1f))
             Switch(
-                checked = state.value,
+                checked = state,
                 onCheckedChange = { onClick() }
             )
         }

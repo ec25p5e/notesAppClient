@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.di
 
 import android.content.SharedPreferences
+import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_auth.data.repository.AuthRepositoryImpl
 import com.ec25p5e.notesapp.feature_auth.domain.repository.AuthRepository
@@ -35,8 +36,8 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApi, sharedPreferences: SharedPreferences): AuthRepository {
-        return AuthRepositoryImpl(api, sharedPreferences)
+    fun provideAuthRepository(api: AuthApi, preferencesManager: PreferencesManager): AuthRepository {
+        return AuthRepositoryImpl(api, preferencesManager)
     }
 
     @Provides
