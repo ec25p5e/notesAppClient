@@ -1,11 +1,17 @@
 package com.ec25p5e.notesapp.feature_note.domain.models
 
-import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.ec25p5e.notesapp.core.data.util.ArrayListConverter
+import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Primary
+import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Secondary
+import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Third
 import com.ec25p5e.notesapp.core.presentation.ui.theme.BabyBlue
 import com.ec25p5e.notesapp.core.presentation.ui.theme.LightGreen
+import com.ec25p5e.notesapp.core.presentation.ui.theme.Nt_Primary
+import com.ec25p5e.notesapp.core.presentation.ui.theme.Nt_Secondary
+import com.ec25p5e.notesapp.core.presentation.ui.theme.Nt_Third
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedOrange
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
 import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
@@ -19,7 +25,8 @@ data class Note(
     val isArchived: Boolean = false,
     val categoryId: Int = 1,
     val remoteId: String = "",
-    val image: String,
+    val image:  ArrayList<String> = ArrayList(),
+    val background: Int,
     @PrimaryKey val id: Int? = null
 ) {
 
@@ -29,7 +36,13 @@ data class Note(
             LightGreen,
             Violet,
             BabyBlue,
-            RedPink
+            RedPink,
+            At_Primary,
+            At_Secondary,
+            At_Third,
+            Nt_Primary,
+            Nt_Secondary,
+            Nt_Third
         )
     }
 }

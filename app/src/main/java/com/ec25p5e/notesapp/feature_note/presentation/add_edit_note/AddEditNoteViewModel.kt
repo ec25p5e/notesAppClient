@@ -42,13 +42,17 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteCategory = mutableStateOf(1)
     val noteCategory: State<Int> = _noteCategory
 
+    private val _noteBackground = mutableStateOf(R.drawable.ic_no_image_note)
+    val noteBackground: State<Int> = _noteBackground
+
     private val _state = mutableStateOf(AddEditNoteState(
-        isAutoSaveEnabled = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isAutoSaveEnabled
+        isAutoSaveEnabled = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isAutoSaveEnabled,
+        isSharing = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isSharingEnabled
     ))
     val state: State<AddEditNoteState> = _state
 
-    private val _chosenImageUri = mutableStateOf<Uri?>(null)
-    val chosenImageUri: State<Uri?> = _chosenImageUri
+    private val _chosenImageUri = mutableStateOf<ArrayList<Uri?>>(ArrayList())
+    val chosenImageUri: State<ArrayList<Uri?>> = _chosenImageUri
 
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -59,7 +63,11 @@ class AddEditNoteViewModel @Inject constructor(
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
             if(noteId != -1) {
                 viewModelScope.launch {
+                    val uriArray: ArrayList<Uri?> = ArrayList()
+
                     noteUseCases.getNote(noteId)?.also { note ->
+                        note.image.forEach { image -> uriArray.add(Uri.parse(image))}
+
                         currentNoteId = note.id
                         _titleState.value = titleState.value.copy(
                             text = note.title,
@@ -71,7 +79,8 @@ class AddEditNoteViewModel @Inject constructor(
                         )
                         _colorState.value = note.color
                         _noteCategory.value = note.categoryId
-                        _chosenImageUri.value = Uri.parse(note.image)
+                        _chosenImageUri.value = uriArray
+                        _noteBackground.value = note.background
                     }
                 }
             }
@@ -114,10 +123,21 @@ class AddEditNoteViewModel @Inject constructor(
                 _noteCategory.value = event.categoryId
             }
             is AddEditNoteEvent.PickImage -> {
-                _chosenImageUri.value = event.uri
+                _chosenImageUri.value = event.uri.toMutableList() as ArrayList<Uri?>
+            }
+            is AddEditNoteEvent.ChangeBgImage -> {
+                _noteBackground.value = event.bgImage
+            }
+            is AddEditNoteEvent.DeleteImage -> {
+                viewModelScope.launch {
+                    _chosenImageUri.value.remove(event.uri)
+                }
             }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
+                    val imageArray: ArrayList<String> = ArrayList()
+                    _chosenImageUri.value.forEach { uri -> imageArray.add(uri.toString()) }
+
                     val noteInsert = Note(
                         title = titleState.value.text,
                         content = contentState.value.text,
@@ -125,7 +145,8 @@ class AddEditNoteViewModel @Inject constructor(
                         color = colorState.value,
                         id = currentNoteId,
                         categoryId = noteCategory.value,
-                        image = _chosenImageUri.value.toString()
+                        image = imageArray,
+                        background = _noteBackground.value
                     )
 
                     val addingResult = noteUseCases.addNote(noteInsert)
@@ -158,7 +179,4 @@ class AddEditNoteViewModel @Inject constructor(
             }
         }
     }
-
-
-
 }

@@ -107,7 +107,7 @@
     <string name="settings_general_theme">Tema</string>
     <string name="settings_general_unlock_method">Metodi di sblocco</string>
     <string name="settings_advanced_screenshot_note">Consenti acquisizione schermo</string>
-    <string name="settings_advanced_block_sharing">Bloccare la condivisione delle note</string>
+    <string name="settings_advanced_block_sharing">Condivisione delle note</string>
     <string name="auto_save_enabled">Salvataggio automatico attivo</string>
     <string name="auto_save_disabled">Salvataggio automatico disattivato</string>
     <string name="all_notes_string">Tutte le note</string>
@@ -117,4 +117,18 @@
     <string name="onboarding_note_feature">Note</string>
     <string name="onboarding_todo_feature">ToDo</string>
     <string name="settings_general_color">Colori associabili</string>
+    <string name="settings_advanced_permission">Gestione permessi dell\'app</string>
+    <string name="sharing_mode_disabled">Condivisione note disattiva</string>
+    <string name="sharing_mode_enabled">Condivisione note attiva</string>
+    <string name="share_note_text">Condividi</string>
+    <string name="archive_note">Archivia nota</string>
+    <string name="create_note_copy">Crea una copia</string>
+    <string name="categorize_note">Categorizza</string>
+    <string name="add_options">Aggiungi opzione</string>
+    <string name="color">Colore</string>
+    <string name="image_background">Immagine di sfondo</string>
+    <string name="take_photo">Scatta una foto</string>
+    <string name="add_image">Aggiungi immagine</string>
+    <string name="drawing">Disegna</string>
+    <string name="start_rec">Registrazione</string>
 </resources>

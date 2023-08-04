@@ -71,7 +71,8 @@ class AuthRepositoryImpl(
                     sharedPreferencesManager.put(authResponse.userId, Constants.KEY_USER_ID)
                     sharedPreferencesManager.put(Settings(
                         isAutoSaveEnabled = false,
-                        isScreenshotEnabled = true
+                        isScreenshotEnabled = true,
+                        isSharingEnabled = false
                     ), Constants.KEY_SETTINGS)
 
                     categoryRepository.insertCategory(
@@ -90,7 +91,8 @@ class AuthRepositoryImpl(
                             timestamp = System.currentTimeMillis(),
                             isArchived = false,
                             categoryId = 1,
-                            image = ""
+                            image = ArrayList(),
+                            background = R.drawable.bg_note_1
                         )
                     )
                 }

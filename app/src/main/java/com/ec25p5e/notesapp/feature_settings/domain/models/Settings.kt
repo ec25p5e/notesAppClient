@@ -5,4 +5,5 @@ data class Settings(
     val unlockMethod: UnlockMethod? = null,
     val appTheme: AppTheme? = null,
     val isScreenshotEnabled: Boolean,
+    val isSharingEnabled: Boolean
 )

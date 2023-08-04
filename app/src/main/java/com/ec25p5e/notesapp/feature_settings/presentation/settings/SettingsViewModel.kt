@@ -51,7 +51,8 @@ class SettingsViewModel @Inject constructor(
                     _state.value = _state.value.copy(
                         settings = Settings(
                             isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled.not(),
-                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled
+                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled,
+                            isSharingEnabled = _state.value.settings!!.isSharingEnabled
                         )
                     )
 
@@ -75,7 +76,8 @@ class SettingsViewModel @Inject constructor(
                     _state.value = _state.value.copy(
                         settings = Settings(
                             isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled,
-                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled.not()
+                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled.not(),
+                            isSharingEnabled = _state.value.settings!!.isSharingEnabled
                         )
                     )
 
@@ -87,6 +89,31 @@ class SettingsViewModel @Inject constructor(
                             R.string.screenshot_mode_enabled
                         } else {
                             R.string.screenshot_mode_disabled
+                        }
+                        )
+                    ))
+                }
+            }
+            is SettingsEvent.ToggleSharingMode -> {
+                viewModelScope.launch {
+                    val oldValue = _state.value.settings!!.isSharingEnabled
+
+                    _state.value = _state.value.copy(
+                        settings = Settings(
+                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled,
+                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled,
+                            isSharingEnabled = _state.value.settings!!.isSharingEnabled.not()
+                        )
+                    )
+
+                    settingsUseCases.editSharedPreferences(_state.value.settings!!)
+
+                    _eventFlow.emit(UiEventSettings.ShowSnackbar(
+                        UiText.StringResource(id =
+                        if(oldValue) {
+                            R.string.sharing_mode_disabled
+                        } else {
+                            R.string.sharing_mode_enabled
                         }
                         )
                     ))

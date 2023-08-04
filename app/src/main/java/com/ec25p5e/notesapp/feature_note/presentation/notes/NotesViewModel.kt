@@ -82,7 +82,7 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.ArchiveNote -> {
                 viewModelScope.launch {
-                    event.note.id?.let { noteUseCases.archiveNote(it) }
+                    noteUseCases.archiveNote(event.noteId)
                 }
             }
             is NotesEvent.RestoreNote -> {
@@ -127,6 +127,9 @@ class NotesViewModel @Inject constructor(
 
             }
             is NotesEvent.ConvertInAudio -> {
+
+            }
+            is NotesEvent.ShareNote -> {
 
             }
         }

@@ -485,7 +485,7 @@ fun NotesScreen(
                                     confirmValueChange = {
                                         when (it) {
                                             DismissValue.DismissedToEnd -> {
-                                                viewModel.onEvent(NotesEvent.ArchiveNote(currentItem))
+                                                viewModel.onEvent(NotesEvent.ArchiveNote(currentItem.id!!))
                                                 true
                                             }
 

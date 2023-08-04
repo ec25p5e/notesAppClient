@@ -154,15 +154,6 @@ fun SettingsScreen(
                         onNavigate(Screen.SelectThemeScreen.route)
                     }
                 )
-
-                SettingsClickableComp(
-                    name = R.string.settings_general_color,
-                    icon = R.drawable.ic_color,
-                    iconDesc = R.string.settings_general_color,
-                    onClick = {
-                        onNavigate(Screen.SelectColorScreen.route)
-                    }
-                )
             }
 
             Spacer(modifier = Modifier.height(SpaceMedium))
@@ -174,10 +165,19 @@ fun SettingsScreen(
             SettingsGroup(name = R.string.settings_advanced) {
                 SettingsClickableComp(
                     name = R.string.settings_advanced_import_note,
-                    icon = R.drawable.ic_import,
+                    icon = R.drawable.ic_import_note,
                     iconDesc = R.string.settings_advanced_import_note,
                     onClick = {
                         onNavigate(Screen.ImportDataScreen.route)
+                    }
+                )
+
+                SettingsClickableComp(
+                    name = R.string.settings_advanced_permission,
+                    icon = R.drawable.ic_permission,
+                    iconDesc = R.string.settings_advanced_permission,
+                    onClick = {
+                        onNavigate(Screen.PermissionScreen.route)
                     }
                 )
 
@@ -191,14 +191,14 @@ fun SettingsScreen(
                 }
 
 
-                /* SettingsSwitchComp(
+                SettingsSwitchComp(
                     name = R.string.settings_advanced_block_sharing,
-                    icon = R.drawable.ic_block_sharing,
+                    icon = R.drawable.ic_sharing,
                     iconDesc = R.string.settings_advanced_block_sharing,
-                    state = viewModel.isSwitchOn.collectAsState()
+                    state = state.settings!!.isSharingEnabled
                 ) {
-                    viewModel.toggleSwitch()
-                } */
+                    viewModel.onEvent(SettingsEvent.ToggleSharingMode)
+                }
             }
 
             Spacer(modifier = Modifier.height(SpaceMedium))

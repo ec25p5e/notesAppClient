@@ -167,4 +167,12 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
     implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
 
+    //permission handling in compose
+    implementation 'com.google.accompanist:accompanist-permissions:0.24.11-rc'
+
+    // Color Picker Compose
+    implementation "com.github.skydoves:colorpicker-compose:1.0.0"
+
+    //Coil for image loading
+    implementation 'io.coil-kt:coil-compose:2.1.0'
 }

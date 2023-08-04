@@ -27,6 +27,7 @@ class NoteParser @Inject constructor(): CSVParser<Note> {
                     val categoryId = line.getOrNull(5).toString()
                     val remoteId = line.getOrNull(6)
                     val image = line.getOrNull(7)
+                    val background = line.getOrNull(8).toString()
 
                     Note(
                         title = title ?: return@mapNotNull null,
@@ -36,7 +37,8 @@ class NoteParser @Inject constructor(): CSVParser<Note> {
                         isArchived = isArchived.toBooleanStrict(),
                         categoryId = categoryId.toInt(),
                         remoteId = remoteId ?: return@mapNotNull null,
-                        image = image ?: return@mapNotNull null
+                        image = ArrayList(), /* image ?: return@mapNotNull null, */
+                        background = background.toInt()
                     )
                 }
                 .also {

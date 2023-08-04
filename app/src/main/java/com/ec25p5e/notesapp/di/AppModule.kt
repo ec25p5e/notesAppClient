@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import coil.ImageLoader
 import coil.decode.SvgDecoder
+import com.ec25p5e.notesapp.core.data.util.ArrayListConverter
 import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.core.util.Constants
 import com.google.gson.Gson
@@ -34,9 +35,6 @@ object AppModule {
     fun provideImageLoader(app: Application): ImageLoader {
         return ImageLoader.Builder(app)
             .crossfade(true)
-            .componentRegistry {
-                add(SvgDecoder(app))
-            }
             .build()
     }
 

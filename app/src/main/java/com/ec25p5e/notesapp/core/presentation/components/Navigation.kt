@@ -23,8 +23,8 @@ import com.ec25p5e.notesapp.feature_settings.presentation.choose_theme.ChooseThe
 import com.ec25p5e.notesapp.feature_settings.presentation.contact_me.ContactMeScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.import_data.ImportDataScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.info_app.InfoAppScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.permission_screen.PermissionScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
-import com.ec25p5e.notesapp.feature_settings.presentation.select_color.SelectColorScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
 
@@ -117,30 +117,21 @@ fun Navigation(
         }
 
         composable(
-            route = Screen.CreateNoteScreen.route + "?noteId={noteId}&noteColor={noteColor}",
+            route = Screen.CreateNoteScreen.route + "?noteId={noteId}",
             arguments = listOf(
                 navArgument(
                     name = "noteId"
                 ) {
                     type = NavType.IntType
                     defaultValue = -1
-                },
-                navArgument(
-                    name = "noteColor"
-                ) {
-                    type = NavType.IntType
-                    defaultValue = -1
-                },
+                }
             ),
         ) {
-            val color = it.arguments?.getInt("noteColor") ?: -1
-
             AddEditNoteScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,
-                scaffoldState = scaffoldState,
-                noteColor = color
+                scaffoldState = scaffoldState
             )
         }
 
@@ -200,8 +191,8 @@ fun Navigation(
             )
         }
 
-        composable(Screen.SelectColorScreen.route) {
-            SelectColorScreen(
+        composable(Screen.PermissionScreen.route) {
+            PermissionScreen(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,

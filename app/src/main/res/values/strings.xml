@@ -106,7 +106,7 @@
     <string name="settings_general_theme">App theme</string>
     <string name="settings_general_unlock_method">Unlock note method</string>
     <string name="settings_advanced_screenshot_note">Consent note screenshot</string>
-    <string name="settings_advanced_block_sharing">Block note sharing</string>
+    <string name="settings_advanced_block_sharing">Enable note sharing</string>
     <string name="auto_save_enabled">Auto save enabled</string>
     <string name="auto_save_disabled">Auto save disabled</string>
     <string name="all_notes_string">All notes</string>
@@ -118,4 +118,19 @@
     <string name="onboarding_todo_feature">ToDo</string>
     <string name="onboarding_todo_description">" "</string>
     <string name="settings_general_color">Usable colors</string>
+    <string name="settings_advanced_permission">Manage permissions</string>
+    <string name="sharing_mode_disabled">Sharing mode disabled</string>
+    <string name="sharing_mode_enabled">Sharing mode enabled</string>
+    <string name="share_note_text">Share</string>
+    <string name="archive_note">Archive note</string>
+    <string name="create_note_copy">Create a copy</string>
+    <string name="categorize_note">Categories</string>
+    <string name="add_options">Add options</string>
+    <string name="color">Color</string>
+    <string name="image_background">Background image</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="add_image">Add an Image</string>
+    <string name="drawing">Start drawing</string>
+    <string name="start_rec">Start register</string>
+    <string name="associated_images">Associated images</string>
 </resources>

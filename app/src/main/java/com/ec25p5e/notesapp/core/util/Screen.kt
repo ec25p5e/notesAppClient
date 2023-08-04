@@ -20,5 +20,5 @@ sealed class Screen(val route: String) {
     object PrivacyAdviceScreen: Screen("privacy_advice_screen")
     object InfoAppScreen: Screen("info_app_screen")
     object ContactMeScreen: Screen("contact_me_screen")
-    object SelectColorScreen: Screen("select_color_screen")
+    object PermissionScreen: Screen("permissions_screen")
 }
