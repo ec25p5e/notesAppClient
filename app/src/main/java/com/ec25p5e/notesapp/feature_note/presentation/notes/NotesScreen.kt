@@ -28,7 +28,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,7 +69,9 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
+import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
@@ -277,6 +278,11 @@ fun NotesScreen(
                                 },
                                 imeAction = ImeAction.Done,
                                 keyboardType = KeyboardType.Text,
+                                error = when(categoryTitleState.error) {
+                                    is AuthError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                                    is AuthError.InputTooShort -> stringResource(id = R.string.input_too_short_text)
+                                    else -> ""
+                                }
                             )
                         }
 
@@ -297,38 +303,47 @@ fun NotesScreen(
                                 .padding(4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Category.noteColors.forEach { color ->
-                                val colorInt = color.toArgb()
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                items(Category.categoryColor) { noteColor ->
+                                    val colorInt = noteColor.toArgb()
 
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .shadow(7.5.dp, CircleShape)
-                                        .clip(CircleShape)
-                                        .background(color)
-                                        .border(
-                                            width = 1.5.dp,
-                                            color = if (viewModelCategory.categoryColor.value == colorInt) {
-                                                Color.Black
-                                            } else Color.Transparent,
-                                            shape = CircleShape
-                                        )
-                                        .clickable {
-                                            scope.launch {
-                                                categoryBackgroundAnimatable.animateTo(
-                                                    targetValue = Color(colorInt),
-                                                    animationSpec = tween(
-                                                        durationMillis = 500
+                                    Box(
+                                        modifier = Modifier
+                                            .size(25.dp)
+                                            .shadow(7.5.dp, CircleShape)
+                                            .clip(CircleShape)
+                                            .background(noteColor)
+                                            .border(
+                                                width = 1.5.dp,
+                                                color = if (viewModelCategory.categoryColor.value == colorInt) {
+                                                    Color.Black
+                                                } else Color.Transparent,
+                                                shape = CircleShape
+                                            )
+                                            .clickable {
+                                                scope.launch {
+                                                    categoryBackgroundAnimatable.animateTo(
+                                                        targetValue = Color(colorInt),
+                                                        animationSpec = tween(
+                                                            durationMillis = 500
+                                                        )
+                                                    )
+                                                }
+                                                viewModelCategory.onEvent(
+                                                    CategoryEvent.ChangeColor(
+                                                        colorInt
                                                     )
                                                 )
                                             }
-                                            viewModelCategory.onEvent(
-                                                CategoryEvent.ChangeColor(
-                                                    colorInt
-                                                )
-                                            )
-                                        }
-                                )
+                                    )
+
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
                             }
                         }
                     }

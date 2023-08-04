@@ -23,6 +23,7 @@ object Constants {
 
     const val SHARED_PREF_NAME = "shared_pref"
     const val KEY_SETTINGS = "settings"
+    const val DATA_STORE_FILE_NAME = "app-settings.pb"
 
     const val RECONNECT_INTERVAL = 5000L
 }

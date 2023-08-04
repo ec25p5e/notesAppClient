@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.core.data.util
+package com.ec25p5e.notesapp.core.data.converter
 
 import androidx.room.TypeConverter
 import com.ec25p5e.notesapp.core.presentation.util.fromJson

@@ -13,4 +13,5 @@ data class NoteResponse(
     val categoryId: Int,
     val image: ArrayList<String>,
     val background: Int,
+    val isCopied: Int
 )

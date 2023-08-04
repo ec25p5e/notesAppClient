@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
@@ -32,7 +31,7 @@ class CategoryViewModel @Inject constructor(
     private val _categoryTitle = mutableStateOf(StandardTextFieldState())
     val categoryTitle: State<StandardTextFieldState> = _categoryTitle
 
-    private val _categoryColor = mutableStateOf(Category.noteColors.random().toArgb())
+    private val _categoryColor = mutableStateOf(Category.categoryColor.random().toArgb())
     val categoryColor: State<Int> = _categoryColor
 
     private val _categoryId = mutableStateOf(0)
@@ -96,16 +95,22 @@ class CategoryViewModel @Inject constructor(
                 viewModelScope.launch {
                     _eventFlow.emit(UiEventNote.ShowLoader)
 
-                    try {
-                        categoryUseCases.addCategory(
-                            Category(
-                                name = categoryTitle.value.text,
-                                color = categoryColor.value,
-                                timestamp = System.currentTimeMillis(),
-                                id = currentCategoryId
-                            )
+                    val result = categoryUseCases.addCategory(
+                        Category(
+                            name = categoryTitle.value.text,
+                            color = categoryColor.value,
+                            timestamp = System.currentTimeMillis(),
+                            id = currentCategoryId
                         )
+                    )
 
+                    if(result.titleError != null) {
+                        _categoryTitle.value = categoryTitle.value.copy(
+                            error = result.titleError
+                        )
+                    }
+
+                    if(result.isCorrect()) {
                         _categoryTitle.value = _categoryTitle.value.copy(
                             text = "",
                             hint = "",
@@ -113,14 +118,8 @@ class CategoryViewModel @Inject constructor(
                             error = null
                         )
 
-                        val newColor = Category.noteColors.random().toArgb()
+                        val newColor = Category.categoryColor.random().toArgb()
                         _categoryColor.value = newColor
-                    } catch(e: InvalidCategoryException) {
-                        _eventFlow.emit(
-                            UiEventNote.ShowSnackbar(
-                                UiText.DynamicString(e.message ?: "Couldn't save the category")
-                            )
-                        )
                     }
 
                     _eventFlow.emit(UiEventNote.ShowLoader)

@@ -2,8 +2,6 @@ package com.ec25p5e.notesapp.feature_note.domain.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.ec25p5e.notesapp.core.data.util.ArrayListConverter
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Primary
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Secondary
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Third
@@ -27,6 +25,7 @@ data class Note(
     val remoteId: String = "",
     val image:  ArrayList<String> = ArrayList(),
     val background: Int,
+    val isCopied: Int = 0,
     @PrimaryKey val id: Int? = null
 ) {
 

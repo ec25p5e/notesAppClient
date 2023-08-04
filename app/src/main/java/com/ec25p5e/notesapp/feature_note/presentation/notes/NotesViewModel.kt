@@ -83,6 +83,13 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.ArchiveNote -> {
                 viewModelScope.launch {
                     noteUseCases.archiveNote(event.noteId)
+                    _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.note_archived)))
+                }
+            }
+            is NotesEvent.CopyNote -> {
+                viewModelScope.launch {
+                    noteUseCases.copyNote(event.noteId)
+                    _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.note_copied)))
                 }
             }
             is NotesEvent.RestoreNote -> {

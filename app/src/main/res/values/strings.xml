@@ -133,4 +133,8 @@
     <string name="drawing">Start drawing</string>
     <string name="start_rec">Start register</string>
     <string name="associated_images">Associated images</string>
+    <string name="note_copied">Note copied successfully</string>
+    <string name="note_archived">Note archived successfully</string>
+    <string name="dearchive_note">Remove from archive</string>
+    <string name="input_too_short_text">Input value too short</string>
 </resources>

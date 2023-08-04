@@ -51,7 +51,7 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.TogglePasswordVisibility -> {
                 _loginState.value = loginState.value.copy(
-                    isPasswordVisible = !loginState.value.isPasswordVisible
+                    isPasswordVisible = loginState.value.isPasswordVisible.not()
                 )
             }
             is LoginEvent.Login -> {

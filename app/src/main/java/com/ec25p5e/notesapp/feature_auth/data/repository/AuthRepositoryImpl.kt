@@ -65,8 +65,6 @@ class AuthRepositoryImpl(
 
             if(response.successful) {
                 response.data?.let { authResponse ->
-                    println("Overriding token with ${authResponse.token}")
-
                     sharedPreferencesManager.put(authResponse.token, Constants.KEY_JWT_TOKEN)
                     sharedPreferencesManager.put(authResponse.userId, Constants.KEY_USER_ID)
                     sharedPreferencesManager.put(Settings(
@@ -92,7 +90,8 @@ class AuthRepositoryImpl(
                             isArchived = false,
                             categoryId = 1,
                             image = ArrayList(),
-                            background = R.drawable.bg_note_1
+                            background = R.drawable.bg_note_0,
+                            isCopied = 0
                         )
                     )
                 }

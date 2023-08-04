@@ -24,7 +24,7 @@ data class Category(
 ) {
 
     companion object {
-        val noteColors = listOf(
+        val categoryColor = listOf(
             RedOrange,
             LightGreen,
             Violet,

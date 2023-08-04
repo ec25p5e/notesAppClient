@@ -1,4 +1,12 @@
 ### ToDo:
+- Implementare il datastore invece delle shared preferences
+- Criptare il datastore
+- Aggiungere pulsante per eliminare il testo nella barra di ricerca (notes screen)
+- Aggiungere pulsante per eliminare il testo nella barra di ricerca (archive screen)
+- Implementare possibilità di scattare un'immagine
+- Implementare la onboarding screen
+- Implementare pulsante di logout
+- Implementare le impostazioni di tipo switch (collegare il backend)
 - Implementare la schermata per la gestione delle categorie
   - Eliminazione per trascinamento
   - Bottom Sheet per conferma (come eliminazione nota)
@@ -11,10 +19,22 @@
 
 
 
+### Bug fix:
+- Show and hide password in login screen
+- Quando si apre l'app riuscire a caricare le immagini nelle note
+- Eliminazione delle immagini nelle note
+- Ingrandire la dimensione delle icone per l'immagine di sfondo
+- Implementare LazyRow nel mostrare i colori nella creazione della categoria
+- Implmentare controllo del campo quando si lascia vuoto il nome della categoria
+- Implementare "Gestione permessi dell'app"
+- Aggiungere pulsante conferma per l'eliminazione delle immagini nella nota
 
 
-### In corso
-- Implementare la schermata di informazioni sull'app
+
+
+
+### In corso:
+
   
 
 

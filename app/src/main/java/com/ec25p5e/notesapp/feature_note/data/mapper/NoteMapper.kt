@@ -13,6 +13,7 @@ fun NoteResponse.toNote(): Note {
         categoryId = categoryId,
         remoteId = noteId, // Remote note ID,
         image = image,
-        background = background
+        background = background,
+        isCopied = isCopied
     )
 }

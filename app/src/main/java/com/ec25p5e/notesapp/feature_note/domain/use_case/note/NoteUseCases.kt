@@ -9,4 +9,5 @@ data class NoteUseCases(
     val getNotesForArchive: GetNotesForArchive,
     val getNotesByCategory: GetNoteByCategory,
     val dearchiveNote: DearchiveNote,
+    val copyNote: CopyNote
 )

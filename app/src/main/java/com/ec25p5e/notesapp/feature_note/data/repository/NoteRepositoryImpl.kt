@@ -117,4 +117,19 @@ class NoteRepositoryImpl(
     override fun dearchiveNote(id: Int) {
         dao.dearchiveNote(id)
     }
+
+    override fun copyNote(id: Int) {
+        val numberOfCopy = dao.getNumberOfCopy(id)
+        var currentNote = dao.getNoteById(id)
+        val newTitle = currentNote?.title.toString().plus(" ").plus(numberOfCopy)
+        val newNote = currentNote?.copy(
+            title = newTitle,
+        )
+
+        dao.insertNote(newNote!!)
+        currentNote = currentNote?.copy(
+            isCopied = currentNote.isCopied + 1
+        )
+        dao.insertNote(currentNote!!)
+    }
 }

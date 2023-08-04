@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import coil.ImageLoader
+import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.onboarding.OnBoardingScreen
@@ -112,7 +113,7 @@ fun Navigation(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
             )
         }
 
@@ -127,11 +128,14 @@ fun Navigation(
                 }
             ),
         ) {
+            val noteId = it.arguments?.getInt("noteId") ?: -1
+
             AddEditNoteScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                noteId = noteId
             )
         }
 

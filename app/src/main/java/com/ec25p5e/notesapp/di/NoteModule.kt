@@ -18,6 +18,7 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCas
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategories
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.AddNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.ArchiveNote
+import com.ec25p5e.notesapp.feature_note.domain.use_case.note.CopyNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DearchiveNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DeleteNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNote
@@ -102,7 +103,8 @@ object NoteModule {
             archiveNote = ArchiveNote(repository),
             getNotesForArchive = GetNotesForArchive(repository),
             getNotesByCategory = GetNoteByCategory(repository),
-            dearchiveNote = DearchiveNote(repository)
+            dearchiveNote = DearchiveNote(repository),
+            copyNote = CopyNote(repository)
         )
     }
 

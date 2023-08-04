@@ -17,6 +17,7 @@ sealed class AddEditNoteEvent {
     object IsSaveNote: AddEditNoteEvent()
 
     object SaveNote: AddEditNoteEvent()
+    object ToggleArchived: AddEditNoteEvent()
 
 
 }

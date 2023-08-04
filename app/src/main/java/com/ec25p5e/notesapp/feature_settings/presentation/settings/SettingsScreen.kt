@@ -26,6 +26,7 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsClickableComp
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGroup
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp

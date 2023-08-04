@@ -11,6 +11,7 @@ sealed class NotesEvent {
     data class ExportCsv(val noteId: Int): NotesEvent()
     data class ConvertInAudio(val noteId: Int): NotesEvent()
     data class ShareNote(val noteId: Int): NotesEvent()
+    data class CopyNote(val noteId: Int): NotesEvent()
 
     object RestoreNote: NotesEvent()
     object ToggleOrderSection: NotesEvent()

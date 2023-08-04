@@ -83,6 +83,8 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import coil.compose.AsyncImage
+import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveEvent
+import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
@@ -94,9 +96,11 @@ fun AddEditNoteScreen(
     scaffoldState: SnackbarHostState,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
+    noteId: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel(),
     viewModelCategory: CategoryViewModel = hiltViewModel(),
-    viewModelNotes: NotesViewModel = hiltViewModel()
+    viewModelNotes: NotesViewModel = hiltViewModel(),
+    viewModelArchive: ArchiveViewModel = hiltViewModel()
 ) {
     val scaffoldAddingBottomSheet = rememberBottomSheetScaffoldState()
     val scaffoldColorBottomSheet = rememberBottomSheetScaffoldState()
@@ -116,6 +120,7 @@ fun AddEditNoteScreen(
             Color(if (noteColor != -1) noteColor else viewModel.colorState.value)
         )
     }
+    val isArchived = viewModel.isArchivedState.value
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val categoryBackgroundAnimatable = remember {
@@ -153,6 +158,38 @@ fun AddEditNoteScreen(
                 }
                 is UiEventNote.ShowLoader -> {
                     viewModel.onEvent(AddEditNoteEvent.IsSaveNote)
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModelNotes.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEventNote.ShowSnackbar -> {
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModelArchive.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEventNote.ShowSnackbar -> {
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 else -> {
                 }
@@ -216,7 +253,7 @@ fun AddEditNoteScreen(
                             text = {
                                 Text(stringResource(id = R.string.convert_in_audio_text)) },
                             onClick = {
-                                viewModelNotes.onEvent(NotesEvent.ConvertInAudio(viewModel.currentNoteId!!))
+                                viewModelNotes.onEvent(NotesEvent.ConvertInAudio(noteId))
                             },
                             leadingIcon = {
                                 Icon(
@@ -226,25 +263,44 @@ fun AddEditNoteScreen(
                             }
                         )
 
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.archive_note)) },
-                            onClick = {
-                                viewModelNotes.onEvent(NotesEvent.ArchiveNote(viewModel.currentNoteId!!))
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_baseline_archive_24),
-                                    contentDescription = stringResource(id = R.string.archive_note)
-                                )
-                            }
-                        )
+                        if(isArchived) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(stringResource(id = R.string.dearchive_note)) },
+                                onClick = {
+                                    viewModel.onEvent(AddEditNoteEvent.ToggleArchived)
+                                    viewModelArchive.onEvent(ArchiveEvent.DeArchiveNote(noteId))
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_unarchive),
+                                        contentDescription = stringResource(id = R.string.dearchive_note)
+                                    )
+                                }
+                            )
+                        } else {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(stringResource(id = R.string.archive_note)) },
+                                onClick = {
+                                    viewModel.onEvent(AddEditNoteEvent.ToggleArchived)
+                                    viewModelNotes.onEvent(NotesEvent.ArchiveNote(noteId))
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_baseline_archive_24),
+                                        contentDescription = stringResource(id = R.string.archive_note)
+                                    )
+                                }
+                            )
+                        }
+
 
                         DropdownMenuItem(
                             text = {
                                 Text(stringResource(id = R.string.create_note_copy)) },
                             onClick = {
-
+                                viewModelNotes.onEvent(NotesEvent.CopyNote(viewModel.currentNoteId!!))
                             },
                             leadingIcon = {
                                 Icon(
@@ -530,7 +586,7 @@ fun AddEditNoteScreen(
                         }
                     }
 
-                    Row(
+                    /* Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -578,7 +634,7 @@ fun AddEditNoteScreen(
                                 overflow = TextOverflow.Ellipsis,
                             )
                         }
-                    }
+                    } */
                 }
             }
         }

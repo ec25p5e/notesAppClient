@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_auth.presentation.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -51,6 +52,7 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.GradientButton
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.util.UiEvent
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
@@ -72,9 +74,11 @@ fun LoginScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.ShowSnackbar -> {
-                    scaffoldState.showSnackbar(
-                        message = "Test"
-                    )
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 is UiEvent.Navigate -> {
                     onNavigate(event.route)
@@ -144,9 +148,11 @@ fun LoginScreen(
                         viewModel.onEvent(LoginEvent.EnteredEmail(it))
                     },
                     imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email   ,
+                    keyboardType = KeyboardType.Email,
                     error = when(emailState.error) {
                         is AuthError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                        is AuthError.InputTooShort -> stringResource(id = R.string.input_too_short_text)
+                        is AuthError.InvalidEmail -> stringResource(id = R.string.invalid_email_text)
                         else -> ""
                     }
                 )
@@ -168,6 +174,7 @@ fun LoginScreen(
                     },
                     error = when(passwordState.error) {
                         is AuthError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                        is AuthError.InputTooShort -> stringResource(id = R.string.input_too_short_text)
                         else -> ""
                     }
                 )
@@ -184,7 +191,7 @@ fun LoginScreen(
                     onClick = {
                         viewModel.onEvent(LoginEvent.Login)
                     },
-                    enabled = emailState.text != null && passwordState.text != null
+                    enabled = !state.isLoading
                 )
 
                 if (state.isLoading) {

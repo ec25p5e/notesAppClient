@@ -1,7 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
@@ -12,7 +11,6 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.UiText
-import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidNoteException
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
@@ -36,6 +34,9 @@ class AddEditNoteViewModel @Inject constructor(
     private val _contentState = mutableStateOf(StandardTextFieldState())
     val contentState: State<StandardTextFieldState> = _contentState
 
+    private val _isArchivedState = mutableStateOf(false)
+    val isArchivedState: State<Boolean> = _isArchivedState
+
     private val _colorState = mutableStateOf(Note.noteColors.random().toArgb())
     val colorState: State<Int> = _colorState
 
@@ -47,7 +48,7 @@ class AddEditNoteViewModel @Inject constructor(
 
     private val _state = mutableStateOf(AddEditNoteState(
         isAutoSaveEnabled = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isAutoSaveEnabled,
-        isSharing = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isSharingEnabled
+        isSharing = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isSharingEnabled,
     ))
     val state: State<AddEditNoteState> = _state
 
@@ -77,6 +78,7 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.content,
                             isHintVisible = false
                         )
+                        _isArchivedState.value = note.isArchived
                         _colorState.value = note.color
                         _noteCategory.value = note.categoryId
                         _chosenImageUri.value = uriArray
@@ -115,6 +117,9 @@ class AddEditNoteViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isSaving = _state.value.isSaving.not()
                 )
+            }
+            is AddEditNoteEvent.ToggleArchived -> {
+                _isArchivedState.value = _isArchivedState.value.not()
             }
             is AddEditNoteEvent.ChangeColor -> {
                 _colorState.value = event.color

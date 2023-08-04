@@ -11,7 +11,8 @@ class AddNote(
 ) {
 
     operator fun invoke(note: Note): AddEditNoteResult {
-        val titleError = if(note.title.isBlank()) AddEditNoteError.FieldEmpty else null
+        val titleError = (
+                if(note.title.isBlank()) AddEditNoteError.FieldEmpty else null)
         val contentError = if(note.content.isBlank()) AddEditNoteError.FieldEmpty else null
 
         if(titleError != null || contentError != null)

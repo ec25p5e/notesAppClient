@@ -24,4 +24,6 @@ interface NoteRepository {
     fun archiveNote(id: Int)
 
     fun dearchiveNote(id: Int)
+
+    fun copyNote(id: Int)
 }
