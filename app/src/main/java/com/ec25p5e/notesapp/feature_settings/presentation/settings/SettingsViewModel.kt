@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
-import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
 import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
 import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
 import dagger.hilt.android.lifecycle.HiltViewModel

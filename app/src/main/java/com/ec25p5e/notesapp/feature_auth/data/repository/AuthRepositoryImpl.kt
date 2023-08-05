@@ -1,11 +1,10 @@
 package com.ec25p5e.notesapp.feature_auth.data.repository
 
-import android.content.SharedPreferences
-import androidx.compose.ui.platform.LocalContext
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_ID
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_TOKEN
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.data.util.PreferencesManager
-import com.ec25p5e.notesapp.core.presentation.util.asString
-import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
@@ -17,14 +16,13 @@ import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
-import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
-import com.google.common.io.Resources
 import retrofit2.HttpException
 import java.io.IOException
 
 class AuthRepositoryImpl(
     private val api: AuthApi,
     private val sharedPreferencesManager: PreferencesManager,
+    private val dataStore: DataStorePreferenceImpl,
     private val categoryRepository: CategoryRepository,
     private val noteRepository: NoteRepository
 ): AuthRepository {
@@ -65,13 +63,8 @@ class AuthRepositoryImpl(
 
             if(response.successful) {
                 response.data?.let { authResponse ->
-                    sharedPreferencesManager.put(authResponse.token, Constants.KEY_JWT_TOKEN)
-                    sharedPreferencesManager.put(authResponse.userId, Constants.KEY_USER_ID)
-                    sharedPreferencesManager.put(Settings(
-                        isAutoSaveEnabled = false,
-                        isScreenshotEnabled = true,
-                        isSharingEnabled = false
-                    ), Constants.KEY_SETTINGS)
+                    dataStore.putPreference(USER_TOKEN, authResponse.token)
+                    dataStore.putPreference(USER_ID, authResponse.userId)
 
                     categoryRepository.insertCategory(
                         Category(
