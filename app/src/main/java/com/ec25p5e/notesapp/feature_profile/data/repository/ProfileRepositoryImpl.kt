@@ -2,6 +2,7 @@ package com.ec25p5e.notesapp.feature_profile.data.repository
 
 import android.content.SharedPreferences
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.UiText
@@ -10,13 +11,14 @@ import com.ec25p5e.notesapp.feature_profile.data.remote.ProfileApi
 import com.ec25p5e.notesapp.feature_profile.domain.models.Profile
 import com.ec25p5e.notesapp.feature_profile.domain.repository.ProfileRepository
 import com.google.gson.Gson
+import kotlinx.coroutines.runBlocking
 import retrofit2.HttpException
 import java.io.IOException
 
 class ProfileRepositoryImpl(
     private val profileApi: ProfileApi,
     private val gson: Gson,
-    private val sharedPreferences: SharedPreferences
+    private val dataStore: DataStorePreferenceImpl
 ): ProfileRepository {
 
     override suspend fun getProfile(userId: String): Resource<Profile> {
@@ -42,9 +44,8 @@ class ProfileRepositoryImpl(
     }
 
     override fun logout() {
-        sharedPreferences.edit()
-            .putString(Constants.KEY_JWT_TOKEN, "")
-            .putString(Constants.KEY_USER_ID, "")
-            .apply()
+        runBlocking {
+            dataStore.clearAllPreference()
+        }
     }
 }

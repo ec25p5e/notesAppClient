@@ -3,6 +3,8 @@ package com.ec25p5e.notesapp.feature_note.data.repository
 import android.content.SharedPreferences
 import android.util.Log
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_ID
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
@@ -16,6 +18,7 @@ import com.ec25p5e.notesapp.feature_note.data.remote.request.SimpleNoteRequest
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Singleton
@@ -24,10 +27,12 @@ import javax.inject.Singleton
 class NoteRepositoryImpl(
     private val dao: NoteDao,
     private val api: NoteApi,
-    sharedPreferences: SharedPreferences
+    dataStore: DataStorePreferenceImpl,
 ): NoteRepository {
 
-    private val userId = sharedPreferences.getString(Constants.KEY_USER_ID, "").toString()
+    private val userId = runBlocking { 
+        dataStore.getPreference(USER_ID, "").toString()
+    }
 
     override suspend fun getAllNotes(fetchFromRemote: Boolean): Resource<Flow<List<Note>>> {
         if(fetchFromRemote) {

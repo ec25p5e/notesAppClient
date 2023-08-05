@@ -14,7 +14,6 @@ import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
-import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
-    private val settingsUseCases: SettingsUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -47,8 +45,8 @@ class AddEditNoteViewModel @Inject constructor(
     val noteBackground: State<Int> = _noteBackground
 
     private val _state = mutableStateOf(AddEditNoteState(
-        isAutoSaveEnabled = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isAutoSaveEnabled,
-        isSharing = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS).isSharingEnabled,
+        isAutoSaveEnabled = true,
+        isSharing = true
     ))
     val state: State<AddEditNoteState> = _state
 

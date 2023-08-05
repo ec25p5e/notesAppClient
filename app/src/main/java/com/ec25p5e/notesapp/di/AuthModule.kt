@@ -1,7 +1,6 @@
 package com.ec25p5e.notesapp.di
 
 import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_auth.data.repository.AuthRepositoryImpl
 import com.ec25p5e.notesapp.feature_auth.domain.repository.AuthRepository
@@ -38,14 +37,12 @@ object AuthModule {
     @Singleton
     fun provideAuthRepository(
         api: AuthApi,
-        preferencesManager: PreferencesManager,
         dataStore: DataStorePreferenceImpl,
         categoryRepository: CategoryRepository,
         noteRepository: NoteRepository
     ): AuthRepository {
         return AuthRepositoryImpl(
             api,
-            preferencesManager,
             dataStore,
             categoryRepository,
             noteRepository

@@ -3,6 +3,7 @@ package com.ec25p5e.notesapp.di
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.feature_note.data.csv.CSVParser
 import com.ec25p5e.notesapp.feature_note.data.csv.NoteParser
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
@@ -78,8 +79,9 @@ object NoteModule {
     @Singleton
     fun provideNoteRepository(db: NoteDatabase,
                               api: NoteApi,
-                              sharedPreferences: SharedPreferences): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao, api, sharedPreferences)
+                              dataStore: DataStorePreferenceImpl
+    ): NoteRepository {
+        return NoteRepositoryImpl(db.noteDao, api, dataStore)
     }
 
     @Provides
@@ -87,9 +89,9 @@ object NoteModule {
     fun provideCategoryRepository(
         db: NoteDatabase,
         api: CategoryApi,
-        sharedPreferences: SharedPreferences
+        dataStore: DataStorePreferenceImpl
     ): CategoryRepository {
-        return CategoryRepositoryImpl(db.categoryDao, api, sharedPreferences)
+        return CategoryRepositoryImpl(db.categoryDao, api, dataStore)
     }
 
     @Provides

@@ -18,13 +18,7 @@ object Constants {
 
     const val DEFAULT_PAGE_SIZE = 20
 
-    const val KEY_JWT_TOKEN = "jwt_token"
-    const val KEY_USER_ID = "userId"
-
-    const val SHARED_PREF_NAME = "shared_pref"
-    const val KEY_SETTINGS = "settings"
     const val DATA_STORE_FILE_NAME = "app-settings.json"
-    const val USER_SETTINGS_NAME = "user-settings"
 
     const val RECONNECT_INTERVAL = 5000L
 }

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
-import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
 import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsUseCases: SettingsUseCases,
     private val dataStore: DataStore<AppSettings>
 ) : ViewModel() {
 

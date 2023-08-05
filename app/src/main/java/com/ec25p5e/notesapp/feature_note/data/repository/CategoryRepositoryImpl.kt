@@ -2,6 +2,8 @@ package com.ec25p5e.notesapp.feature_note.data.repository
 
 import android.content.SharedPreferences
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants
+import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
@@ -16,16 +18,19 @@ import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import retrofit2.HttpException
 import java.io.IOException
 
 class CategoryRepositoryImpl(
     private val dao: CategoryDao,
     private val api: CategoryApi,
-    private val sharedPreferences: SharedPreferences
+    dataStore: DataStorePreferenceImpl,
 ): CategoryRepository {
 
-    private val userId = sharedPreferences.getString(Constants.KEY_USER_ID, "").toString()
+    private val userId = runBlocking {
+        dataStore.getPreference(DataStorePreferenceConstants.USER_ID, "").toString()
+    }
 
     override suspend fun getAllCategories(fetchFromRemote: Boolean): Flow<List<Category>> {
         if(fetchFromRemote) {

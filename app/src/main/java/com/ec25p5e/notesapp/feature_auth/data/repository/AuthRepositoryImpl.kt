@@ -4,7 +4,6 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_ID
 import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_TOKEN
 import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
@@ -21,7 +20,6 @@ import java.io.IOException
 
 class AuthRepositoryImpl(
     private val api: AuthApi,
-    private val sharedPreferencesManager: PreferencesManager,
     private val dataStore: DataStorePreferenceImpl,
     private val categoryRepository: CategoryRepository,
     private val noteRepository: NoteRepository
