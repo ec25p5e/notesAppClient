@@ -343,19 +343,23 @@ fun AddEditNoteScreen(
             navActions = {
                 StandardOptionsMenu(
                     menuItem = {
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.convert_in_audio_text)) },
-                            onClick = {
-                                viewModel.onEvent(AddEditNoteEvent.ConvertInAudio(noteId, context))
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_audio),
-                                    contentDescription = stringResource(id = R.string.convert_in_audio_text)
-                                )
-                            }
-                        )
+                        if(false) {
+                            TODO("Not yet implemented")
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text(stringResource(id = R.string.convert_in_audio_text)) },
+                                onClick = {
+                                    viewModel.onEvent(AddEditNoteEvent.ConvertInAudio(noteId, context))
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_audio),
+                                        contentDescription = stringResource(id = R.string.convert_in_audio_text)
+                                    )
+                                }
+                            )
+                        }
 
                         DropdownMenuItem(
                             text = {

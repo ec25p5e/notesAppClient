@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.core.presentation.components
 
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import coil.ImageLoader
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.core.util.Screen
@@ -127,6 +129,16 @@ fun Navigation(
                     defaultValue = -1
                 }
             ),
+            deepLinks = listOf(
+                navDeepLink {
+                    action = Intent.ACTION_SEND
+                    mimeType = "text/*"
+                },
+                navDeepLink {
+                    action = Intent.ACTION_SEND
+                    mimeType = "image/*"
+                }
+            )
         ) {
             val noteId = it.arguments?.getInt("noteId") ?: -1
 
