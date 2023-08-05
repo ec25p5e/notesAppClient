@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.feature_settings.presentation.settings
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,29 +11,40 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
-import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsClickableComp
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGroup
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp
 import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -45,7 +57,10 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -60,6 +75,17 @@ fun SettingsScreen(
                 else -> {
                 }
             }
+        }
+    }
+
+
+    LaunchedEffect(lifecycleState) {
+        when (lifecycleState) {
+            Lifecycle.State.DESTROYED -> {}
+            Lifecycle.State.INITIALIZED -> {}
+            Lifecycle.State.CREATED -> {}
+            Lifecycle.State.STARTED -> {}
+            Lifecycle.State.RESUMED -> {}
         }
     }
 
@@ -130,14 +156,14 @@ fun SettingsScreen(
              * General section
              */
             SettingsGroup(name = R.string.settings_general) {
-                /* SettingsSwitchComp(
+                SettingsSwitchComp(
                     name = R.string.settings_general_auto_save,
                     icon = R.drawable.ic_save,
                     iconDesc = R.string.settings_general_auto_save,
-                    state =
+                    state = viewModel.getSettings().isAutoSaveEnabled
                 ) {
                     viewModel.onEvent(SettingsEvent.ToggleAutoSave)
-                } */
+                }
 
                 SettingsClickableComp(
                     name = R.string.settings_general_unlock_method,
@@ -183,11 +209,11 @@ fun SettingsScreen(
                     }
                 )
 
-                /* SettingsSwitchComp(
+                SettingsSwitchComp(
                     name = R.string.settings_advanced_screenshot_note,
                     icon = R.drawable.ic_screenshot,
                     iconDesc = R.string.settings_advanced_screenshot_note,
-                    state = state.settings!!.isScreenshotEnabled
+                    state = viewModel.getSettings().isScreenshotEnabled
                 ) {
                     viewModel.onEvent(SettingsEvent.ToggleScreenShotMode)
                 }
@@ -197,10 +223,10 @@ fun SettingsScreen(
                     name = R.string.settings_advanced_block_sharing,
                     icon = R.drawable.ic_sharing,
                     iconDesc = R.string.settings_advanced_block_sharing,
-                    state = state.settings!!.isSharingEnabled
+                    state = viewModel.getSettings().isSharingEnabled
                 ) {
                     viewModel.onEvent(SettingsEvent.ToggleSharingMode)
-                } */
+                }
             }
 
             Spacer(modifier = Modifier.height(SpaceMedium))
@@ -245,4 +271,19 @@ fun SettingsScreen(
             }
         }
     }
+}
+
+@Composable
+fun Lifecycle.observeAsState(): State<Lifecycle.Event> {
+    val state = remember { mutableStateOf(Lifecycle.Event.ON_ANY) }
+    DisposableEffect(this) {
+        val observer = LifecycleEventObserver { _, event ->
+            state.value = event
+        }
+        this@observeAsState.addObserver(observer)
+        onDispose {
+            this@observeAsState.removeObserver(observer)
+        }
+    }
+    return state
 }

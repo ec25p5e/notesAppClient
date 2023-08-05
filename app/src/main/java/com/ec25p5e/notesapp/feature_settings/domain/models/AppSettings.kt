@@ -1,12 +1,14 @@
 package com.ec25p5e.notesapp.feature_settings.domain.models
 
+import androidx.datastore.core.DataStore
 import com.ec25p5e.notesapp.feature_settings.domain.models.Language
+import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppSettings(
     val language: Language = Language.ENGLISH,
-    val isAutoSaveEnabled: Boolean = false,
+    var isAutoSaveEnabled: Boolean = false,
     val unlockMethod: UnlockMethod = UnlockMethod.NONE,
     val appTheme: AppTheme = AppTheme.NATURE,
     val isScreenshotEnabled: Boolean = true,

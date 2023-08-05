@@ -1,9 +1,11 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,15 +16,19 @@ import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
+import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
+    private var dataStore: DataStore<AppSettings>,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -45,8 +51,8 @@ class AddEditNoteViewModel @Inject constructor(
     val noteBackground: State<Int> = _noteBackground
 
     private val _state = mutableStateOf(AddEditNoteState(
-        isAutoSaveEnabled = true,
-        isSharing = true
+        isAutoSaveEnabled = runBlocking { dataStore.data.first().isAutoSaveEnabled },
+        isSharing = runBlocking { dataStore.data.first().isSharingEnabled }
     ))
     val state: State<AddEditNoteState> = _state
 
@@ -119,6 +125,11 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.ToggleArchived -> {
                 _isArchivedState.value = _isArchivedState.value.not()
             }
+            is AddEditNoteEvent.ToggleCategoryModal -> {
+                _state.value = _state.value.copy(
+                    isCategoryModalOpen = !_state.value.isCategoryModalOpen
+                )
+            }
             is AddEditNoteEvent.ChangeColor -> {
                 _colorState.value = event.color
             }
@@ -141,13 +152,15 @@ class AddEditNoteViewModel @Inject constructor(
                     val imageArray: ArrayList<String> = ArrayList()
                     _chosenImageUri.value.forEach { uri -> imageArray.add(uri.toString()) }
 
+                    Log.i("ADNVM", noteCategory.value.toString())
+
                     val noteInsert = Note(
                         title = titleState.value.text,
                         content = contentState.value.text,
                         timestamp = System.currentTimeMillis(),
                         color = colorState.value,
                         id = currentNoteId,
-                        categoryId = noteCategory.value,
+                        categoryId = _noteCategory.value,
                         image = imageArray,
                         background = _noteBackground.value
                     )

@@ -192,4 +192,6 @@ dependencies {
     //For lifecycle if not added earlier
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0-alpha01"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0-alpha01"
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0-alpha01")
 }

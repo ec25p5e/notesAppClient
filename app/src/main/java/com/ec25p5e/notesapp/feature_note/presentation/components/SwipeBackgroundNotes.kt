@@ -58,7 +58,7 @@ fun SwipeBackgroundNotes(
     ) {
         Icon(
             icon,
-            contentDescription = "Localized description",
+            contentDescription = null,
             modifier = Modifier.scale(scale)
         )
     }

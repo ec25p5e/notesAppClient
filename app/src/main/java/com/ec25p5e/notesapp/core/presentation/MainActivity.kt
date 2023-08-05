@@ -20,6 +20,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
+import com.ec25p5e.notesapp.core.data.local.serializer.AppSettingsSerializer
+import com.ec25p5e.notesapp.core.data.util.CryptoManager
 import com.ec25p5e.notesapp.core.presentation.components.Navigation
 import com.ec25p5e.notesapp.core.presentation.components.StandardScaffold
 import com.ec25p5e.notesapp.core.presentation.ui.theme.NotesAppTheme

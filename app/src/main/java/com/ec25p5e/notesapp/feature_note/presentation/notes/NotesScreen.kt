@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DismissValue
@@ -22,6 +24,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHostState
@@ -53,6 +56,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -79,6 +83,7 @@ import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackground
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -388,6 +393,15 @@ fun NotesScreen(
                     },
                     placeholder = { Text(stringResource(id = R.string.text_search_note)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                text = ""
+                            },
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = null)
+                        }
+                    }
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -397,7 +411,7 @@ fun NotesScreen(
                             .padding(bottom = 10.dp)
                     ) {
                         items(state.notes) { note ->
-                            if((note.title.contains(text) || note.content.contains(text)) && text.isNotEmpty()) {
+                            if((note.title.lowercase(Locale.ROOT).contains(text) || note.content.lowercase(Locale.ROOT).contains(text)) && text.isNotEmpty()) {
                                 NoteItem(
                                     note = note,
                                     modifier = Modifier

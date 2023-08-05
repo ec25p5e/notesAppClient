@@ -11,26 +11,33 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +48,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -83,8 +91,15 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import coil.compose.AsyncImage
+import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveEvent
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveViewModel
+import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
+import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
+import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
+import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
+import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundNotes
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
@@ -107,6 +122,7 @@ fun AddEditNoteScreen(
     var addingBottomSheet by rememberSaveable { mutableStateOf(false) }
     var colorBottomSheet by rememberSaveable { mutableStateOf(false) }
     val titleState = viewModel.titleState.value
+    val stateCategories = viewModelCategory.state.value
     val contentState = viewModel.contentState.value
     val categoryState = viewModelCategory.state.value
     val backgroundImage = viewModel.noteBackground.value
@@ -208,6 +224,81 @@ fun AddEditNoteScreen(
             },
             title = {
             }
+        )
+    }
+
+    if (state.isCategoryModalOpen) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+            },
+            icon = {
+                Icon(painterResource(id = R.drawable.ic_category), contentDescription = null) },
+            title = {
+                Text(text = stringResource(id = R.string.choose_category))
+            },
+            text = {
+                Column(
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                        ) {
+                            items(
+                                items = stateCategories.categories,
+                                key = { category -> category.id!! },
+                                itemContent = { category ->
+                                    CategoryItem(
+                                        category = category,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .border(
+                                                width = 1.5.dp,
+                                                color = if (category.id == viewModel.noteCategory.value) {
+                                                    Color.Black
+                                                } else Color.Transparent,
+                                                shape = RoundedCornerShape(10.dp)
+                                            ),
+                                        clickable = {
+                                            scope.launch {
+                                                categoryBackgroundAnimatable.animateTo(
+                                                    targetValue = Color(category.color),
+                                                    animationSpec = tween(
+                                                        durationMillis = 500
+                                                    )
+                                                )
+                                            }
+
+                                            category.id?.let {
+                                                AddEditNoteEvent.ChangeCategoryColor(it)
+                                            }?.let { viewModel.onEvent(it) }
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+                    }
+                ) {
+                    Text(stringResource(id = R.string.apply_btn_text))
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
         )
     }
 
@@ -314,7 +405,7 @@ fun AddEditNoteScreen(
                             text = {
                                 Text(stringResource(id = R.string.categorize_note)) },
                             onClick = {
-
+                                viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
                             },
                             leadingIcon = {
                                 Icon(
@@ -586,17 +677,24 @@ fun AddEditNoteScreen(
                         }
                     }
 
-                    /* Row(
+                    Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_draw),
-                                contentDescription = stringResource(id = R.string.drawing),
-                                modifier = Modifier
-                                    .size(24.dp)
-                            )
+                            IconButton(
+                                onClick = {
+                                    galleryLauncher.launch("image/jpeg")
+                                }
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_draw),
+                                    contentDescription = stringResource(id = R.string.drawing),
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                )
+                            }
+
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = stringResource(id = R.string.drawing),
@@ -616,12 +714,19 @@ fun AddEditNoteScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_rec),
-                                contentDescription = stringResource(id = R.string.start_rec),
-                                modifier = Modifier
-                                    .size(24.dp)
-                            )
+                            IconButton(
+                                onClick = {
+
+                                }
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_rec),
+                                    contentDescription = stringResource(id = R.string.start_rec),
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                )
+                            }
+
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = stringResource(id = R.string.start_rec),
@@ -634,7 +739,7 @@ fun AddEditNoteScreen(
                                 overflow = TextOverflow.Ellipsis,
                             )
                         }
-                    } */
+                    }
                 }
             }
         }

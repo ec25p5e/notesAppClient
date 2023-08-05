@@ -135,4 +135,6 @@
     <string name="note_copied">Note copiata</string>
     <string name="note_archived">Nota archiviata</string>
     <string name="dearchive_note">Rimuovi dall\'archivio</string>
+    <string name="input_too_short_text">Valore troppo corto</string>
+    <string name="choose_category">Scegli una categoria</string>
 </resources>
