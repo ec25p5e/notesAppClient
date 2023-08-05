@@ -1,5 +1,5 @@
 package com.ec25p5e.notesapp.feature_settings.domain.models
 
-data class AppTheme(
-    val themeName: String
-)
+enum class AppTheme {
+    ACQUA, LIGHT, NATURE, ENERGY, DARK
+}

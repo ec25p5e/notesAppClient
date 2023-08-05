@@ -20,21 +20,12 @@
 
 
 ### Bug fix:
-- Show and hide password in login screen
-- Quando si apre l'app riuscire a caricare le immagini nelle note
-- Eliminazione delle immagini nelle note
-- Ingrandire la dimensione delle icone per l'immagine di sfondo
-- Implementare LazyRow nel mostrare i colori nella creazione della categoria
-- Implmentare controllo del campo quando si lascia vuoto il nome della categoria
-- Implementare "Gestione permessi dell'app"
-- Aggiungere pulsante conferma per l'eliminazione delle immagini nella nota
-
 
 
 
 
 ### In corso:
-
+- Deprecare le shared preferences
   
 
 
@@ -58,3 +49,4 @@
   - Ridurre lo spessore dello spazio quando si seleziona una categoria
   - Implementare la schermata "impostazioni"
 - Implementare il salvataggio automatico
+- Implementare LazyRow nel mostrare i colori nella creazione della categoria

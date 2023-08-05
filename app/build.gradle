@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'com.ec25p5e.notesapp'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.ec25p5e.notesapp"
         minSdk 29
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -182,4 +182,14 @@ dependencies {
     implementation "androidx.datastore:datastore:1.0.0"
     implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
+
+    // For preference Datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //For Coroutines if not added earlier
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    //For lifecycle if not added earlier
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0-alpha01"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0-alpha01"
 }

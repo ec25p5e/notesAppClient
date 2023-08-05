@@ -2,11 +2,12 @@ package com.ec25p5e.notesapp.feature_settings.presentation.settings
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.UiText
+import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_settings.domain.models.Settings
 import com.ec25p5e.notesapp.feature_settings.domain.use_case.SettingsUseCases
 import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.DecimalFormatSymbols
 import java.util.Locale
@@ -22,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsUseCases: SettingsUseCases
+    private val settingsUseCases: SettingsUseCases,
+    private val dataStore: DataStore<AppSettings>
 ) : ViewModel() {
 
     private val _textPreference: MutableStateFlow<String> = MutableStateFlow("")
@@ -35,7 +38,7 @@ class SettingsViewModel @Inject constructor(
     private val separatorChar = DecimalFormatSymbols.getInstance(Locale.ENGLISH).decimalSeparator
 
     private val _state = mutableStateOf(SettingsState(
-        settings = settingsUseCases.getSharedPreferences(Constants.KEY_SETTINGS)
+        settings = dataStore
     ))
     val state: State<SettingsState> = _state
 
@@ -46,17 +49,11 @@ class SettingsViewModel @Inject constructor(
         when(event) {
             is SettingsEvent.ToggleAutoSave -> {
                 viewModelScope.launch {
-                    val oldValue = _state.value.settings!!.isAutoSaveEnabled
+                    val oldValue = dataStore.data.first().isAutoSaveEnabled
 
-                    _state.value = _state.value.copy(
-                        settings = Settings(
-                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled.not(),
-                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled,
-                            isSharingEnabled = _state.value.settings!!.isSharingEnabled
-                        )
-                    )
-
-                    settingsUseCases.editSharedPreferences(_state.value.settings!!)
+                    dataStore.updateData {
+                        it.copy(isAutoSaveEnabled = !it.isAutoSaveEnabled)
+                    }
 
                     _eventFlow.emit(UiEventSettings.ShowSnackbar(
                         UiText.StringResource(id =
@@ -71,17 +68,11 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsEvent.ToggleScreenShotMode -> {
                 viewModelScope.launch {
-                    val oldValue = _state.value.settings!!.isScreenshotEnabled
+                    val oldValue = _state.value.settings.data.first().isScreenshotEnabled
 
-                    _state.value = _state.value.copy(
-                        settings = Settings(
-                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled,
-                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled.not(),
-                            isSharingEnabled = _state.value.settings!!.isSharingEnabled
-                        )
-                    )
-
-                    settingsUseCases.editSharedPreferences(_state.value.settings!!)
+                    dataStore.updateData {
+                        it.copy(isScreenshotEnabled = !it.isScreenshotEnabled)
+                    }
 
                     _eventFlow.emit(UiEventSettings.ShowSnackbar(
                         UiText.StringResource(id =
@@ -96,17 +87,11 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsEvent.ToggleSharingMode -> {
                 viewModelScope.launch {
-                    val oldValue = _state.value.settings!!.isSharingEnabled
+                    val oldValue = _state.value.settings!!.data.first().isSharingEnabled
 
-                    _state.value = _state.value.copy(
-                        settings = Settings(
-                            isAutoSaveEnabled = _state.value.settings!!.isAutoSaveEnabled,
-                            isScreenshotEnabled = _state.value.settings!!.isScreenshotEnabled,
-                            isSharingEnabled = _state.value.settings!!.isSharingEnabled.not()
-                        )
-                    )
-
-                    settingsUseCases.editSharedPreferences(_state.value.settings!!)
+                    dataStore.updateData {
+                        it.copy(isSharingEnabled = !it.isSharingEnabled)
+                    }
 
                     _eventFlow.emit(UiEventSettings.ShowSnackbar(
                         UiText.StringResource(id =
@@ -121,29 +106,4 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
-
-    fun saveText(finalText: String) {
-        _textPreference.value = finalText
-        // place to store text
-    }
-
-    // just checking, if it is not empty - but you can check anything
-    fun checkTextInput(text: String) = text.isNotEmpty()
-
-    // filtering only numbers and decimal separator
-    fun filterNumbers(text: String): String = text.filter { it.isDigit() || it == separatorChar}
-
-    // someone can still put more decimal points into the textfield
-    // we should always try to convert text to number
-    fun checkNumber(text: String): Boolean {
-        val value = text.toDoubleOrNull() ?: return false
-        return value < 0
-    }
-
-    // saving the number / show error if something goes wrong
-    fun saveNumber(text: String) {
-        val value = text.toDoubleOrNull()
-            ?: 0 // default value / handle the error in some way - show toast or something
-    }
-
 }

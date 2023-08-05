@@ -7,6 +7,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import coil.ImageLoader
+import com.ec25p5e.notesapp.core.data.local.AppSettingsSerializer
 import com.ec25p5e.notesapp.core.data.util.PreferencesManager
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
@@ -36,7 +37,7 @@ object AppModule {
         )
     }
 
-    /* @Singleton
+    @Singleton
     @Provides
     fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<AppSettings> {
         return DataStoreFactory.create(
@@ -45,7 +46,7 @@ object AppModule {
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
-    } */
+    }
 
     @Provides
     @Singleton

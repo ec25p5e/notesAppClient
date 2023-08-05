@@ -32,6 +32,7 @@ import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGro
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp
 import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 
 
 @SuppressLint("UnrememberedMutableState")
@@ -129,14 +130,14 @@ fun SettingsScreen(
              * General section
              */
             SettingsGroup(name = R.string.settings_general) {
-                SettingsSwitchComp(
+                /* SettingsSwitchComp(
                     name = R.string.settings_general_auto_save,
                     icon = R.drawable.ic_save,
                     iconDesc = R.string.settings_general_auto_save,
-                    state = state.settings!!.isAutoSaveEnabled
+                    state =
                 ) {
                     viewModel.onEvent(SettingsEvent.ToggleAutoSave)
-                }
+                } */
 
                 SettingsClickableComp(
                     name = R.string.settings_general_unlock_method,
@@ -182,7 +183,7 @@ fun SettingsScreen(
                     }
                 )
 
-                SettingsSwitchComp(
+                /* SettingsSwitchComp(
                     name = R.string.settings_advanced_screenshot_note,
                     icon = R.drawable.ic_screenshot,
                     iconDesc = R.string.settings_advanced_screenshot_note,
@@ -199,7 +200,7 @@ fun SettingsScreen(
                     state = state.settings!!.isSharingEnabled
                 ) {
                     viewModel.onEvent(SettingsEvent.ToggleSharingMode)
-                }
+                } */
             }
 
             Spacer(modifier = Modifier.height(SpaceMedium))

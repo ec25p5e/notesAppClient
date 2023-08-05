@@ -1,6 +1,8 @@
 package com.ec25p5e.notesapp.core.data.util
 
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
