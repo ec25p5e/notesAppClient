@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.notes
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +35,7 @@ class NotesViewModel @Inject constructor(
 
     private var recentlyDeletedNote: Note? = null
     private var getNotesJob: Job? = null
+    private var textToSpeech: TextToSpeech? = null
 
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -131,9 +134,6 @@ class NotesViewModel @Inject constructor(
                 )
             }
             is NotesEvent.ExportCsv -> {
-
-            }
-            is NotesEvent.ConvertInAudio -> {
 
             }
             is NotesEvent.ShareNote -> {

@@ -1,7 +1,8 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
+import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
@@ -11,7 +12,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
-import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
@@ -23,6 +23,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.Locale
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,11 +59,14 @@ class AddEditNoteViewModel @Inject constructor(
     ))
     val state: State<AddEditNoteState> = _state
 
+    @SuppressLint("MutableCollectionMutableState")
     private val _chosenImageUri = mutableStateOf<ArrayList<Uri?>>(ArrayList())
     val chosenImageUri: State<ArrayList<Uri?>> = _chosenImageUri
 
     private val _eventFlow = MutableSharedFlow<UiEventNote>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private var textToSpeech:TextToSpeech? = null
 
     var currentNoteId: Int? = null
 
@@ -117,6 +123,40 @@ class AddEditNoteViewModel @Inject constructor(
                             _contentState.value.text.isBlank()
                 )
             }
+            is AddEditNoteEvent.ConvertInAudio -> {
+
+            }
+            is AddEditNoteEvent.ReadNote -> {
+                textToSpeech = TextToSpeech(
+                    event.context
+                ) {
+                    if(it == TextToSpeech.SUCCESS) {
+                        textToSpeech?.let { txtToSpeech ->
+                            txtToSpeech.language = Locale.ITALIAN
+                            txtToSpeech.setSpeechRate(1.0f)
+                            txtToSpeech.speak(
+                                _titleState.value.text,
+                                TextToSpeech.QUEUE_ADD,
+                                null,
+                                null
+                            )
+                        }
+
+                        Executors.newSingleThreadScheduledExecutor().schedule({
+                            textToSpeech?.let { txtToSpeech ->
+                                txtToSpeech.language = Locale.ITALIAN
+                                txtToSpeech.setSpeechRate(1.0f)
+                                txtToSpeech.speak(
+                                    _contentState.value.text,
+                                    TextToSpeech.QUEUE_ADD,
+                                    null,
+                                    null
+                                )
+                            }
+                        }, 3, TimeUnit.SECONDS)
+                    }
+                }
+            }
             is AddEditNoteEvent.IsSaveNote -> {
                 _state.value = _state.value.copy(
                     isSaving = _state.value.isSaving.not()
@@ -145,14 +185,14 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.DeleteImage -> {
                 viewModelScope.launch {
                     _chosenImageUri.value.remove(event.uri)
+                    _chosenImageUri.value = _chosenImageUri.value
+                    _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.image_removed)))
                 }
             }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     val imageArray: ArrayList<String> = ArrayList()
                     _chosenImageUri.value.forEach { uri -> imageArray.add(uri.toString()) }
-
-                    Log.i("ADNVM", noteCategory.value.toString())
 
                     val noteInsert = Note(
                         title = titleState.value.text,

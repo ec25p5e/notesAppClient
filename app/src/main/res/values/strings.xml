@@ -138,4 +138,6 @@
     <string name="dearchive_note">Remove from archive</string>
     <string name="input_too_short_text">Input value too short</string>
     <string name="choose_category">Choose a category</string>
+    <string name="read_note_text">Read note</string>
+    <string name="image_removed">Image removed successfully</string>
 </resources>

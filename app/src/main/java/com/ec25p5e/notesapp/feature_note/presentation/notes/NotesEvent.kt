@@ -9,7 +9,6 @@ sealed class NotesEvent {
     data class FilterNotesByCategory(val categoryId: Int): NotesEvent()
     data class SetNoteToDelete(val note: Note): NotesEvent()
     data class ExportCsv(val noteId: Int): NotesEvent()
-    data class ConvertInAudio(val noteId: Int): NotesEvent()
     data class ShareNote(val noteId: Int): NotesEvent()
     data class CopyNote(val noteId: Int): NotesEvent()
 

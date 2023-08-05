@@ -2,11 +2,13 @@ package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.Manifest
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -91,6 +93,7 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveEvent
@@ -344,11 +347,25 @@ fun AddEditNoteScreen(
                             text = {
                                 Text(stringResource(id = R.string.convert_in_audio_text)) },
                             onClick = {
-                                viewModelNotes.onEvent(NotesEvent.ConvertInAudio(noteId))
+                                viewModel.onEvent(AddEditNoteEvent.ConvertInAudio(noteId, context))
                             },
                             leadingIcon = {
                                 Icon(
                                     painterResource(id = R.drawable.ic_audio),
+                                    contentDescription = stringResource(id = R.string.convert_in_audio_text)
+                                )
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.read_note_text)) },
+                            onClick = {
+                                viewModel.onEvent(AddEditNoteEvent.ReadNote(context))
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_speak),
                                     contentDescription = stringResource(id = R.string.convert_in_audio_text)
                                 )
                             }
@@ -876,8 +893,8 @@ fun ImagePreviewItem(
             .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        AsyncImage(
-            model = uri,
+        Image(
+            painter = rememberAsyncImagePainter(uri),
             contentDescription = "",
             modifier = Modifier
                 .width(width)

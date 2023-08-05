@@ -137,4 +137,6 @@
     <string name="dearchive_note">Rimuovi dall\'archivio</string>
     <string name="input_too_short_text">Valore troppo corto</string>
     <string name="choose_category">Scegli una categoria</string>
+    <string name="read_note_text">Leggi ad alta voce</string>
+    <string name="image_removed">Immagine rimossa</string>
 </resources>

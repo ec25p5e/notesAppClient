@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.ui.focus.FocusState
 
@@ -13,12 +14,13 @@ sealed class AddEditNoteEvent {
     data class PickImage(val uri: List<Uri?>): AddEditNoteEvent()
     data class ChangeBgImage(val bgImage: Int): AddEditNoteEvent()
     data class DeleteImage(val uri: Uri): AddEditNoteEvent()
+    data class ConvertInAudio(val noteId: Int, val context: Context) : AddEditNoteEvent()
+    data class ReadNote(val context: Context): AddEditNoteEvent()
 
-    object IsSaveNote: AddEditNoteEvent()
+    data object IsSaveNote: AddEditNoteEvent()
 
-    object SaveNote: AddEditNoteEvent()
-    object ToggleArchived: AddEditNoteEvent()
-    object ToggleCategoryModal: AddEditNoteEvent()
-
+    data object SaveNote: AddEditNoteEvent()
+    data object ToggleArchived: AddEditNoteEvent()
+    data object ToggleCategoryModal: AddEditNoteEvent()
 
 }
