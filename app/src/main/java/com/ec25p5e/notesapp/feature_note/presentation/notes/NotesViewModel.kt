@@ -80,9 +80,6 @@ class NotesViewModel @Inject constructor(
                     }
                 }
             }
-            is NotesEvent.FetchNote -> {
-
-            }
             is NotesEvent.ArchiveNote -> {
                 viewModelScope.launch {
                     noteUseCases.archiveNote(event.noteId)
@@ -132,12 +129,6 @@ class NotesViewModel @Inject constructor(
                     noteToDelete = event.note,
                     isDeleting = true
                 )
-            }
-            is NotesEvent.ExportCsv -> {
-
-            }
-            is NotesEvent.ShareNote -> {
-
             }
         }
     }

@@ -441,7 +441,7 @@ fun AddEditNoteScreen(
                                 text = {
                                     Text(stringResource(id = R.string.share_note_text)) },
                                 onClick = {
-                                    viewModelNotes.onEvent(NotesEvent.ShareNote(viewModel.currentNoteId!!))
+                                          TODO("Not yet implemented")
                                 },
                                 leadingIcon = {
                                     Icon(

@@ -140,4 +140,5 @@
     <string name="choose_category">Choose a category</string>
     <string name="read_note_text">Read note</string>
     <string name="image_removed">Image removed successfully</string>
+    <string name="menu_category_text">Manage categories</string>
 </resources>

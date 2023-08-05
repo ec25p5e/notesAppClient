@@ -8,14 +8,11 @@ sealed class NotesEvent {
     data class ArchiveNote(val noteId: Int): NotesEvent()
     data class FilterNotesByCategory(val categoryId: Int): NotesEvent()
     data class SetNoteToDelete(val note: Note): NotesEvent()
-    data class ExportCsv(val noteId: Int): NotesEvent()
-    data class ShareNote(val noteId: Int): NotesEvent()
     data class CopyNote(val noteId: Int): NotesEvent()
 
     object RestoreNote: NotesEvent()
     object ToggleOrderSection: NotesEvent()
     object IsLoadingPage: NotesEvent()
-    object FetchNote: NotesEvent()
     object IsDeletingNote: NotesEvent()
     object DeleteNote: NotesEvent()
 }

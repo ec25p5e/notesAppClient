@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import coil.ImageLoader
-import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.onboarding.OnBoardingScreen
@@ -20,6 +19,7 @@ import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
+import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
 import com.ec25p5e.notesapp.feature_profile.presentation.profile.ProfileScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.choose_theme.ChooseThemeScreen
@@ -209,6 +209,14 @@ fun Navigation(
 
         composable(Screen.PermissionScreen.route) {
             PermissionScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigateUp = navController::navigateUp,
+            )
+        }
+
+        composable(Screen.CategoryScreen.route) {
+            CategoryScreen(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,

@@ -19,9 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DismissValue
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +33,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,15 +56,19 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
+import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSectionArchive
 import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundArchive
 import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundNotes
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -108,39 +116,66 @@ fun ArchiveScreen(
             modifier = Modifier.fillMaxWidth(),
             showBackArrow = false,
             navActions = {
-                IconButton(onClick = {
-                    viewModel.onEvent(ArchiveEvent.ToggleOrderSection)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Sort,
-                        contentDescription = "Sort notes",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
+                StandardOptionsMenu(
+                    menuItem = {
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.order_note_title)) },
+                            onClick = {
+                                viewModel.onEvent(ArchiveEvent.ToggleOrderSection)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_filter),
+                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
+                                )
+                            }
+                        )
+                    }
+                )
             }
         )
+
+        if(state.isOrderSectionVisible) {
+            AlertDialog(
+                onDismissRequest = {
+                    viewModel.onEvent(ArchiveEvent.ToggleOrderSection)
+                },
+                icon = {
+                    Icon(painterResource(id = R.drawable.ic_filter), contentDescription = null) },
+                title = {
+                    Text(text = stringResource(id = R.string.dialog_filter_title))
+                },
+                text = {
+                    OrderSectionArchive(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        noteOrder = state.noteOrder,
+                        onOrderChange = {
+                            viewModel.onEvent(ArchiveEvent.Order(it))
+                        }
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.onEvent(ArchiveEvent.ToggleOrderSection)
+                        }
+                    ) {
+                        Text(stringResource(id = R.string.apply_btn_text))
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(6.dp)
         ) {
-            AnimatedVisibility(
-                visible = state.isOrderSectionVisible,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                OrderSectionArchive(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    noteOrder = state.noteOrder,
-                    onOrderChange = {
-                        viewModel.onEvent(ArchiveEvent.Order(it))
-                    }
-                )
-            }
-
             Box(
                 modifier = Modifier
                     .semantics {
@@ -160,6 +195,15 @@ fun ArchiveScreen(
                     },
                     placeholder = { Text(stringResource(id = R.string.text_search_note_archive)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                text = ""
+                            },
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = null)
+                        }
+                    }
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -169,7 +213,7 @@ fun ArchiveScreen(
                             .padding(bottom = 10.dp)
                     ) {
                         items(state.notes) { note ->
-                            if((note.title.contains(text) || note.content.contains(text)) && text.isNotEmpty()) {
+                            if((note.title.lowercase(Locale.ROOT).contains(text) || note.content.lowercase(Locale.ROOT).contains(text)) && text.isNotEmpty()) {
                                 NoteItem(
                                     note = note,
                                     modifier = Modifier
