@@ -194,4 +194,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0-alpha01"
 
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0-alpha01")
+
+    implementation 'com.github.raheemadamboev:pin-lock-compose:1.0.1'
 }

@@ -22,5 +22,7 @@ sealed class AddEditNoteEvent {
     data object SaveNote: AddEditNoteEvent()
     data object ToggleArchived: AddEditNoteEvent()
     data object ToggleCategoryModal: AddEditNoteEvent()
+    data object OnPinCorrect: AddEditNoteEvent()
+    data object TogglePinError: AddEditNoteEvent()
 
 }

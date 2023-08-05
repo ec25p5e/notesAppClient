@@ -30,6 +30,7 @@ import com.ec25p5e.notesapp.feature_settings.presentation.permission_screen.Perm
 import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
+import com.ec25p5e.notesapp.feature_todo.presentation.todo.TodoScreen
 
 @Composable
 fun Navigation(
@@ -73,6 +74,15 @@ fun Navigation(
 
         composable(Screen.NotesScreen.route) {
             NotesScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.TodoScreen.route) {
+            TodoScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,

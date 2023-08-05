@@ -141,4 +141,13 @@
     <string name="read_note_text">Read note</string>
     <string name="image_removed">Image removed successfully</string>
     <string name="menu_category_text">Manage categories</string>
+    <string name="order_todo_title">Filter tasks</string>
+    <string name="all_your_todo">Your tasks</string>
+    <string name="lock_note_text">Lock note</string>
+    <string name="unlock_note_text">Unlock Note</string>
+    <string name="protected_note_text">Protected note</string>
+    <string name="enter_your_pin">Enter your pin</string>
+    <string name="pin_error">Wrong Pin</string>
+    <string name="retry_insert_pin">Retry</string>
+    <string name="string_enter_new_pin">Enter new pin</string>
 </resources>

@@ -53,11 +53,18 @@ class AddEditNoteViewModel @Inject constructor(
     private val _noteBackground = mutableStateOf(R.drawable.ic_no_image_note)
     val noteBackground: State<Int> = _noteBackground
 
+    private val _isLockedNote = mutableStateOf(false)
+    val isLockedNote: State<Boolean> = _isLockedNote
+
     private val _state = mutableStateOf(AddEditNoteState(
         isAutoSaveEnabled = runBlocking { dataStore.data.first().isAutoSaveEnabled },
-        isSharing = runBlocking { dataStore.data.first().isSharingEnabled }
+        isSharing = runBlocking { dataStore.data.first().isSharingEnabled },
+        lockedMode = runBlocking { dataStore.data.first().unlock },
     ))
     val state: State<AddEditNoteState> = _state
+
+    private val _unlockPinState = mutableStateOf(AddEditNotePinState())
+    val unlockPinState: State<AddEditNotePinState> = _unlockPinState
 
     @SuppressLint("MutableCollectionMutableState")
     private val _chosenImageUri = mutableStateOf<ArrayList<Uri?>>(ArrayList())
@@ -93,6 +100,7 @@ class AddEditNoteViewModel @Inject constructor(
                         _noteCategory.value = note.categoryId
                         _chosenImageUri.value = uriArray
                         _noteBackground.value = note.background
+                        _isLockedNote.value = note.isLocked
                     }
                 }
             }
@@ -125,6 +133,16 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.ConvertInAudio -> {
 
+            }
+            is AddEditNoteEvent.OnPinCorrect -> {
+                _unlockPinState.value = _unlockPinState.value.copy(
+                    isNoteUnlocked = !_unlockPinState.value.isNoteUnlocked
+                )
+            }
+            is AddEditNoteEvent.TogglePinError -> {
+                _unlockPinState.value = _unlockPinState.value.copy(
+                    isPinError = !_unlockPinState.value.isPinError
+                )
             }
             is AddEditNoteEvent.ReadNote -> {
                 textToSpeech = TextToSpeech(

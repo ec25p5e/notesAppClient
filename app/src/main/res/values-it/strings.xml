@@ -105,7 +105,7 @@
     <string name="settings_advanced_import_note">Importa note</string>
     <string name="settings_about_us_info">Informazioni sull\'app</string>
     <string name="settings_general_theme">Tema</string>
-    <string name="settings_general_unlock_method">Metodi di sblocco</string>
+    <string name="settings_general_unlock_method">Metodo di sblocco</string>
     <string name="settings_advanced_screenshot_note">Consenti acquisizione schermo</string>
     <string name="settings_advanced_block_sharing">Condivisione delle note</string>
     <string name="auto_save_enabled">Salvataggio automatico attivo</string>
@@ -139,4 +139,13 @@
     <string name="choose_category">Scegli una categoria</string>
     <string name="read_note_text">Leggi ad alta voce</string>
     <string name="image_removed">Immagine rimossa</string>
+    <string name="menu_category_text">Gestisci categorie</string>
+    <string name="order_todo_title">Filtra task</string>
+    <string name="all_your_todo">Tutte le task</string>
+    <string name="lock_note_text">Blocca nota</string>
+    <string name="unlock_note_text">Sblocca nota</string>
+    <string name="protected_note_text">Nota protetta</string>
+    <string name="enter_your_pin">Immetti il tuo pin</string>
+    <string name="pin_error">Pin errato!</string>
+    <string name="retry_insert_pin">Riprova Pin</string>
 </resources>

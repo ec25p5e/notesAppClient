@@ -27,6 +27,7 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardScaffold
 import com.ec25p5e.notesapp.core.presentation.ui.theme.NotesAppTheme
 import com.ec25p5e.notesapp.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
+import xyz.teamgravity.pin_lock_compose.PinManager
 import javax.inject.Inject
 
 
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        PinManager.initialize(this)
+
         setContent {
             NotesAppTheme {
                 // A surface container using the 'background' color from the theme

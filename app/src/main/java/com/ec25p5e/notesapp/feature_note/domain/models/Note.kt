@@ -23,9 +23,10 @@ data class Note(
     val isArchived: Boolean = false,
     val categoryId: Int = 1,
     val remoteId: String = "",
-    val image:  ArrayList<String> = ArrayList(),
+    val image: ArrayList<String> = ArrayList(),
     val background: Int,
     val isCopied: Int = 0,
+    val isLocked: Boolean = false,
     @PrimaryKey val id: Int? = null
 ) {
 

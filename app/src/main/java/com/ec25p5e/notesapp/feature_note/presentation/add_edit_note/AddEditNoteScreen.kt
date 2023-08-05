@@ -56,6 +56,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -103,8 +104,10 @@ import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
 import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
 import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundNotes
+import com.ec25p5e.notesapp.feature_settings.domain.models.UnlockMethod
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import xyz.teamgravity.pin_lock_compose.PinLock
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -128,6 +131,9 @@ fun AddEditNoteScreen(
     val stateCategories = viewModelCategory.state.value
     val contentState = viewModel.contentState.value
     val categoryState = viewModelCategory.state.value
+    val isNoteUnlocked = viewModel.unlockPinState.value.isNoteUnlocked
+    val isLockedNote = viewModel.isLockedNote.value
+    val lockedMode = viewModel.state.value.lockedMode.unlockMethod
     val backgroundImage = viewModel.noteBackground.value
     val noteColor = viewModel.colorState.value
     val state = viewModel.state.value
@@ -305,7 +311,7 @@ fun AddEditNoteScreen(
         )
     }
 
-    var baseColumnModifier: Modifier = if(backgroundImage != R.drawable.ic_no_image_note) {
+    val baseColumnModifier: Modifier = if(backgroundImage != R.drawable.ic_no_image_note) {
         Modifier
             .fillMaxSize()
             .paint(
@@ -318,571 +324,715 @@ fun AddEditNoteScreen(
             .background(Color(noteColor))
     }
 
-    Column(
-        modifier = baseColumnModifier
-    ) {
-        StandardToolbar(
-            onNavigateUp = {
-                if(state.isAutoSaveEnabled) {
-                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
+    if(isLockedNote && !isNoteUnlocked) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            StandardToolbar(
+                onNavigateUp = {
+                    onNavigateUp()
+                },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.protected_note_text),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                showBackArrow = true,
+                navActions = {
                 }
+            )
 
-                onNavigateUp()
-            },
-            title = {
-                Text(
-                    text = titleState.text,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.protected_content_image),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize(1.3f)
                 )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(noteColor)),
-            showBackArrow = true,
-            navActions = {
-                StandardOptionsMenu(
-                    menuItem = {
-                        if(false) {
-                            TODO("Not yet implemented")
+            }
+
+
+            if(lockedMode == UnlockMethod.PIN) {
+                PinLock(
+                    title = { pinExists ->
+                        Text(text = if (pinExists) stringResource(id = R.string.enter_your_pin) else "")
+                    },
+                    color = MaterialTheme.colorScheme.primary,
+                    onPinCorrect = {
+                        viewModel.onEvent(AddEditNoteEvent.OnPinCorrect)
+                    },
+                    onPinIncorrect = {
+                        viewModel.onEvent(AddEditNoteEvent.TogglePinError)
+                    },
+                    onPinCreated = {
+
+                    }
+                )
+            }
+
+            if(viewModel.unlockPinState.value.isPinError) {
+                AlertDialog(
+                    onDismissRequest = {
+                        viewModel.onEvent(AddEditNoteEvent.TogglePinError)
+                    },
+                    icon = {
+                        Icon(painterResource(id = R.drawable.ic_error), contentDescription = null) },
+                    title = {
+                        Text(text = stringResource(id = R.string.pin_error))
+                    },
+                    text = {
+
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                viewModel.onEvent(AddEditNoteEvent.TogglePinError)
+                            }
+                        ) {
+                            Text(stringResource(id = R.string.retry_insert_pin))
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+        }
+    } else {
+        Column(
+            modifier = baseColumnModifier
+        ) {
+            StandardToolbar(
+                onNavigateUp = {
+                    if (state.isAutoSaveEnabled) {
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    }
+
+                    onNavigateUp()
+                },
+                title = {
+                    Text(
+                        text = titleState.text,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(noteColor)),
+                showBackArrow = true,
+                navActions = {
+                    StandardOptionsMenu(
+                        menuItem = {
+                            if (false) {
+                                TODO("Not yet implemented")
+
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(id = R.string.convert_in_audio_text))
+                                    },
+                                    onClick = {
+                                        viewModel.onEvent(
+                                            AddEditNoteEvent.ConvertInAudio(
+                                                noteId,
+                                                context
+                                            )
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painterResource(id = R.drawable.ic_audio),
+                                            contentDescription = stringResource(id = R.string.convert_in_audio_text)
+                                        )
+                                    }
+                                )
+                            }
 
                             DropdownMenuItem(
                                 text = {
-                                    Text(stringResource(id = R.string.convert_in_audio_text)) },
+                                    Text(stringResource(id = R.string.read_note_text))
+                                },
                                 onClick = {
-                                    viewModel.onEvent(AddEditNoteEvent.ConvertInAudio(noteId, context))
+                                    viewModel.onEvent(AddEditNoteEvent.ReadNote(context))
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        painterResource(id = R.drawable.ic_audio),
+                                        painterResource(id = R.drawable.ic_speak),
                                         contentDescription = stringResource(id = R.string.convert_in_audio_text)
                                     )
                                 }
                             )
-                        }
 
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.read_note_text)) },
-                            onClick = {
-                                viewModel.onEvent(AddEditNoteEvent.ReadNote(context))
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_speak),
-                                    contentDescription = stringResource(id = R.string.convert_in_audio_text)
-                                )
-                            }
-                        )
-
-                        if(isArchived) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(stringResource(id = R.string.dearchive_note)) },
-                                onClick = {
-                                    viewModel.onEvent(AddEditNoteEvent.ToggleArchived)
-                                    viewModelArchive.onEvent(ArchiveEvent.DeArchiveNote(noteId))
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painterResource(id = R.drawable.ic_unarchive),
-                                        contentDescription = stringResource(id = R.string.dearchive_note)
-                                    )
-                                }
-                            )
-                        } else {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(stringResource(id = R.string.archive_note)) },
-                                onClick = {
-                                    viewModel.onEvent(AddEditNoteEvent.ToggleArchived)
-                                    viewModelNotes.onEvent(NotesEvent.ArchiveNote(noteId))
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painterResource(id = R.drawable.ic_baseline_archive_24),
-                                        contentDescription = stringResource(id = R.string.archive_note)
-                                    )
-                                }
-                            )
-                        }
-
-
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.create_note_copy)) },
-                            onClick = {
-                                viewModelNotes.onEvent(NotesEvent.CopyNote(viewModel.currentNoteId!!))
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_copy),
-                                    contentDescription = stringResource(id = R.string.create_note_copy)
-                                )
-                            }
-                        )
-
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.categorize_note)) },
-                            onClick = {
-                                viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_category),
-                                    contentDescription = stringResource(id = R.string.categorize_note)
-                                )
-                            }
-                        )
-
-                        if(state.isSharing) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(stringResource(id = R.string.share_note_text)) },
-                                onClick = {
-                                          TODO("Not yet implemented")
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painterResource(id = R.drawable.ic_sharing),
-                                        contentDescription = stringResource(id = R.string.share_note_text)
-                                    )
-                                }
-                            )
-                        }
-                    }
-                )
-            }
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(SpaceMedium)
-        ) {
-            StandardTextFieldState(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = titleState.text,
-                label = stringResource(id = R.string.label_note_title_input),
-                maxLength = Constants.MAX_NOTE_TITLE_LENGTH,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-                },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                },
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Text,
-                error = when(titleState.error) {
-                    is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
-                    is AddEditNoteError.InputTooShort -> stringResource(id = R.string.field_too_short_text_error, MIN_NOTE_TITLE_LENGTH)
-                    else -> ""
-                }
-            )
-
-            Spacer(modifier = Modifier.height(SpaceMedium))
-
-            StandardTextFieldState(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
-                    .height(400.dp),
-                text = contentState.text,
-                label = stringResource(id = R.string.label_note_description_input),
-                maxLength = Constants.MAX_NOTE_DESCRIPTION_LENGTH,
-                maxLines = 20,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
-                },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                },
-                singleLine = false,
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Text,
-                error = when(contentState.error) {
-                    is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
-                    is AddEditNoteError.InputTooShort -> stringResource(id = R.string.field_too_short_text_error, MIN_NOTE_TITLE_LENGTH)
-                    else -> ""
-                }
-            )
-
-            Spacer(modifier = Modifier.height(SpaceMedium))
-
-            if(imageUri.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.6f)
-                    ) {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.Center)
-                        ) {
-                            itemsIndexed(imageUri) { index, uri ->
-                                ImagePreviewItem(uri = uri!!,
-                                    height = screenHeight * 0.5f,
-                                    width = screenWidth * 0.6f,
+                            if (isArchived) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(id = R.string.dearchive_note))
+                                    },
                                     onClick = {
-                                        viewModel.onEvent(AddEditNoteEvent.DeleteImage(uri))
+                                        viewModel.onEvent(AddEditNoteEvent.ToggleArchived)
+                                        viewModelArchive.onEvent(ArchiveEvent.DeArchiveNote(noteId))
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painterResource(id = R.drawable.ic_unarchive),
+                                            contentDescription = stringResource(id = R.string.dearchive_note)
+                                        )
                                     }
                                 )
-                                Spacer(modifier = Modifier.width(5.dp))
+                            } else {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(id = R.string.archive_note))
+                                    },
+                                    onClick = {
+                                        viewModel.onEvent(AddEditNoteEvent.ToggleArchived)
+                                        viewModelNotes.onEvent(NotesEvent.ArchiveNote(noteId))
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painterResource(id = R.drawable.ic_baseline_archive_24),
+                                            contentDescription = stringResource(id = R.string.archive_note)
+                                        )
+                                    }
+                                )
+                            }
+
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text(stringResource(id = R.string.create_note_copy))
+                                },
+                                onClick = {
+                                    viewModelNotes.onEvent(NotesEvent.CopyNote(viewModel.currentNoteId!!))
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_copy),
+                                        contentDescription = stringResource(id = R.string.create_note_copy)
+                                    )
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Text(stringResource(id = R.string.categorize_note))
+                                },
+                                onClick = {
+                                    viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_category),
+                                        contentDescription = stringResource(id = R.string.categorize_note)
+                                    )
+                                }
+                            )
+
+                            if (isLockedNote) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(id = R.string.unlock_note_text))
+                                    },
+                                    onClick = {
+                                        viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painterResource(id = R.drawable.ic_lock_open),
+                                            contentDescription = stringResource(id = R.string.unlock_note_text)
+                                        )
+                                    }
+                                )
+                            } else {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(id = R.string.lock_note_text))
+                                    },
+                                    onClick = {
+                                        viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painterResource(id = R.drawable.ic_lock_close),
+                                            contentDescription = stringResource(id = R.string.lock_note_text)
+                                        )
+                                    }
+                                )
+                            }
+
+                            if (state.isSharing) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(stringResource(id = R.string.share_note_text))
+                                    },
+                                    onClick = {
+                                        TODO("Not yet implemented")
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painterResource(id = R.drawable.ic_sharing),
+                                            contentDescription = stringResource(id = R.string.share_note_text)
+                                        )
+                                    }
+                                )
                             }
                         }
-                    }
-                }
-            }
-        }
-
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Row(
-            modifier = Modifier
-                .padding(SpaceSmall)
-        ) {
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        scaffoldAddingBottomSheet.bottomSheetState.expand()
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.add_options),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            IconButton(
-                onClick = {
-                    scope.launch {
-                        scaffoldColorBottomSheet.bottomSheetState.expand()
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ColorLens,
-                    contentDescription = stringResource(id = R.string.settings_general_color),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            Button(
-                onClick = {
-                    viewModel.onEvent(AddEditNoteEvent.SaveNote)
-                },
-                enabled = (!state.isSaving && !state.isAutoSaveEnabled),
-            ) {
-                Text(
-                    text = stringResource(id =
-                    if(!state.isAutoSaveEnabled) {
-                        R.string.save_btn_text
-                    }else {
-                        R.string.auto_save_btn_text
-                    }),
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Spacer(modifier = Modifier.width(SpaceSmall))
-                if (state.isSaving) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .size(20.dp)
-                            .align(CenterVertically)
                     )
-                } else {
-                    Icon(imageVector = Icons.Default.Save, contentDescription = null)
                 }
-            }
-        }
-    }
+            )
 
-
-    /**
-     * Add element bottom sheet navigation
-     */
-    BottomSheetScaffold(
-        scaffoldState = scaffoldAddingBottomSheet,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            addingBottomSheet = true
-
-            Box(
+            Column(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(SpaceMedium)
             ) {
-                if (scaffoldAddingBottomSheet.bottomSheetState.hasExpandedState) {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                scaffoldAddingBottomSheet.bottomSheetState.partialExpand()
-                            }
-                        },
+                StandardTextFieldState(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = titleState.text,
+                    label = stringResource(id = R.string.label_note_title_input),
+                    maxLength = Constants.MAX_NOTE_TITLE_LENGTH,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
+                    },
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text,
+                    error = when (titleState.error) {
+                        is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                        is AddEditNoteError.InputTooShort -> stringResource(
+                            id = R.string.field_too_short_text_error,
+                            MIN_NOTE_TITLE_LENGTH
+                        )
+
+                        else -> ""
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(SpaceMedium))
+
+                StandardTextFieldState(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.5f)
+                        .height(400.dp),
+                    text = contentState.text,
+                    label = stringResource(id = R.string.label_note_description_input),
+                    maxLength = Constants.MAX_NOTE_DESCRIPTION_LENGTH,
+                    maxLines = 20,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                    },
+                    singleLine = false,
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Text,
+                    error = when (contentState.error) {
+                        is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                        is AddEditNoteError.InputTooShort -> stringResource(
+                            id = R.string.field_too_short_text_error,
+                            MIN_NOTE_TITLE_LENGTH
+                        )
+
+                        else -> ""
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(SpaceMedium))
+
+                if (imageUri.isNotEmpty()) {
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-
-                    }
-                }
-
-                Column {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(
-                                onClick = {
-
-                                }
-                            ) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_take_photo),
-                                    contentDescription = stringResource(id = R.string.take_photo),
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.take_photo),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.surfaceTint
-                                ),
-                                modifier = Modifier
-                                    .padding(16.dp),
-                                textAlign = TextAlign.Start,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(
-                                onClick = {
-                                    galleryLauncher.launch("image/jpeg")
-                                }
-                            ) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_image),
-                                    contentDescription = stringResource(id = R.string.add_image),
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.add_image),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.surfaceTint
-                                ),
-                                modifier = Modifier
-                                    .padding(16.dp),
-                                textAlign = TextAlign.Start,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(
-                                onClick = {
-                                    galleryLauncher.launch("image/jpeg")
-                                }
-                            ) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_draw),
-                                    contentDescription = stringResource(id = R.string.drawing),
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.drawing),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.surfaceTint
-                                ),
-                                modifier = Modifier
-                                    .padding(16.dp),
-                                textAlign = TextAlign.Start,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(
-                                onClick = {
-
-                                }
-                            ) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_rec),
-                                    contentDescription = stringResource(id = R.string.start_rec),
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(id = R.string.start_rec),
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    color = MaterialTheme.colorScheme.surfaceTint
-                                ),
-                                modifier = Modifier
-                                    .padding(16.dp),
-                                textAlign = TextAlign.Start,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    ) {}
-
-
-
-    /**
-     * Pick color and image section
-     */
-    BottomSheetScaffold(
-        scaffoldState = scaffoldColorBottomSheet,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            colorBottomSheet = true
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (scaffoldColorBottomSheet.bottomSheetState.hasExpandedState) {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                scaffoldColorBottomSheet.bottomSheetState.partialExpand()
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {}
-                }
-
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(SpaceSmall),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Row {
-                        LazyRow(
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(4.dp),
+                                .fillMaxHeight(0.6f)
+                        ) {
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center)
+                            ) {
+                                itemsIndexed(imageUri) { index, uri ->
+                                    ImagePreviewItem(uri = uri!!,
+                                        height = screenHeight * 0.5f,
+                                        width = screenWidth * 0.6f,
+                                        onClick = {
+                                            viewModel.onEvent(AddEditNoteEvent.DeleteImage(uri))
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(5.dp))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier
+                    .padding(SpaceSmall)
+            ) {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            scaffoldAddingBottomSheet.bottomSheetState.expand()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(id = R.string.add_options),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            scaffoldColorBottomSheet.bottomSheetState.expand()
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ColorLens,
+                        contentDescription = stringResource(id = R.string.settings_general_color),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    },
+                    enabled = (!state.isSaving && !state.isAutoSaveEnabled),
+                ) {
+                    Text(
+                        text = stringResource(
+                            id =
+                            if (!state.isAutoSaveEnabled) {
+                                R.string.save_btn_text
+                            } else {
+                                R.string.auto_save_btn_text
+                            }
+                        ),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(modifier = Modifier.width(SpaceSmall))
+                    if (state.isSaving) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .align(CenterVertically)
+                        )
+                    } else {
+                        Icon(imageVector = Icons.Default.Save, contentDescription = null)
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * Add element bottom sheet navigation
+         */
+        BottomSheetScaffold(
+            scaffoldState = scaffoldAddingBottomSheet,
+            sheetPeekHeight = 0.dp,
+            sheetContent = {
+                addingBottomSheet = true
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                ) {
+                    if (scaffoldAddingBottomSheet.bottomSheetState.hasExpandedState) {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    scaffoldAddingBottomSheet.bottomSheetState.partialExpand()
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+
+                        }
+                    }
+
+                    Column {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            items(Note.noteColors) { noteColor ->
-                                val colorInt = noteColor.toArgb()
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
+                                    onClick = {
 
-                                Box(
+                                    }
+                                ) {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_take_photo),
+                                        contentDescription = stringResource(id = R.string.take_photo),
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(id = R.string.take_photo),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.surfaceTint
+                                    ),
                                     modifier = Modifier
-                                        .size(25.dp)
-                                        .shadow(7.5.dp, CircleShape)
-                                        .clip(CircleShape)
-                                        .background(noteColor)
-                                        .border(
-                                            width = 1.5.dp,
-                                            color = if (viewModel.colorState.value == colorInt) {
-                                                Color.Black
-                                            } else Color.Transparent,
-                                            shape = CircleShape
-                                        )
-                                        .clickable {
-                                            scope.launch {
-                                                noteBackgroundAnimatable.animateTo(
-                                                    targetValue = Color(colorInt),
-                                                    animationSpec = tween(
-                                                        durationMillis = 500
+                                        .padding(16.dp),
+                                    textAlign = TextAlign.Start,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
+                                    onClick = {
+                                        galleryLauncher.launch("image/jpeg")
+                                    }
+                                ) {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_image),
+                                        contentDescription = stringResource(id = R.string.add_image),
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(id = R.string.add_image),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.surfaceTint
+                                    ),
+                                    modifier = Modifier
+                                        .padding(16.dp),
+                                    textAlign = TextAlign.Start,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
+                                    onClick = {
+                                        galleryLauncher.launch("image/jpeg")
+                                    }
+                                ) {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_draw),
+                                        contentDescription = stringResource(id = R.string.drawing),
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(id = R.string.drawing),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.surfaceTint
+                                    ),
+                                    modifier = Modifier
+                                        .padding(16.dp),
+                                    textAlign = TextAlign.Start,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(
+                                    onClick = {
+
+                                    }
+                                ) {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_rec),
+                                        contentDescription = stringResource(id = R.string.start_rec),
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(id = R.string.start_rec),
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.surfaceTint
+                                    ),
+                                    modifier = Modifier
+                                        .padding(16.dp),
+                                    textAlign = TextAlign.Start,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        ) {}
+
+
+        /**
+         * Pick color and image section
+         */
+        BottomSheetScaffold(
+            scaffoldState = scaffoldColorBottomSheet,
+            sheetPeekHeight = 0.dp,
+            sheetContent = {
+                colorBottomSheet = true
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (scaffoldColorBottomSheet.bottomSheetState.hasExpandedState) {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    scaffoldColorBottomSheet.bottomSheetState.partialExpand()
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {}
+                    }
+
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(SpaceSmall),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Row {
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                items(Note.noteColors) { noteColor ->
+                                    val colorInt = noteColor.toArgb()
+
+                                    Box(
+                                        modifier = Modifier
+                                            .size(25.dp)
+                                            .shadow(7.5.dp, CircleShape)
+                                            .clip(CircleShape)
+                                            .background(noteColor)
+                                            .border(
+                                                width = 1.5.dp,
+                                                color = if (viewModel.colorState.value == colorInt) {
+                                                    Color.Black
+                                                } else Color.Transparent,
+                                                shape = CircleShape
+                                            )
+                                            .clickable {
+                                                scope.launch {
+                                                    noteBackgroundAnimatable.animateTo(
+                                                        targetValue = Color(colorInt),
+                                                        animationSpec = tween(
+                                                            durationMillis = 500
+                                                        )
+                                                    )
+                                                }
+                                                viewModel.onEvent(
+                                                    AddEditNoteEvent.ChangeColor(
+                                                        colorInt
                                                     )
                                                 )
                                             }
-                                            viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
-                                        }
-                                )
+                                    )
 
-                                Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
                             }
                         }
-                    }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
 
-                    Row {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            items(Background.background) { bg ->
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .shadow(7.5.dp, CircleShape)
-                                        .clip(CircleShape)
-                                        .border(
-                                            width = 1.5.dp,
-                                            color = if (bg == backgroundImage) {
-                                                Color.Black
-                                            } else Color.Transparent,
-                                            shape = CircleShape
-                                        )
-                                        .paint(
-                                            painterResource(id = bg),
-                                            contentScale = ContentScale.FillBounds
-                                        )
-                                        .clickable {
-                                            scope.launch {
-                                                viewModel.onEvent(AddEditNoteEvent.ChangeBgImage(bg))
+                        Row {
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                items(Background.background) { bg ->
+                                    Box(
+                                        modifier = Modifier
+                                            .size(25.dp)
+                                            .shadow(7.5.dp, CircleShape)
+                                            .clip(CircleShape)
+                                            .border(
+                                                width = 1.5.dp,
+                                                color = if (bg == backgroundImage) {
+                                                    Color.Black
+                                                } else Color.Transparent,
+                                                shape = CircleShape
+                                            )
+                                            .paint(
+                                                painterResource(id = bg),
+                                                contentScale = ContentScale.FillBounds
+                                            )
+                                            .clickable {
+                                                scope.launch {
+                                                    viewModel.onEvent(
+                                                        AddEditNoteEvent.ChangeBgImage(
+                                                            bg
+                                                        )
+                                                    )
+                                                }
                                             }
-                                        }
-                                )
+                                    )
 
-                                Spacer(modifier = Modifier.width(16.dp))
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-    ) {}
+        ) {}
+    }
 }
 
 @Composable

@@ -9,7 +9,10 @@ import kotlinx.serialization.Serializable
 data class AppSettings(
     val language: Language = Language.ENGLISH,
     var isAutoSaveEnabled: Boolean = false,
-    val unlockMethod: UnlockMethod = UnlockMethod.NONE,
+    val unlock: Unlock = Unlock(
+        unlockMethod = UnlockMethod.PIN,
+        valueToUnlock = ""
+    ),
     val appTheme: AppTheme = AppTheme.NATURE,
     val isScreenshotEnabled: Boolean = true,
     val isSharingEnabled: Boolean = true
