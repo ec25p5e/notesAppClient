@@ -137,4 +137,12 @@ class NoteRepositoryImpl(
         )
         dao.insertNote(currentNote!!)
     }
+
+    override fun lockNote(id: Int) {
+        dao.lockNote(id)
+    }
+
+    override fun unLockNote(id: Int) {
+        dao.unLockNote(id)
+    }
 }

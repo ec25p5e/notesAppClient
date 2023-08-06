@@ -26,7 +26,9 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNoteByCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotes
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotesForArchive
+import com.ec25p5e.notesapp.feature_note.domain.use_case.note.LockNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
+import com.ec25p5e.notesapp.feature_note.domain.use_case.note.UnLockNote
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -106,7 +108,9 @@ object NoteModule {
             getNotesForArchive = GetNotesForArchive(repository),
             getNotesByCategory = GetNoteByCategory(repository),
             dearchiveNote = DearchiveNote(repository),
-            copyNote = CopyNote(repository)
+            copyNote = CopyNote(repository),
+            lockNote = LockNote(repository),
+            unLockNote = UnLockNote(repository)
         )
     }
 

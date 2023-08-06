@@ -86,6 +86,18 @@ class NotesViewModel @Inject constructor(
                     _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.note_archived)))
                 }
             }
+            is NotesEvent.LockNote -> {
+                viewModelScope.launch {
+                    noteUseCases.lockNote(event.noteId)
+                    _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.note_locked)))
+                }
+            }
+            is NotesEvent.UnLockNote -> {
+                viewModelScope.launch {
+                    noteUseCases.unLockNote(event.noteId)
+                    _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.note_unlocked)))
+                }
+            }
             is NotesEvent.CopyNote -> {
                 viewModelScope.launch {
                     noteUseCases.copyNote(event.noteId)

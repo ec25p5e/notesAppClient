@@ -134,15 +134,11 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.ConvertInAudio -> {
 
             }
-            is AddEditNoteEvent.OnPinCorrect -> {
-                _unlockPinState.value = _unlockPinState.value.copy(
-                    isNoteUnlocked = !_unlockPinState.value.isNoteUnlocked
-                )
+            is AddEditNoteEvent.UnlockNote -> {
+
             }
             is AddEditNoteEvent.TogglePinError -> {
-                _unlockPinState.value = _unlockPinState.value.copy(
-                    isPinError = !_unlockPinState.value.isPinError
-                )
+
             }
             is AddEditNoteEvent.ReadNote -> {
                 textToSpeech = TextToSpeech(
@@ -182,6 +178,9 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.ToggleArchived -> {
                 _isArchivedState.value = _isArchivedState.value.not()
+            }
+            is AddEditNoteEvent.ToggleLockMode -> {
+                _isLockedNote.value = _isLockedNote.value.not()
             }
             is AddEditNoteEvent.ToggleCategoryModal -> {
                 _state.value = _state.value.copy(

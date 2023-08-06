@@ -30,6 +30,7 @@ import com.ec25p5e.notesapp.feature_settings.presentation.permission_screen.Perm
 import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
+import com.ec25p5e.notesapp.feature_todo.presentation.add_edit_task.AddEditTaskScreen
 import com.ec25p5e.notesapp.feature_todo.presentation.todo.TodoScreen
 
 @Composable
@@ -158,6 +159,38 @@ fun Navigation(
                 imageLoader = imageLoader,
                 scaffoldState = scaffoldState,
                 noteId = noteId
+            )
+        }
+
+        composable(
+            route = Screen.AddEditTaskScreen.route + "?taskId={taskId}",
+            arguments = listOf(
+                navArgument(
+                    name = "taskId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    action = Intent.ACTION_SEND
+                    mimeType = "text/*"
+                },
+                navDeepLink {
+                    action = Intent.ACTION_SEND
+                    mimeType = "image/*"
+                }
+            )
+        ) {
+            val taskId = it.arguments?.getInt("taskId") ?: -1
+
+            AddEditTaskScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState,
+                taskId = taskId
             )
         }
 

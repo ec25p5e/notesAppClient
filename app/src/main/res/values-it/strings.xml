@@ -148,4 +148,14 @@
     <string name="enter_your_pin">Immetti il tuo pin</string>
     <string name="pin_error">Pin errato!</string>
     <string name="retry_insert_pin">Riprova Pin</string>
+    <string name="string_enter_new_pin">Immetti il nuovo pin</string>
+    <string name="note_locked">Nota bloccata</string>
+    <string name="note_unlocked">Nota sbloccata</string>
+    <string name="label_note_pin">Codice pin</string>
+    <string name="label_task_title_text">Nome della task</string>
+    <string name="item">Elemento</string>
+    <string name="add_checkable">Aggiungi caselle di controllo</string>
+    <string name="label_task_decription_text">Descrizione della task</string>
+    <string name="lock_content_note_text">Contenuto protetto</string>
+    <string name="lock_note_title_text">Nota protetta</string>
 </resources>

@@ -150,4 +150,13 @@
     <string name="pin_error">Wrong Pin</string>
     <string name="retry_insert_pin">Retry</string>
     <string name="string_enter_new_pin">Enter new pin</string>
+    <string name="note_locked">Note locked successfully</string>
+    <string name="note_unlocked">Note unlocked successfully</string>
+    <string name="label_note_pin">Pin code</string>
+    <string name="label_task_title_text">Task name</string>
+    <string name="item">Item</string>
+    <string name="add_checkable">Add checkable</string>
+    <string name="label_task_decription_text">Task description</string>
+    <string name="lock_content_note_text">Protected content</string>
+    <string name="lock_note_title_text">Protected note</string>
 </resources>

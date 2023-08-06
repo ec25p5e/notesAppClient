@@ -38,6 +38,12 @@ interface NoteDao {
     @Query("SELECT isCopied FROM note where id = :id")
     fun getNumberOfCopy(id: Int): Int
 
+    @Query("UPDATE note SET isLocked = 1 WHERE id = :id")
+    fun lockNote(id: Int)
+
+    @Query("UPDATE note SET isLocked = 0 WHERE id = :id")
+    fun unLockNote(id: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNote(note: Note)
 

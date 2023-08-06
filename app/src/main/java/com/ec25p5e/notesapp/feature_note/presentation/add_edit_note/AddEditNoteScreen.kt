@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
@@ -347,38 +348,65 @@ fun AddEditNoteScreen(
             )
 
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.protected_content_image),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(1.3f)
-                )
+            Row {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.protected_content_image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth(1.1f)
+                    )
+                }
             }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                StandardTextFieldState(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f),
+                    text = "",
+                    label = stringResource(id = R.string.label_note_pin),
+                    maxLength = Constants.MAX_PIN_LENGTH,
+                    onValueChange = {
 
-            if(lockedMode == UnlockMethod.PIN) {
-                PinLock(
-                    title = { pinExists ->
-                        Text(text = if (pinExists) stringResource(id = R.string.enter_your_pin) else "")
                     },
-                    color = MaterialTheme.colorScheme.primary,
-                    onPinCorrect = {
-                        viewModel.onEvent(AddEditNoteEvent.OnPinCorrect)
-                    },
-                    onPinIncorrect = {
-                        viewModel.onEvent(AddEditNoteEvent.TogglePinError)
-                    },
-                    onPinCreated = {
+                    onFocusChange = {
 
+                    },
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number,
+                    error = when (titleState.error) {
+                        is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                        is AddEditNoteError.InputTooShort -> stringResource(
+                            id = R.string.field_too_short_text_error,
+                            MIN_NOTE_TITLE_LENGTH
+                        )
+                        else -> ""
                     }
                 )
+
+                Button(
+                    onClick = {
+                        viewModel.onEvent(AddEditNoteEvent.UnlockNote)
+                    },
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.unlock_note_text),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+
+                    Spacer(modifier = Modifier.width(SpaceSmall))
+                    Icon(imageVector = Icons.Default.LockOpen, contentDescription = null)
+                }
             }
 
-            if(viewModel.unlockPinState.value.isPinError) {
+            /* if(viewModel.unlockPinState.value.isPinError) {
                 AlertDialog(
                     onDismissRequest = {
                         viewModel.onEvent(AddEditNoteEvent.TogglePinError)
@@ -403,7 +431,7 @@ fun AddEditNoteScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 )
-            }
+            } */
         }
     } else {
         Column(
@@ -431,29 +459,25 @@ fun AddEditNoteScreen(
                 navActions = {
                     StandardOptionsMenu(
                         menuItem = {
-                            if (false) {
-                                TODO("Not yet implemented")
-
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(stringResource(id = R.string.convert_in_audio_text))
-                                    },
-                                    onClick = {
-                                        viewModel.onEvent(
-                                            AddEditNoteEvent.ConvertInAudio(
-                                                noteId,
-                                                context
-                                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(stringResource(id = R.string.convert_in_audio_text))
+                                },
+                                onClick = {
+                                    viewModel.onEvent(
+                                        AddEditNoteEvent.ConvertInAudio(
+                                            noteId,
+                                            context
                                         )
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            painterResource(id = R.drawable.ic_audio),
-                                            contentDescription = stringResource(id = R.string.convert_in_audio_text)
-                                        )
-                                    }
-                                )
-                            }
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painterResource(id = R.drawable.ic_audio),
+                                        contentDescription = stringResource(id = R.string.convert_in_audio_text)
+                                    )
+                                }
+                            )
 
                             DropdownMenuItem(
                                 text = {
@@ -470,7 +494,7 @@ fun AddEditNoteScreen(
                                 }
                             )
 
-                            if (isArchived) {
+                            if (isArchived && noteId != -1) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.dearchive_note))
@@ -486,7 +510,7 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            } else {
+                            } else if(!isArchived && noteId != -1) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.archive_note))
@@ -541,7 +565,8 @@ fun AddEditNoteScreen(
                                         Text(stringResource(id = R.string.unlock_note_text))
                                     },
                                     onClick = {
-                                        viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+                                        viewModelNotes.onEvent(NotesEvent.UnLockNote(noteId))
+                                        viewModel.onEvent(AddEditNoteEvent.ToggleLockMode)
                                     },
                                     leadingIcon = {
                                         Icon(
@@ -556,7 +581,8 @@ fun AddEditNoteScreen(
                                         Text(stringResource(id = R.string.lock_note_text))
                                     },
                                     onClick = {
-                                        viewModel.onEvent(AddEditNoteEvent.ToggleCategoryModal)
+                                        viewModelNotes.onEvent(NotesEvent.LockNote(noteId))
+                                        viewModel.onEvent(AddEditNoteEvent.ToggleLockMode)
                                     },
                                     leadingIcon = {
                                         Icon(

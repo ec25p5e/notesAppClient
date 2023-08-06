@@ -41,7 +41,7 @@ fun StandardScaffold(
             contentDescription = stringResource(id = R.string.cont_todo_home),
             showFab = true,
             fabClick = {
-                navController.navigate(Screen.CreatePostScreen.route)
+                navController.navigate(Screen.AddEditTaskScreen.route)
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),

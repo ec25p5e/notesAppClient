@@ -32,6 +32,9 @@ fun NoteItem(
     cutCornerSize: Dp = 30.dp
 ) {
 
+    val title = if(note.isLocked) stringResource(id = R.string.lock_note_title_text) else note.title
+    val content = if(note.isLocked) stringResource(id = R.string.lock_content_note_text) else note.content
+
     Box(
         modifier = modifier
             .padding(vertical = 8.dp)
@@ -69,7 +72,7 @@ fun NoteItem(
                 .padding(end = 32.dp)
         ) {
             Text(
-                text = note.title,
+                text = title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
@@ -79,7 +82,7 @@ fun NoteItem(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = note.content,
+                text = content,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 10,

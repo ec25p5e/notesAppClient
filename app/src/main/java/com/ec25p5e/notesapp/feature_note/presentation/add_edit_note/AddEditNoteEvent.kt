@@ -16,13 +16,13 @@ sealed class AddEditNoteEvent {
     data class DeleteImage(val uri: Uri): AddEditNoteEvent()
     data class ConvertInAudio(val noteId: Int, val context: Context) : AddEditNoteEvent()
     data class ReadNote(val context: Context): AddEditNoteEvent()
+    data object UnlockNote: AddEditNoteEvent()
 
     data object IsSaveNote: AddEditNoteEvent()
 
     data object SaveNote: AddEditNoteEvent()
     data object ToggleArchived: AddEditNoteEvent()
     data object ToggleCategoryModal: AddEditNoteEvent()
-    data object OnPinCorrect: AddEditNoteEvent()
+    data object ToggleLockMode: AddEditNoteEvent()
     data object TogglePinError: AddEditNoteEvent()
-
 }
