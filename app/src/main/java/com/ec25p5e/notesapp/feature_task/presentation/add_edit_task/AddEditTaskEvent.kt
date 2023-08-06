@@ -1,7 +1,6 @@
-package com.ec25p5e.notesapp.feature_todo.presentation.add_edit_task
+package com.ec25p5e.notesapp.feature_task.presentation.add_edit_task
 
 import androidx.compose.ui.focus.FocusState
-import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
 
 sealed class AddEditTaskEvent {
     data class EnteredTitle(val value: String): AddEditTaskEvent()

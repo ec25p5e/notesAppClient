@@ -1,17 +1,14 @@
 package com.ec25p5e.notesapp.di
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.room.Room
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.feature_note.data.csv.CSVParser
-import com.ec25p5e.notesapp.feature_note.data.csv.NoteParser
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
 import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
 import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
 import com.ec25p5e.notesapp.feature_note.data.repository.CategoryRepositoryImpl
 import com.ec25p5e.notesapp.feature_note.data.repository.NoteRepositoryImpl
-import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.AddCategory
@@ -29,7 +26,6 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotesForArchive
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.LockNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.UnLockNote
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

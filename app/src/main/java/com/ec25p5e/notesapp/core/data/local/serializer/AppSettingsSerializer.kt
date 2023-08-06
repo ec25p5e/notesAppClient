@@ -1,7 +1,7 @@
 package com.ec25p5e.notesapp.core.data.local.serializer
 
 import androidx.datastore.core.Serializer
-import com.ec25p5e.notesapp.core.data.util.CryptoManager
+import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json

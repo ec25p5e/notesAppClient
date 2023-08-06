@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_todo.domain.models
+package com.ec25p5e.notesapp.feature_task.domain.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

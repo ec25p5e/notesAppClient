@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_todo.presentation.components
+package com.ec25p5e.notesapp.feature_task.presentation.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,9 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
-import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
-import com.ec25p5e.notesapp.feature_todo.presentation.add_edit_task.AddEditTaskViewModel
+import com.ec25p5e.notesapp.feature_task.presentation.add_edit_task.AddEditTaskViewModel
 
 @Composable
 fun CheckableItem(

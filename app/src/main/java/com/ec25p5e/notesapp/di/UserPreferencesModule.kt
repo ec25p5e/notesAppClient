@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferences
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferences
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

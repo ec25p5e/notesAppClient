@@ -1,6 +1,6 @@
 package com.ec25p5e.notesapp.di
 
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.feature_auth.data.remote.AuthApi
 import com.ec25p5e.notesapp.feature_auth.data.repository.AuthRepositoryImpl
 import com.ec25p5e.notesapp.feature_auth.domain.repository.AuthRepository

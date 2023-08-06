@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.core.data.util
+package com.ec25p5e.notesapp.core.data.local.encryption
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties

@@ -1,9 +1,7 @@
 package com.ec25p5e.notesapp.feature_profile.data.repository
 
-import android.content.SharedPreferences
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_profile.data.mapper.toProfile

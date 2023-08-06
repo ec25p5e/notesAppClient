@@ -30,8 +30,8 @@ import com.ec25p5e.notesapp.feature_settings.presentation.permission_screen.Perm
 import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
-import com.ec25p5e.notesapp.feature_todo.presentation.add_edit_task.AddEditTaskScreen
-import com.ec25p5e.notesapp.feature_todo.presentation.todo.TodoScreen
+import com.ec25p5e.notesapp.feature_task.presentation.add_edit_task.AddEditTaskScreen
+import com.ec25p5e.notesapp.feature_task.presentation.todo.TodoScreen
 
 @Composable
 fun Navigation(

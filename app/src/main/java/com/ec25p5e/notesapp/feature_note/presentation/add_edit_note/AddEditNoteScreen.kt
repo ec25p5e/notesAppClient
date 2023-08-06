@@ -2,7 +2,6 @@ package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.Manifest
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,18 +28,15 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,13 +47,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -94,21 +88,12 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.AddEditNoteError
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import com.ec25p5e.notesapp.core.util.Screen
-import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveEvent
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveViewModel
-import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
-import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
-import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
-import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackgroundNotes
-import com.ec25p5e.notesapp.feature_settings.domain.models.UnlockMethod
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import xyz.teamgravity.pin_lock_compose.PinLock
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -131,10 +116,9 @@ fun AddEditNoteScreen(
     val titleState = viewModel.titleState.value
     val stateCategories = viewModelCategory.state.value
     val contentState = viewModel.contentState.value
-    val categoryState = viewModelCategory.state.value
-    val isNoteUnlocked = viewModel.unlockPinState.value.isNoteUnlocked
+    val pinState = viewModel.pinState.value
     val isLockedNote = viewModel.isLockedNote.value
-    val lockedMode = viewModel.state.value.lockedMode.unlockMethod
+    val unlockState = viewModel.unlockPinState.value
     val backgroundImage = viewModel.noteBackground.value
     val noteColor = viewModel.colorState.value
     val state = viewModel.state.value
@@ -325,7 +309,7 @@ fun AddEditNoteScreen(
             .background(Color(noteColor))
     }
 
-    if(isLockedNote && !isNoteUnlocked) {
+    if(isLockedNote && !unlockState.isNoteUnlocked) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -370,14 +354,14 @@ fun AddEditNoteScreen(
                 StandardTextFieldState(
                     modifier = Modifier
                         .fillMaxWidth(0.5f),
-                    text = "",
+                    text = pinState.text,
                     label = stringResource(id = R.string.label_note_pin),
                     maxLength = Constants.MAX_PIN_LENGTH,
                     onValueChange = {
-
+                        viewModel.onEvent(AddEditNoteEvent.EnteredPin(it))
                     },
                     onFocusChange = {
-
+                        viewModel.onEvent(AddEditNoteEvent.ChangePinFocus(it))
                     },
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Number,
@@ -390,7 +374,15 @@ fun AddEditNoteScreen(
                         else -> ""
                     }
                 )
+            }
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Button(
                     onClick = {
                         viewModel.onEvent(AddEditNoteEvent.UnlockNote)
@@ -406,7 +398,7 @@ fun AddEditNoteScreen(
                 }
             }
 
-            /* if(viewModel.unlockPinState.value.isPinError) {
+            if(viewModel.unlockPinState.value.isPinError) {
                 AlertDialog(
                     onDismissRequest = {
                         viewModel.onEvent(AddEditNoteEvent.TogglePinError)
@@ -431,9 +423,9 @@ fun AddEditNoteScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                 )
-            } */
+            }
         }
-    } else {
+    } else if(unlockState.isNoteUnlocked || !isLockedNote) {
         Column(
             modifier = baseColumnModifier
         ) {

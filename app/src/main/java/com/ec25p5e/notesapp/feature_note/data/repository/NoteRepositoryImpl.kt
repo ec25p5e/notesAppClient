@@ -1,19 +1,14 @@
 package com.ec25p5e.notesapp.feature_note.data.repository
 
-import android.content.SharedPreferences
-import android.util.Log
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_ID
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_ID
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDao
 import com.ec25p5e.notesapp.feature_note.data.mapper.toNote
 import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
-import com.ec25p5e.notesapp.feature_note.data.remote.request.CreateNoteRequest
-import com.ec25p5e.notesapp.feature_note.data.remote.request.DeleteNoteRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.request.SimpleNoteRequest
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository

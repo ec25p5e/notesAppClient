@@ -1,6 +1,5 @@
-package com.ec25p5e.notesapp.core.data.local.preferences
+package com.ec25p5e.notesapp.core.data.local.datastore_pref
 
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.Flow
 

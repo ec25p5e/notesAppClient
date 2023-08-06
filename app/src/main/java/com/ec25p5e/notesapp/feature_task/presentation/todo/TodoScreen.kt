@@ -1,6 +1,5 @@
-package com.ec25p5e.notesapp.feature_todo.presentation.todo
+package com.ec25p5e.notesapp.feature_task.presentation.todo
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,11 +19,6 @@ import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
-import com.ec25p5e.notesapp.core.presentation.util.asString
-import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
-import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
-import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun TodoScreen(

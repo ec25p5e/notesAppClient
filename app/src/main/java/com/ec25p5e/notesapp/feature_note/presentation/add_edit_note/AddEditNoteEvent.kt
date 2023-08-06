@@ -9,6 +9,8 @@ sealed class AddEditNoteEvent {
     data class ChangeTitleFocus(val focusState: FocusState): AddEditNoteEvent()
     data class EnteredContent(val value: String): AddEditNoteEvent()
     data class ChangeContentFocus(val focusState: FocusState): AddEditNoteEvent()
+    data class EnteredPin(val value: String): AddEditNoteEvent()
+    data class ChangePinFocus(val focusState: FocusState): AddEditNoteEvent()
     data class ChangeColor(val color: Int): AddEditNoteEvent()
     data class ChangeCategoryColor(val categoryId: Int): AddEditNoteEvent()
     data class PickImage(val uri: List<Uri?>): AddEditNoteEvent()

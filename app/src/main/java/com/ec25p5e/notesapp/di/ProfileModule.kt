@@ -1,7 +1,6 @@
 package com.ec25p5e.notesapp.di
 
-import android.content.SharedPreferences
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.feature_profile.data.remote.ProfileApi
 import com.ec25p5e.notesapp.feature_profile.data.repository.ProfileRepositoryImpl
 import com.ec25p5e.notesapp.feature_profile.domain.repository.ProfileRepository

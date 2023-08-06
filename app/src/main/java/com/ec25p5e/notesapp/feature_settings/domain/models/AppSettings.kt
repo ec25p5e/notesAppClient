@@ -11,7 +11,7 @@ data class AppSettings(
     var isAutoSaveEnabled: Boolean = false,
     val unlock: Unlock = Unlock(
         unlockMethod = UnlockMethod.PIN,
-        valueToUnlock = ""
+        valueToUnlock = "2005"
     ),
     val appTheme: AppTheme = AppTheme.NATURE,
     val isScreenshotEnabled: Boolean = true,

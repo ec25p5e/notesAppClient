@@ -41,6 +41,9 @@ class AddEditNoteViewModel @Inject constructor(
     private val _contentState = mutableStateOf(StandardTextFieldState())
     val contentState: State<StandardTextFieldState> = _contentState
 
+    private val _pinState = mutableStateOf(StandardTextFieldState())
+    val pinState: State<StandardTextFieldState> = _pinState
+
     private val _isArchivedState = mutableStateOf(false)
     val isArchivedState: State<Boolean> = _isArchivedState
 
@@ -131,14 +134,48 @@ class AddEditNoteViewModel @Inject constructor(
                             _contentState.value.text.isBlank()
                 )
             }
+            is AddEditNoteEvent.EnteredPin -> {
+                _pinState.value = pinState.value.copy(
+                    text = event.value
+                )
+            }
+            is AddEditNoteEvent.ChangePinFocus -> {
+                _pinState.value = _pinState.value.copy(
+                    isHintVisible = !event.focusState.isFocused &&
+                        _pinState.value.text.isBlank()
+                )
+            }
             is AddEditNoteEvent.ConvertInAudio -> {
 
             }
             is AddEditNoteEvent.UnlockNote -> {
+                viewModelScope.launch {
+                    val targetValue = _state.value.lockedMode.valueToUnlock
+                    val enteredValue = _pinState.value.text
 
+                    if(targetValue == enteredValue) {
+                        _unlockPinState.value = _unlockPinState.value.copy(
+                            isPinError = false,
+                            isNoteUnlocked = !unlockPinState.value.isNoteUnlocked
+                        )
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.note_unlocked_successfully)))
+                    } else {
+                        _unlockPinState.value = unlockPinState.value.copy(
+                            isPinError = !unlockPinState.value.isPinError,
+                            isNoteUnlocked = false
+                        )
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.wrong_ping_entered)))
+                    }
+                }
             }
             is AddEditNoteEvent.TogglePinError -> {
-
+                _unlockPinState.value = unlockPinState.value.copy(
+                    isPinError = !unlockPinState.value.isPinError
+                )
+                _pinState.value = _pinState.value.copy(
+                    text = "",
+                    error = null
+                )
             }
             is AddEditNoteEvent.ReadNote -> {
                 textToSpeech = TextToSpeech(
@@ -219,7 +256,8 @@ class AddEditNoteViewModel @Inject constructor(
                         id = currentNoteId,
                         categoryId = _noteCategory.value,
                         image = imageArray,
-                        background = _noteBackground.value
+                        background = _noteBackground.value,
+                        isLocked = _isLockedNote.value
                     )
 
                     val addingResult = noteUseCases.addNote(noteInsert)

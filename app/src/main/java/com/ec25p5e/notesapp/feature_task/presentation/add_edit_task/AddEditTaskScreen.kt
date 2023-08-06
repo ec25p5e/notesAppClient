@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_todo.presentation.add_edit_task
+package com.ec25p5e.notesapp.feature_task.presentation.add_edit_task
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,7 +47,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -62,14 +60,9 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.util.Constants
-import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import com.ec25p5e.notesapp.feature_todo.domain.models.Task
-import com.ec25p5e.notesapp.feature_todo.presentation.components.CheckableItem
-import com.ec25p5e.notesapp.feature_todo.presentation.util.AddEditTaskError
+import com.ec25p5e.notesapp.feature_task.domain.models.Task
+import com.ec25p5e.notesapp.feature_task.presentation.util.AddEditTaskError
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.ZoneOffset
-import java.util.Calendar
 
 /* Box(
     modifier = Modifier

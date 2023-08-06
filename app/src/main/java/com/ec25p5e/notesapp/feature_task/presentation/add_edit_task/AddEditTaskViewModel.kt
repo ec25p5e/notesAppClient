@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_todo.presentation.add_edit_task
+package com.ec25p5e.notesapp.feature_task.presentation.add_edit_task
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,10 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
-import com.ec25p5e.notesapp.feature_note.domain.models.Note
-import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteState
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
-import com.ec25p5e.notesapp.feature_todo.domain.models.Task
+import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

@@ -1,19 +1,14 @@
 package com.ec25p5e.notesapp.feature_note.data.repository
 
-import android.content.SharedPreferences
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Resource
-import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.data.data_source.CategoryDao
 import com.ec25p5e.notesapp.feature_note.data.mapper.toCategory
 import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
-import com.ec25p5e.notesapp.feature_note.data.remote.request.CreateCategoryRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.request.GetCategoriesRequest
-import com.ec25p5e.notesapp.feature_note.data.remote.response.CategoryResponse
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository

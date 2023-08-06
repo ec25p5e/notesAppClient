@@ -6,10 +6,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import coil.ImageLoader
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_TOKEN
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_TOKEN
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
 import com.ec25p5e.notesapp.core.data.local.serializer.AppSettingsSerializer
-import com.ec25p5e.notesapp.core.data.util.CryptoManager
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.google.gson.Gson

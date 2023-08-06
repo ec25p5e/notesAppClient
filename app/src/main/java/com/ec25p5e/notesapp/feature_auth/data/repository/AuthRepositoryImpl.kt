@@ -1,9 +1,9 @@
 package com.ec25p5e.notesapp.feature_auth.data.repository
 
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_ID
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceConstants.USER_TOKEN
-import com.ec25p5e.notesapp.core.data.local.preferences.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_ID
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_TOKEN
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
