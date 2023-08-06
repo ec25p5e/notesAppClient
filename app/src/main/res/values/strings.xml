@@ -162,4 +162,10 @@
     <string name="note_unlocked_successfully">Note unlocked successfully</string>
     <string name="wrong_ping_entered">Wrong pin entered</string>
     <string name="add_checklist">Add checklist</string>
+    <string name="delete_checkable">Delete checkable</string>
+    <string name="set_time">Set Time</string>
+    <string name="set_date">Set Date</string>
+    <string name="ok" translatable="false">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear">Clear</string>
 </resources>

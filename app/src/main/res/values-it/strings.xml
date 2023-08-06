@@ -153,7 +153,7 @@
     <string name="note_unlocked">Nota sbloccata</string>
     <string name="label_note_pin">Codice pin</string>
     <string name="label_task_title_text">Nome della task</string>
-    <string name="item">Elemento</string>
+    <string name="item">Nuova voce</string>
     <string name="add_checkable">Aggiungi caselle di controllo</string>
     <string name="label_task_decription_text">Descrizione della task</string>
     <string name="lock_content_note_text">Contenuto protetto</string>
@@ -161,4 +161,9 @@
     <string name="note_unlocked_successfully">Nota sbloccata</string>
     <string name="wrong_ping_entered">Pin errato</string>
     <string name="add_checklist">Aggiungi checklist</string>
+    <string name="delete_checkable">Elimina voce</string>
+    <string name="set_time">Ora</string>
+    <string name="set_date">Data</string>
+    <string name="cancel">Elimina</string>
+    <string name="clear">Chiudi</string>
 </resources>

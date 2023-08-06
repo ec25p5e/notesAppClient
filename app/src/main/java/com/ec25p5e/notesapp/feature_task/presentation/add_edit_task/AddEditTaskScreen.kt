@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -64,6 +66,8 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
+import com.ec25p5e.notesapp.feature_task.presentation.components.CheckableItem
+import com.ec25p5e.notesapp.feature_task.presentation.components.TaskDateTime
 import com.ec25p5e.notesapp.feature_task.presentation.util.AddEditTaskError
 import kotlinx.coroutines.launch
 
@@ -189,6 +193,24 @@ fun AddEditTaskScreen(
 
             Spacer(modifier = Modifier.height(SpaceMedium))
 
+            TaskDateTime()
+
+            Spacer(modifier = Modifier.height(SpaceMedium))
+
+            if(viewModel.checkables.size > 0) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                ) {
+                    items(
+                        items = viewModel.checkables,
+                        key = { it.uid }
+                    ) {
+                        CheckableItem(it)
+                    }
+                }
+            }
+
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -293,7 +315,7 @@ fun AddEditTaskScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(
                                 onClick = {
-
+                                    viewModel.onEvent(AddEditTaskEvent.AddCheckable())
                                 }
                             ) {
                                 Icon(

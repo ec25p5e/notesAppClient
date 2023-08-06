@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Checkable(
-    @PrimaryKey val id: Int? = null,
-    val value: String = "",
-    val checked: Boolean = false,
-    val created: Long,
-    val updated: Long,
+    @PrimaryKey var id: Int? = null,
+    var uid: Long = 0L,
+    var value: String = "",
+    var checked: Boolean = false,
+    var created: Long = 0L,
+    var updated: Long = 0L,
 )
