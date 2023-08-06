@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -17,12 +18,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
+import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
+import com.ec25p5e.notesapp.core.data.local.connectivity.NetworkConnectivityObserver
 import com.ec25p5e.notesapp.core.presentation.components.Navigation
 import com.ec25p5e.notesapp.core.presentation.components.StandardScaffold
 import com.ec25p5e.notesapp.core.presentation.ui.theme.NotesAppTheme
 import com.ec25p5e.notesapp.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
-import xyz.teamgravity.pin_lock_compose.PinManager
 import javax.inject.Inject
 
 
@@ -35,14 +37,14 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
 
+    private lateinit var connectivityObserver: ConnectivityObserver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        PinManager.initialize(this)
+        connectivityObserver = NetworkConnectivityObserver(applicationContext)
 
         setContent {
             NotesAppTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -50,13 +52,16 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val scaffoldState = remember { SnackbarHostState() }
+                    val status by connectivityObserver.observe().collectAsState(
+                        initial = ConnectivityObserver.Status.Unavailable
+                    )
 
                     StandardScaffold(
                         navController = navController,
                         showBottomBar = shouldShowBottomBar(navBackStackEntry),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Navigation(navController, scaffoldState, imageLoader)
+                        Navigation(navController, scaffoldState, imageLoader, status)
                     }
                 }
             }

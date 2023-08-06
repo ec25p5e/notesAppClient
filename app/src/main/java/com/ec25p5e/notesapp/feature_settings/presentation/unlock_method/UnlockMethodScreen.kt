@@ -28,8 +28,6 @@ import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsViewModel
-import xyz.teamgravity.pin_lock_compose.ChangePinLock
-import xyz.teamgravity.pin_lock_compose.PinLock
 
 @Composable
 fun UnlockMethodScreen(
@@ -57,22 +55,6 @@ fun UnlockMethodScreen(
             modifier = Modifier.fillMaxWidth(),
             showBackArrow = true,
             navActions = {
-            }
-        )
-
-        PinLock(
-            title = { pinExists ->
-                Text(text = if (pinExists) "Enter your pin" else "Create pin")
-            },
-            color = MaterialTheme.colorScheme.primary,
-            onPinCorrect = {
-                viewModel.onEvent(UnlockMethodEvent.OnPinCorrect)
-            },
-            onPinIncorrect = {
-                // pin is incorrect, show error
-            },
-            onPinCreated = {
-                viewModel.onEvent(UnlockMethodEvent.OnPinCorrect)
             }
         )
 

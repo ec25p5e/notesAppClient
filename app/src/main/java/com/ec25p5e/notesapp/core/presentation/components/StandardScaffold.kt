@@ -43,7 +43,7 @@ fun StandardScaffold(
             fabClick = {
                 navController.navigate(Screen.AddEditTaskScreen.route)
             },
-            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.secondary)
         ),
         BottomNavItem(
             route = Screen.ArchiveScreen.route,

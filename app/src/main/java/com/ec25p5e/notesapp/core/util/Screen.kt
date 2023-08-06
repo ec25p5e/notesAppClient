@@ -21,4 +21,5 @@ sealed class Screen(val route: String) {
     data object ContactMeScreen: Screen("contact_me_screen")
     data object PermissionScreen: Screen("permissions_screen")
     data object AddEditTaskScreen: Screen("add_edit_task_screen")
+    data object OfflineScreen: Screen("offline_screen")
 }

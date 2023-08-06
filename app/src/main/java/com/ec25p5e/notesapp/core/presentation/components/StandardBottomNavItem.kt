@@ -43,7 +43,7 @@ fun RowScope.StandardBottomNavItem(
         targetValue = if(selected) 1f else 0f,
         animationSpec = tween(
             durationMillis = 300
-        )
+        ), label = ""
     )
 
     NavigationBarItem(

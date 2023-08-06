@@ -22,46 +22,23 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val NatureTheme = lightColorScheme(
+    primary = Nt_Primary,
+    secondary = Nt_Secondary,
+    tertiary = Nt_Third,
 )
 
 private val AcquaTheme = lightColorScheme(
     primary = At_Primary,
     secondary = At_Secondary,
-    tertiary = At_Third
-)
-
-private val NatureTheme = lightColorScheme(
-    primary = Nt_Primary,
-    secondary = Nt_Secondary,
-    tertiary = Nt_Third,
-    background = Nt_Primary,
-    surface = Nt_Secondary,
-    onPrimary = Nt_Primary,
-    onSecondary = Nt_Secondary,
-    onTertiary = Nt_Third,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F)
+    tertiary = At_Third,
 )
 
 @Composable
 fun NotesAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

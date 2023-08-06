@@ -103,7 +103,6 @@ fun CategoryScreen(
                         clickable = {
 
                         },
-                        showDetails = true
                     )
                 }
             )

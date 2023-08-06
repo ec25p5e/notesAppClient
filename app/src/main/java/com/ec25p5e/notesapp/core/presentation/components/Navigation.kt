@@ -12,8 +12,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import coil.ImageLoader
+import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
+import com.ec25p5e.notesapp.feature_auth.presentation.offline.OfflineScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.onboarding.OnBoardingScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
@@ -37,7 +39,8 @@ import com.ec25p5e.notesapp.feature_task.presentation.todo.TodoScreen
 fun Navigation(
     navController: NavHostController,
     scaffoldState: SnackbarHostState,
-    imageLoader: ImageLoader
+    imageLoader: ImageLoader,
+    status: ConnectivityObserver.Status
 ) {
     NavHost(
         navController = navController,
@@ -47,7 +50,16 @@ fun Navigation(
         composable(Screen.SplashScreen.route) {
             SplashScreen(
                 onPopBackStack = navController::popBackStack,
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
+                networkStatus = status
+            )
+        }
+
+        composable(Screen.OfflineScreen.route) {
+            OfflineScreen(
+                onPopBackStack = navController::popBackStack,
+                onNavigate = navController::navigate,
+                networkStatus = status
             )
         }
 

@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_auth.presentation.splash
 
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
 import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.UiEvent
 import com.ec25p5e.notesapp.core.util.Screen
@@ -29,6 +31,7 @@ fun SplashScreen(
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     onPopBackStack: () -> Unit = {},
     onNavigate: (String) -> Unit = {},
+    networkStatus: ConnectivityObserver.Status,
     viewModel: SplashScreenViewModel = hiltViewModel()
 ) {
     val scale = remember {
@@ -57,8 +60,12 @@ fun SplashScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.Navigate -> {
-                    onPopBackStack()
-                    onNavigate(event.route)
+                    /* if(networkStatus == ConnectivityObserver.Status.Unavailable) {
+                        onNavigate(Screen.OfflineScreen.route)
+                    } else { */
+                        onPopBackStack()
+                        onNavigate(event.route)
+                    //}
                 }
                 else -> Unit
             }
@@ -69,6 +76,8 @@ fun SplashScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        Log.i("test", networkStatus.toString())
+
         LottieView(
             json = R.raw.splash,
             modifier = Modifier.fillMaxWidth()
