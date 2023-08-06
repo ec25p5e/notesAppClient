@@ -3,37 +3,24 @@ package com.ec25p5e.notesapp.di
 import android.app.Application
 import androidx.room.Room
 import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
-import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
-import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
-import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
-import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
-import com.ec25p5e.notesapp.feature_note.data.repository.CategoryRepositoryImpl
-import com.ec25p5e.notesapp.feature_note.data.repository.NoteRepositoryImpl
-import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
-import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
-import com.ec25p5e.notesapp.feature_note.domain.use_case.category.AddCategory
-import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
-import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategories
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.AddNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.ArchiveNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.CopyNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DearchiveNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.DeleteNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNoteByCategory
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotes
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.GetNotesForArchive
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.LockNote
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
-import com.ec25p5e.notesapp.feature_note.domain.use_case.note.UnLockNote
 import com.ec25p5e.notesapp.feature_task.data.data_source.TaskDatabase
+import com.ec25p5e.notesapp.feature_task.data.repository.CheckableRepositoryImpl
+import com.ec25p5e.notesapp.feature_task.data.repository.TaskRepositoryImpl
+import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
+import com.ec25p5e.notesapp.feature_task.domain.repository.CheckableRepository
+import com.ec25p5e.notesapp.feature_task.domain.repository.TaskRepository
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.AddCheckable
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUseCases
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.GetCheckableByTask
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.AddTask
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.DeleteTask
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.GetTaskById
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.GetTasks
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -52,4 +39,40 @@ object TaskModule {
             .build()
     }
 
+    @Provides
+    @Singleton
+    fun provideTaskRepository(
+        db: TaskDatabase,
+        dataStore: DataStorePreferenceImpl
+    ): TaskRepository {
+        return TaskRepositoryImpl(db.taskDao, dataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckableRepository(
+        db: TaskDatabase,
+    ): CheckableRepository {
+        return CheckableRepositoryImpl(db.checkableDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTaskUseCases(repository: TaskRepository): TaskUseCases {
+        return TaskUseCases(
+            getTaskById = GetTaskById(repository),
+            getTasks = GetTasks(repository),
+            addTask = AddTask(repository),
+            deleteTask = DeleteTask(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckableUseCases(repository: CheckableRepository): CheckableUseCases {
+        return CheckableUseCases(
+            addCheckable = AddCheckable(repository),
+            getCheckableByTask = GetCheckableByTask(repository)
+        )
+    }
 }

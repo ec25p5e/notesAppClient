@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_task.presentation.add_edit_task
 
+import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,11 +67,15 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.presentation.components.CheckableItem
 import com.ec25p5e.notesapp.feature_task.presentation.components.TaskDateTime
 import com.ec25p5e.notesapp.feature_task.presentation.util.AddEditTaskError
+import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /* Box(
@@ -115,7 +122,23 @@ fun AddEditTaskScreen(
             Color(if (taskColor != -1) taskColor else viewModel.colorState.value)
         )
     }
+    val context = LocalContext.current
 
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEventTask.ShowSnackbar -> {
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

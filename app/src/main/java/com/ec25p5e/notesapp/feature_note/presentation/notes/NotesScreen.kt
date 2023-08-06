@@ -468,6 +468,7 @@ fun NotesScreen(
                             category = category,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .height(40.dp)
                                 .border(
                                     width = 1.5.dp,
                                     color = if ((viewModelCategory.categoryId.value == catId) ||

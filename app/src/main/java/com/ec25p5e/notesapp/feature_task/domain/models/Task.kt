@@ -14,10 +14,11 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.RedOrange
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
 import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
 
+
 @Entity
 data class Task(
     @PrimaryKey val id: Int? = null,
-    val uid: Int,
+    val uid: Long = 0L,
     val title: String,
     val description: String,
     val dueDateTime: String = "",

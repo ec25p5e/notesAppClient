@@ -9,11 +9,18 @@ import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUseCases
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
+import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -23,6 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
+    private val taskUseCases: TaskUseCases,
+    private val checkableUseCases: CheckableUseCases,
     private var dataStore: DataStore<AppSettings>,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -64,6 +73,9 @@ class AddEditTaskViewModel @Inject constructor(
 
     private val _time = mutableStateOf("")
     val time: State<String> = _time
+
+    private val _eventFlow = MutableSharedFlow<UiEventTask>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     var currentTaskId: Int? = null
 
@@ -151,9 +163,7 @@ class AddEditTaskViewModel @Inject constructor(
                 _colorState.value = event.color
             }
             is AddEditTaskEvent.SaveTask -> {
-                viewModelScope.launch {
-
-                }
+                saveTask()
             }
         }
     }
@@ -260,5 +270,38 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun onTimeClick() {
         _timeDialogOpen.value = true
+    }
+
+    private fun saveTask() {
+        viewModelScope.launch {
+            taskUseCases.addTask(Task(
+                title = _titleState.value.text,
+                description = _contentState.value.text,
+                dueDateTime = (_date.value + " " + _time.value).trim(),
+                uid = newId,
+                done = false,
+                created = System.currentTimeMillis(),
+                updated = System.currentTimeMillis()
+            ).apply {
+                checkables.addAll(_checkables.filter {
+                    it.value.isNotEmpty()
+                })
+
+                checkables.forEach { checkable ->
+                    checkableUseCases.addCheckable(
+                        Checkable(
+                            uid = System.currentTimeMillis(),
+                            value = checkable.value,
+                            checked = checkable.checked,
+                            updated = System.currentTimeMillis(),
+                            created = System.currentTimeMillis(),
+                            taskId = 1 // To make dynamically
+                        )
+                    )
+                }
+            })
+
+            _eventFlow.emit(UiEventTask.ShowSnackbar(UiText.StringResource(id = R.string.task_created_successfully)))
+        }
     }
 }

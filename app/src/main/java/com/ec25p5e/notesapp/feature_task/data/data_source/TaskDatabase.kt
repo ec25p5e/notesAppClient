@@ -16,6 +16,7 @@ import com.ec25p5e.notesapp.feature_task.domain.models.Task
 abstract class TaskDatabase: RoomDatabase() {
 
     abstract val taskDao: TaskDao
+    abstract val checkableDao: CheckableDao
 
     companion object {
         const val DATABASE_NAME = "task_db"

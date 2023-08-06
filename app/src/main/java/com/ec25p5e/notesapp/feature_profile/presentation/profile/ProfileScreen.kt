@@ -36,14 +36,10 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
         ) {
-
-
             Button(
                 onClick = {
                     onNavigate(Screen.SettingsScreen.route)
