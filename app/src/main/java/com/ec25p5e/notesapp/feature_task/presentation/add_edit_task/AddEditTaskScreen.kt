@@ -47,10 +47,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
@@ -99,7 +102,9 @@ fun AddEditTaskScreen(
     val state = viewModel.state.value
     val scope = rememberCoroutineScope()
     val taskColor = viewModel.colorState.value
+    val scaffoldAddingBottomSheet = rememberBottomSheetScaffoldState()
     val scaffoldColorBottomSheet = rememberBottomSheetScaffoldState()
+    var addingBottomSheet by rememberSaveable { mutableStateOf(false) }
     var colorBottomSheet by rememberSaveable { mutableStateOf(false) }
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -195,7 +200,7 @@ fun AddEditTaskScreen(
             IconButton(
                 onClick = {
                     scope.launch {
-                        // scaffoldAddingBottomSheet.bottomSheetState.expand()
+                        scaffoldAddingBottomSheet.bottomSheetState.expand()
                     }
                 }
             ) {
@@ -251,6 +256,70 @@ fun AddEditTaskScreen(
             }
         }
     }
+
+
+    /**
+     * Add element bottom sheet navigation
+     */
+    BottomSheetScaffold(
+        scaffoldState = scaffoldAddingBottomSheet,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            addingBottomSheet = true
+
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                if (scaffoldAddingBottomSheet.bottomSheetState.hasExpandedState) {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                scaffoldAddingBottomSheet.bottomSheetState.partialExpand()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+
+                    }
+                }
+
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = {
+
+                                }
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_list),
+                                    contentDescription = stringResource(id = R.string.add_checklist),
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(id = R.string.add_checklist),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.surfaceTint
+                                ),
+                                modifier = Modifier
+                                    .padding(16.dp),
+                                textAlign = TextAlign.Start,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    ) {}
 
 
 

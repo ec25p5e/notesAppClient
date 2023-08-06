@@ -158,4 +158,7 @@
     <string name="label_task_decription_text">Descrizione della task</string>
     <string name="lock_content_note_text">Contenuto protetto</string>
     <string name="lock_note_title_text">Nota protetta</string>
+    <string name="note_unlocked_successfully">Nota sbloccata</string>
+    <string name="wrong_ping_entered">Pin errato</string>
+    <string name="add_checklist">Aggiungi checklist</string>
 </resources>

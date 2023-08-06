@@ -939,7 +939,7 @@ fun AddEditNoteScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(100.dp),
+                        .height(175.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     if (scaffoldColorBottomSheet.bottomSheetState.hasExpandedState) {
@@ -972,12 +972,12 @@ fun AddEditNoteScreen(
 
                                     Box(
                                         modifier = Modifier
-                                            .size(25.dp)
-                                            .shadow(7.5.dp, CircleShape)
+                                            .size(50.dp)
+                                            .shadow(15.dp, CircleShape)
                                             .clip(CircleShape)
                                             .background(noteColor)
                                             .border(
-                                                width = 1.5.dp,
+                                                width = 3.dp,
                                                 color = if (viewModel.colorState.value == colorInt) {
                                                     Color.Black
                                                 } else Color.Transparent,
@@ -1017,8 +1017,8 @@ fun AddEditNoteScreen(
                                 items(Background.background) { bg ->
                                     Box(
                                         modifier = Modifier
-                                            .size(25.dp)
-                                            .shadow(7.5.dp, CircleShape)
+                                            .size(50.dp)
+                                            .shadow(15.dp, CircleShape)
                                             .clip(CircleShape)
                                             .border(
                                                 width = 1.5.dp,
@@ -1034,9 +1034,7 @@ fun AddEditNoteScreen(
                                             .clickable {
                                                 scope.launch {
                                                     viewModel.onEvent(
-                                                        AddEditNoteEvent.ChangeBgImage(
-                                                            bg
-                                                        )
+                                                        AddEditNoteEvent.ChangeBgImage(bg)
                                                     )
                                                 }
                                             }

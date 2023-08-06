@@ -16,9 +16,13 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
 
 @Entity
 data class Task(
-    val taskName: String,
-    val tastContent: String,
-    @PrimaryKey val id: Int? = null
+    @PrimaryKey val id: Int? = null,
+    val title: String,
+    val description: String,
+    val dueDateTime: String = "",
+    val done: Boolean = false,
+    val created: Long,
+    val updated: Long,
 ) {
 
     companion object {

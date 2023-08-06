@@ -161,4 +161,5 @@
     <string name="lock_note_title_text">Protected note</string>
     <string name="note_unlocked_successfully">Note unlocked successfully</string>
     <string name="wrong_ping_entered">Wrong pin entered</string>
+    <string name="add_checklist">Add checklist</string>
 </resources>
