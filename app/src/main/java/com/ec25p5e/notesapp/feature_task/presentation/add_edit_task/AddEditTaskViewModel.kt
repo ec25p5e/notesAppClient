@@ -11,6 +11,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.presentation.util.date
+import com.ec25p5e.notesapp.core.presentation.util.formatted
+import com.ec25p5e.notesapp.core.presentation.util.time
+import com.ec25p5e.notesapp.core.presentation.util.today
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
@@ -19,9 +23,12 @@ import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUse
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
 import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
@@ -81,8 +88,22 @@ class AddEditTaskViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<Int>("taskId")?.let { taskId ->
-            viewModelScope.launch {
-
+            if(taskId != -1) {
+                viewModelScope.launch {
+                    taskUseCases.getTaskById(taskId)?.also { task ->
+                        currentTaskId = task.id
+                        _titleState.value = titleState.value.copy(
+                            text = task.title,
+                            isHintVisible = false
+                        )
+                        _contentState.value = _contentState.value.copy(
+                            text = task.description,
+                            isHintVisible = false
+                        )
+                        _colorState.value = task.color
+                        _date.value = (task.dueDateTime.date + " " + task.dueDateTime.time)
+                    }
+                }
             }
         }
     }
@@ -243,7 +264,7 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     private fun onDateDialogDate(date: LocalDate) {
-        _date.value = date.toString()
+        _date.value = date.formatted
     }
 
     private fun onTimeDialogOk() {
@@ -255,7 +276,7 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     private fun onTimeDialogTime(time: LocalTime) {
-        _time.value = time.toString()
+        _time.value = time.formatted
     }
 
     private fun onDateDialogClear() {
@@ -274,32 +295,26 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun saveTask() {
         viewModelScope.launch {
-            taskUseCases.addTask(Task(
+            val taskId = taskUseCases.addTask(Task(
                 title = _titleState.value.text,
                 description = _contentState.value.text,
                 dueDateTime = (_date.value + " " + _time.value).trim(),
                 uid = newId,
+                color = _colorState.value,
                 done = false,
-                created = System.currentTimeMillis(),
-                updated = System.currentTimeMillis()
-            ).apply {
-                checkables.addAll(_checkables.filter {
-                    it.value.isNotEmpty()
-                })
+                createdAt = System.currentTimeMillis(),
+                updatedAt = System.currentTimeMillis()
+            ))
 
-                checkables.forEach { checkable ->
-                    checkableUseCases.addCheckable(
-                        Checkable(
-                            uid = System.currentTimeMillis(),
-                            value = checkable.value,
-                            checked = checkable.checked,
-                            updated = System.currentTimeMillis(),
-                            created = System.currentTimeMillis(),
-                            taskId = 1 // To make dynamically
-                        )
-                    )
-                }
+            // Exclude empty checkable
+            checkables.addAll(_checkables.filter {
+                it.value.isNotEmpty()
             })
+
+            /* checkables.forEach { checkable ->
+                checkable.taskId = taskId.toInt()
+                checkableUseCases.addCheckable(checkable)
+            } */
 
             _eventFlow.emit(UiEventTask.ShowSnackbar(UiText.StringResource(id = R.string.task_created_successfully)))
         }

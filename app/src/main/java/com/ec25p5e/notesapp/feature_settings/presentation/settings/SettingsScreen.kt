@@ -209,15 +209,6 @@ fun SettingsScreen(
                     }
                 )
 
-                SettingsSwitchComp(
-                    name = R.string.settings_advanced_screenshot_note,
-                    icon = R.drawable.ic_screenshot,
-                    iconDesc = R.string.settings_advanced_screenshot_note,
-                    state = viewModel.getSettings().isScreenshotEnabled
-                ) {
-                    viewModel.onEvent(SettingsEvent.ToggleScreenShotMode)
-                }
-
 
                 SettingsSwitchComp(
                     name = R.string.settings_advanced_block_sharing,

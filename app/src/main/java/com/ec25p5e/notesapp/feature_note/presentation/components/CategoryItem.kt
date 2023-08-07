@@ -35,7 +35,7 @@ fun CategoryItem(
         Column(
             modifier = Modifier
                 .padding(5.dp)
-                .height(40.dp)
+                .height(50.dp)
                 .fillMaxSize()
                 .background(Color(category.color), shape = RoundedCornerShape(10.dp))
                 .clip(shape = RoundedCornerShape(10.dp))

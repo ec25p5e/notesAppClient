@@ -7,7 +7,7 @@ class AddTask(
     private val repository: TaskRepository
 ) {
 
-    operator fun invoke(task: Task) {
-        repository.insertTask(task)
+    operator fun invoke(task: Task): Long {
+        return repository.insertTask(task)
     }
 }

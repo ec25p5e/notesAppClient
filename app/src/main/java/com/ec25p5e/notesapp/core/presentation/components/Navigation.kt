@@ -33,7 +33,7 @@ import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.Privacy
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
 import com.ec25p5e.notesapp.feature_task.presentation.add_edit_task.AddEditTaskScreen
-import com.ec25p5e.notesapp.feature_task.presentation.todo.TodoScreen
+import com.ec25p5e.notesapp.feature_task.presentation.task.TodoScreen
 
 @Composable
 fun Navigation(

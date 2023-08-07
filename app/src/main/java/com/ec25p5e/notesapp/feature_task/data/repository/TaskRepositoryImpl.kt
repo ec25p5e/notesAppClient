@@ -21,8 +21,8 @@ class TaskRepositoryImpl(
         return dao.getTaskById(id)
     }
 
-    override fun insertTask(task: Task) {
-        dao.insertTask(task)
+    override fun insertTask(task: Task): Long {
+        return dao.insertTask(task)
     }
 
     override fun deleteTask(task: Task) {

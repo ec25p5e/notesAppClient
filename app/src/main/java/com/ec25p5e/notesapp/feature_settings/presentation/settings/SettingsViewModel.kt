@@ -51,25 +51,6 @@ class SettingsViewModel @Inject constructor(
                     ))
                 }
             }
-            is SettingsEvent.ToggleScreenShotMode -> {
-                viewModelScope.launch {
-                    val oldValue = _state.value.settings.data.first().isScreenshotEnabled
-
-                    dataStore.updateData {
-                        it.copy(isScreenshotEnabled = !it.isScreenshotEnabled)
-                    }
-
-                    _eventFlow.emit(UiEventSettings.ShowSnackbar(
-                        UiText.StringResource(id =
-                        if(oldValue) {
-                            R.string.screenshot_mode_enabled
-                        } else {
-                            R.string.screenshot_mode_disabled
-                        }
-                        )
-                    ))
-                }
-            }
             is SettingsEvent.ToggleSharingMode -> {
                 viewModelScope.launch {
                     val oldValue = _state.value.settings!!.data.first().isSharingEnabled

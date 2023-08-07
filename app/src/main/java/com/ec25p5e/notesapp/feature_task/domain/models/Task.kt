@@ -23,8 +23,9 @@ data class Task(
     val description: String,
     val dueDateTime: String = "",
     val done: Boolean = false,
-    val created: Long,
-    val updated: Long,
+    val color: Int,
+    val createdAt: Long,
+    val updatedAt: Long,
 ) {
 
     companion object {

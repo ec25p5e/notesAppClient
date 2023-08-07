@@ -1,5 +1,6 @@
-package com.ec25p5e.notesapp.feature_task.presentation.todo
+package com.ec25p5e.notesapp.feature_task.presentation.task
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ScrollableTabRow
@@ -19,8 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,13 +35,18 @@ import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
+import com.ec25p5e.notesapp.core.presentation.util.LottieView
+import com.ec25p5e.notesapp.core.presentation.util.asString
+import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.domain.models.TaskFilters
 import com.ec25p5e.notesapp.feature_task.presentation.components.TaskItem
+import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
@@ -55,25 +61,26 @@ fun TodoScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
+    val state = viewModel.state.value
 
-    /* LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
-                is UiEventNote.ShowSnackbar -> {
+                is UiEventTask.ShowSnackbar -> {
                     Toast.makeText(
                         context,
                         event.uiText!!.asString(context),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                is UiEventNote.IsLoadingPage -> {
-                    viewModel.onEvent(NotesEvent.IsLoadingPage)
+                is UiEventTask.Navigate -> {
+                    onNavigate(event.route)
                 }
                 else -> {
                 }
             }
         }
-    } */
+    }
 
 
     Column(
@@ -115,11 +122,14 @@ fun TodoScreen(
 
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ){
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
             ){
                 ScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
@@ -130,11 +140,11 @@ fun TodoScreen(
                                 .pagerTabIndicatorOffset(pagerState, tabPositions)
                         )
                     },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.onSurface)
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                 ){
                     TaskFilters.values().forEachIndexed{ index, filter ->
                         Tab(
-                            text = { Text(filter.name) },
+                            text = { Text(stringResource(id = filter.text)) },
                             selected = pagerState.currentPage == index,
                             onClick = {
                                 scope.launch {
@@ -145,17 +155,27 @@ fun TodoScreen(
                     }
                 }
 
+                if(state.isGreat) {
+                    LottieView(
+                        json = R.raw.thumbs_up,
+                        iterations = 1,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
                 HorizontalPager(
                     count = TaskFilters.values().size,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface),
                     state = pagerState
                 ) { page ->
                     when(TaskFilters.values()[page]){
-                        TaskFilters.Today -> TaskFilter(viewModel.tasksToday)
-                        TaskFilters.Upcoming -> TaskFilter(viewModel.tasksUpcoming)
-                        TaskFilters.Regular -> TaskFilter(viewModel.tasksRegular)
-                        TaskFilters.CheckLists -> TaskFilter(viewModel.tasksChecklist)
-                        TaskFilters.All -> TaskFilter(viewModel.allTasks)
+                        TaskFilters.Today -> TaskFilter(state.tasksToday)
+                        TaskFilters.Upcoming -> TaskFilter(state.tasksUpcoming)
+                        TaskFilters.Regular -> TaskFilter(state.tasksRegular)
+                        TaskFilters.CheckLists -> TaskFilter(state.tasksChecklist)
+                        TaskFilters.All -> TaskFilter(tasks = state.allTasks)
                     }
                 }
             }
@@ -164,15 +184,18 @@ fun TodoScreen(
 }
 
 @Composable
-fun TaskFilter(tasks: List<Task>) {
+fun TaskFilter(
+    tasks: List<Task>
+) {
     if(tasks.isEmpty()){
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
-            androidx.compose.material.Text(
-                stringResource(id = R.string.no_tasks_yet),
-                color = Color.Gray
+            LottieView(
+                json = R.raw.empty_tasks,
+                modifier = Modifier.fillMaxWidth()
+                    .height(200.dp)
             )
         }
     } else{
@@ -187,7 +210,9 @@ fun TaskFilter(tasks: List<Task>) {
             )
         ){
             items(tasks) {
-                TaskItem(it)
+                TaskItem(
+                    task = it,
+                )
             }
         }
     }

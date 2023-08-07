@@ -9,6 +9,6 @@ sealed class UiEventTask: Event() {
     data object ShowLoader: UiEventTask()
 
     data object NavigateUp: UiEventTask()
-    data object SaveNote: UiEventTask()
+    data object SaveTask: UiEventTask()
     data object IsLoadingPage: UiEventTask()
 }

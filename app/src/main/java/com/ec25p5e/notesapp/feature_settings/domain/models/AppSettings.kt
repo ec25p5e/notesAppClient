@@ -14,6 +14,6 @@ data class AppSettings(
         valueToUnlock = "2005"
     ),
     val appTheme: AppTheme = AppTheme.NATURE,
-    val isScreenshotEnabled: Boolean = true,
-    val isSharingEnabled: Boolean = true
+    val isSharingEnabled: Boolean = true,
+    val isCompleteOnboarding: Boolean = false,
 )

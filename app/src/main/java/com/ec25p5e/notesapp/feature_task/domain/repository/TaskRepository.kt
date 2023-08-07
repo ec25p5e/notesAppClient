@@ -9,7 +9,7 @@ interface TaskRepository {
 
     fun getTaskById(id: Int): Task
 
-    fun insertTask(task: Task)
+    fun insertTask(task: Task): Long
 
     fun deleteTask(task: Task)
 

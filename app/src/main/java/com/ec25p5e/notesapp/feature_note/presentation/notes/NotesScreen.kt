@@ -74,6 +74,7 @@ import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
+import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
@@ -560,13 +561,11 @@ fun NotesScreen(
                         )
                     }
                 } else {
-                    Image(
-                        painter = painterResource(id = R.drawable.all_task_done),
-                        contentDescription = stringResource(id = R.string.cont_descr_image_all_task_done),
-                        modifier = Modifier
-                            .fillMaxSize()
+                    LottieView(
+                        json = R.raw.write_notes,
+                        modifier = Modifier.fillMaxWidth()
+                            .height(500.dp)
                             .align(Alignment.CenterHorizontally)
-                            .scale(0.5f)
                     )
                 }
             }

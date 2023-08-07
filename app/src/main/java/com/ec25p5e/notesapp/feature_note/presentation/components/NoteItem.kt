@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.presentation.components
 
+import android.util.Log
 import com.ec25p5e.notesapp.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -10,12 +11,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -95,8 +98,9 @@ fun NoteItem(
                     .padding(top = 8.dp)
             ) {
                 Row {
-                    if(
-                        note.image.contains("content")) {
+                    Log.i("test", note.image.toString())
+
+                    if(note.image.isNotEmpty()) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_image),
                             contentDescription = stringResource(id = R.string.is_image_present),

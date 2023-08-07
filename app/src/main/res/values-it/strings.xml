@@ -115,7 +115,9 @@
     <string name="screenshot_mode_enabled">Acquisizione dello schermo disattivata</string>
     <string name="auto_save_btn_text">Salvataggio automatico</string>
     <string name="onboarding_note_feature">Note</string>
+    <string name="onboarding_note_description">"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. "</string>
     <string name="onboarding_todo_feature">ToDo</string>
+    <string name="onboarding_todo_description">"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. "</string>
     <string name="settings_general_color">Colori associabili</string>
     <string name="settings_advanced_permission">Gestione permessi dell\'app</string>
     <string name="sharing_mode_disabled">Condivisione note disattiva</string>
@@ -166,4 +168,19 @@
     <string name="set_date">Data</string>
     <string name="cancel">Elimina</string>
     <string name="clear">Chiudi</string>
+    <string name="task_created_successfully">Task creata</string>
+    <string name="no_tasks_yet">Nessuna task</string>
+    <string name="all_your_categories">Tutte le categorie</string>
+    <string name="today_filter">Oggi</string>
+    <string name="upcoming_filter">Prossimamente</string>
+    <string name="regular_filter">Regolari</string>
+    <string name="checklist_filter">Liste di controllo</string>
+    <string name="all_filter">Tutte le task</string>
+    <string name="finish_btn_text">Fine</string>
+    <string name="onboarding_profile_feature">Sincronizzazione su cloud</string>
+    <string name="onboarding_profile_feature_description">"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. "</string>
+    <string name="onboarding_allow_permission">Concedi alcuni permessi</string>
+    <string name="onboarding_allow_permission_description">"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. "</string>
+    <string name="permission_required">È richiesto l\'accesso a</string>
+    <string name="grant_permission_text">Concedi autorizzazione</string>
 </resources>
