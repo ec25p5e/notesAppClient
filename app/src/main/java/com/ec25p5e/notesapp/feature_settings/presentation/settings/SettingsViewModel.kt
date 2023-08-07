@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +24,8 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = mutableStateOf(SettingsState(
-        settings = dataStore
+        settings = dataStore,
+        settingsLive = runBlocking { dataStore.data.first() }
     ))
     var state: State<SettingsState> = _state
 

@@ -10,11 +10,11 @@ class CheckableRepositoryImpl(
     private val dao: CheckableDao,
 ): CheckableRepository {
 
-    override fun getCheckablesByTask(taskId: Int): Flow<List<Checkable>> {
+    override fun getCheckablesByTask(taskId: Int): List<Checkable> {
         return dao.getCheckablesByTask(taskId)
     }
 
-    override fun insertCheckable(checkable: Checkable) {
-        dao.insertCheckable(checkable)
+    override fun insertBulkCheckable(checkables: List<Checkable>) {
+        dao.insertBulkCheckable(checkables)
     }
 }

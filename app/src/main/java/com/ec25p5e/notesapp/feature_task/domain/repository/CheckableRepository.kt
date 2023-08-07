@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface CheckableRepository {
 
-    fun getCheckablesByTask(taskId: Int): Flow<List<Checkable>>
+    fun getCheckablesByTask(taskId: Int): List<Checkable>
 
-    fun insertCheckable(checkable: Checkable)
+    fun insertBulkCheckable(checkables: List<Checkable>)
 
 }

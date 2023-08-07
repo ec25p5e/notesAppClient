@@ -1,7 +1,6 @@
 package com.ec25p5e.notesapp.feature_settings.presentation.settings
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -28,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -192,23 +188,13 @@ fun SettingsScreen(
              */
             SettingsGroup(name = R.string.settings_advanced) {
                 SettingsClickableComp(
-                    name = R.string.settings_advanced_import_note,
-                    icon = R.drawable.ic_import_note,
-                    iconDesc = R.string.settings_advanced_import_note,
+                    name = R.string.settings_sync_to_server,
+                    icon = R.drawable.ic_sync,
+                    iconDesc = R.string.settings_sync_to_server,
                     onClick = {
-                        onNavigate(Screen.ImportDataScreen.route)
+                        onNavigate(Screen.SyncToServer.route)
                     }
                 )
-
-                SettingsClickableComp(
-                    name = R.string.settings_advanced_permission,
-                    icon = R.drawable.ic_permission,
-                    iconDesc = R.string.settings_advanced_permission,
-                    onClick = {
-                        onNavigate(Screen.PermissionScreen.route)
-                    }
-                )
-
 
                 SettingsSwitchComp(
                     name = R.string.settings_advanced_block_sharing,

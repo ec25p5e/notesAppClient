@@ -24,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +36,6 @@ import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.asString
-import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.domain.models.TaskFilters
 import com.ec25p5e.notesapp.feature_task.presentation.components.TaskItem
@@ -171,11 +169,11 @@ fun TodoScreen(
                     state = pagerState
                 ) { page ->
                     when(TaskFilters.values()[page]){
-                        TaskFilters.Today -> TaskFilter(state.tasksToday)
-                        TaskFilters.Upcoming -> TaskFilter(state.tasksUpcoming)
-                        TaskFilters.Regular -> TaskFilter(state.tasksRegular)
-                        TaskFilters.CheckLists -> TaskFilter(state.tasksChecklist)
-                        TaskFilters.All -> TaskFilter(tasks = state.allTasks)
+                        TaskFilters.Today -> TaskFilter(state.tasksToday, viewModel)
+                        TaskFilters.Upcoming -> TaskFilter(state.tasksUpcoming, viewModel)
+                        TaskFilters.Regular -> TaskFilter(state.tasksRegular, viewModel)
+                        TaskFilters.CheckLists -> TaskFilter(state.tasksChecklist, viewModel)
+                        TaskFilters.All -> TaskFilter(tasks = state.allTasks, viewModel)
                     }
                 }
             }
@@ -185,7 +183,8 @@ fun TodoScreen(
 
 @Composable
 fun TaskFilter(
-    tasks: List<Task>
+    tasks: List<Task>,
+    viewModel: TaskViewModel
 ) {
     if(tasks.isEmpty()){
         Box(
@@ -194,7 +193,8 @@ fun TaskFilter(
         ){
             LottieView(
                 json = R.raw.empty_tasks,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(200.dp)
             )
         }
@@ -210,8 +210,10 @@ fun TaskFilter(
             )
         ){
             items(tasks) {
+                viewModel.onEvent(TaskEvent.GetCheckablesForTask(it.id!!.toInt()))
                 TaskItem(
                     task = it,
+                    checkables = viewModel.state.value.checkablesForTask
                 )
             }
         }

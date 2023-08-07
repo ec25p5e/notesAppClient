@@ -13,6 +13,12 @@ import com.ec25p5e.notesapp.feature_note.data.remote.request.SimpleNoteRequest
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import retrofit2.HttpException
 import java.io.IOException
@@ -78,11 +84,16 @@ class NoteRepositoryImpl(
 
     override suspend fun pushNotes(): SimpleResource {
         val localDatabaseNotes = dao.getLocalNotes()
+        val remoteList: List<Note> = emptyList()
 
-        return Resource.Success(Unit)
+        remoteList.apply {
+            localDatabaseNotes.map {
+                it.asFlow().toList()
+            }
+        }
 
-        /* return try {
-            val response = api.pushNotes(localDatabaseNotes)
+        return try {
+            val response = api.pushNotes(remoteList)
 
             if(response.successful) {
                 Resource.Success(Unit)
@@ -99,7 +110,7 @@ class NoteRepositoryImpl(
             Resource.Error(
                 uiText = UiText.StringResource(R.string.oops_something_went_wrong)
             )
-        } */
+        }
     }
 
     override fun insertNote(note: Note) {

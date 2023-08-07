@@ -183,4 +183,11 @@
     <string name="onboarding_allow_permission_description">"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. "</string>
     <string name="permission_required">È richiesto l\'accesso a</string>
     <string name="grant_permission_text">Concedi autorizzazione</string>
+    <string name="settings_sync_to_server">Sincronizzazione in cloud</string>
+    <string name="sync_to_server_options_inner">Opzioni di sincronizzazione</string>
+    <string name="sync_to_server_notes">Le mie note</string>
+    <string name="sync_to_server_categories">Le mie categorie</string>
+    <string name="sync_to_server_tasks">Le mie task</string>
+    <string name="make_sync_text">Avvia sincronizzazione</string>
+    <string name="sync_in_time">Sincronizzazione in corso...</string>
 </resources>

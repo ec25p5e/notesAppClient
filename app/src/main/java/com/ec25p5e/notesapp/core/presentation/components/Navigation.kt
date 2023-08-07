@@ -26,9 +26,8 @@ import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
 import com.ec25p5e.notesapp.feature_profile.presentation.profile.ProfileScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.choose_theme.ChooseThemeScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.contact_me.ContactMeScreen
-import com.ec25p5e.notesapp.feature_settings.presentation.import_data.ImportDataScreen
+import com.ec25p5e.notesapp.feature_settings.presentation.sync_remote.SyncRemoteScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.info_app.InfoAppScreen
-import com.ec25p5e.notesapp.feature_settings.presentation.permission_screen.PermissionScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.privacy_advice.PrivacyAdviceScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMethodScreen
@@ -222,8 +221,8 @@ fun Navigation(
             )
         }
 
-        composable(Screen.ImportDataScreen.route) {
-            ImportDataScreen(
+        composable(Screen.SyncToServer.route) {
+            SyncRemoteScreen(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,
@@ -259,14 +258,6 @@ fun Navigation(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigate = navController::navigate,
-            )
-        }
-
-        composable(Screen.PermissionScreen.route) {
-            PermissionScreen(
-                scaffoldState = scaffoldState,
-                imageLoader = imageLoader,
-                onNavigateUp = navController::navigateUp,
             )
         }
 

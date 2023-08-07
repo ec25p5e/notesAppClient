@@ -2,11 +2,16 @@ package com.ec25p5e.notesapp.feature_settings.presentation.unlock_method
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -27,6 +32,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
+import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
+import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.feature_settings.presentation.settings.SettingsViewModel
 
 @Composable
@@ -58,32 +65,27 @@ fun UnlockMethodScreen(
             }
         )
 
-        if(state.isLoggedIn) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(SpaceMedium)
+
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Text(text = "Set a pin")
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {
-
-                    }
-                ) {
-                    Text(text = "Authenticate")
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-
-                    }
-                ) {
-                    Text(text = "Change Pin")
+                Row {
+                    LottieView(
+                        json = R.raw.unlock_method,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp),
+                        iterations = 3
+                    )
                 }
             }
+
         }
 
     }

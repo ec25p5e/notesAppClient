@@ -15,5 +15,6 @@ data class AppSettings(
     ),
     val appTheme: AppTheme = AppTheme.NATURE,
     val isSharingEnabled: Boolean = true,
+    val syncOptions: SyncOption = SyncOption(),
     val isCompleteOnboarding: Boolean = false,
 )

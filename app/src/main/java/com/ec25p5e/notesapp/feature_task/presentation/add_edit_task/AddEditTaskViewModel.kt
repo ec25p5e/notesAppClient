@@ -306,15 +306,8 @@ class AddEditTaskViewModel @Inject constructor(
                 updatedAt = System.currentTimeMillis()
             ))
 
-            // Exclude empty checkable
-            checkables.addAll(_checkables.filter {
-                it.value.isNotEmpty()
-            })
-
-            /* checkables.forEach { checkable ->
-                checkable.taskId = taskId.toInt()
-                checkableUseCases.addCheckable(checkable)
-            } */
+            checkables.map { checkable -> checkable.taskId = taskId.toInt() }
+            checkableUseCases.addCheckable(checkables)
 
             _eventFlow.emit(UiEventTask.ShowSnackbar(UiText.StringResource(id = R.string.task_created_successfully)))
         }

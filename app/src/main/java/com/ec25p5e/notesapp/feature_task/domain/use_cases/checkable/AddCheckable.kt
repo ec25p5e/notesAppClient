@@ -7,7 +7,7 @@ class AddCheckable(
     private val repository: CheckableRepository
 ) {
 
-    operator fun invoke(checkable: Checkable) {
-        repository.insertCheckable(checkable)
+    operator fun invoke(checkables: List<Checkable>) {
+        repository.insertBulkCheckable(checkables)
     }
 }

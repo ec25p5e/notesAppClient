@@ -15,11 +15,10 @@ sealed class Screen(val route: String) {
     data object SettingsScreen: Screen("settings_screen")
     data object SelectThemeScreen: Screen("select_theme_screen")
     data object UnlockMethodScreen: Screen("unlock_method_screen")
-    data object ImportDataScreen: Screen("import_data_screen")
+    data object SyncToServer: Screen("import_data_screen")
     data object PrivacyAdviceScreen: Screen("privacy_advice_screen")
     data object InfoAppScreen: Screen("info_app_screen")
     data object ContactMeScreen: Screen("contact_me_screen")
-    data object PermissionScreen: Screen("permissions_screen")
     data object AddEditTaskScreen: Screen("add_edit_task_screen")
     data object OfflineScreen: Screen("offline_screen")
 }

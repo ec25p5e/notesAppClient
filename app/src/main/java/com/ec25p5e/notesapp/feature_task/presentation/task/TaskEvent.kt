@@ -9,4 +9,5 @@ sealed class TaskEvent {
     data class DeleteTask(val task: Task): TaskEvent()
 
     data class EditTask(val task: Task): TaskEvent()
+    data class GetCheckablesForTask(val taskId: Int): TaskEvent()
 }

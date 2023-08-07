@@ -8,7 +8,7 @@ class GetCheckableByTask(
     private val repository: CheckableRepository
 ) {
 
-    operator fun invoke(taskId: Int): Flow<List<Checkable>> {
+    operator fun invoke(taskId: Int): List<Checkable> {
         return repository.getCheckablesByTask(taskId)
     }
 }

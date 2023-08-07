@@ -11,21 +11,27 @@ import com.ec25p5e.notesapp.core.presentation.util.time
 import com.ec25p5e.notesapp.core.presentation.util.today
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
+import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUseCases
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
 import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
     private val taskUseCases: TaskUseCases,
+    private val checkableUseCases: CheckableUseCases,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -51,6 +57,13 @@ class TaskViewModel @Inject constructor(
             }
             is TaskEvent.EditTask -> {
                 editTask(event.task)
+            }
+            is TaskEvent.GetCheckablesForTask -> {
+                viewModelScope.launch {
+                    _state.value = _state.value.copy(
+                        checkablesForTask = checkableUseCases.getCheckableByTask(event.taskId)
+                    )
+                }
             }
         }
     }
@@ -102,4 +115,7 @@ class TaskViewModel @Inject constructor(
                 .launchIn(viewModelScope)
         }
     }
+
+    suspend fun <T> Flow<List<T>>.flattenToList() =
+        flatMapConcat { it.asFlow() }.toList()
 }

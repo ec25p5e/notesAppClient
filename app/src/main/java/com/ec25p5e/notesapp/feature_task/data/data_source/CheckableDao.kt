@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 interface CheckableDao {
 
     @Query("SELECT * FROM checkable WHERE taskId = :taskId")
-    fun getCheckablesByTask(taskId: Int): Flow<List<Checkable>>
+    fun getCheckablesByTask(taskId: Int): List<Checkable>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCheckable(checkable: Checkable)
+    fun insertBulkCheckable(checkables: List<Checkable>)
 }

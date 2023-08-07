@@ -189,4 +189,11 @@
     <string name="record_audio_permission_text">This app needs access to your microphone so you can\nwrite a note or task without keyboard</string>
     <string name="camera_permission_permanently_declined" />
     <string name="camera_permission_text" />
+    <string name="settings_sync_to_server">Sync to server</string>
+    <string name="sync_to_server_options_inner">Sync options</string>
+    <string name="sync_to_server_notes">Notes</string>
+    <string name="sync_to_server_categories">Categories</string>
+    <string name="sync_to_server_tasks">Tasks</string>
+    <string name="make_sync_text">Start sync</string>
+    <string name="sync_in_time">Syncing...</string>
 </resources>

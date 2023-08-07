@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ec25p5e.notesapp.core.presentation.util.date
 import com.ec25p5e.notesapp.core.presentation.util.format12Hour
 import com.ec25p5e.notesapp.core.presentation.util.time
+import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.presentation.task.TaskEvent
 import com.ec25p5e.notesapp.feature_task.presentation.task.TaskViewModel
@@ -34,6 +35,7 @@ import com.ec25p5e.notesapp.feature_task.presentation.task.TaskViewModel
 @Composable
 fun TaskItem(
     task: Task,
+    checkables: List<Checkable>,
     viewModel: TaskViewModel = hiltViewModel()
 ) {
     Card(
@@ -52,7 +54,9 @@ fun TaskItem(
             ){
                 Text(
                     task.title,
-                    modifier = Modifier.fillMaxWidth().weight(1f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
                 )
 
                 Row(
@@ -125,6 +129,13 @@ fun TaskItem(
                     Text(task.dueDateTime.date)
                     Text(task.dueDateTime.time.format12Hour)
                 }
+            }
+
+            checkables.forEach { checkable ->
+                CheckableDisplayItem(
+                    task = task,
+                    checkable = checkable
+                )
             }
         }
     }

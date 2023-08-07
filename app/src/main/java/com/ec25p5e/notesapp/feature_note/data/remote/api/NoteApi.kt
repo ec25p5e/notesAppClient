@@ -4,6 +4,7 @@ import com.ec25p5e.notesapp.core.data.dto.response.BasicApiResponse
 import com.ec25p5e.notesapp.feature_note.data.remote.request.SimpleNoteRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.response.NoteResponse
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Body
 import retrofit2.http.POST
 
