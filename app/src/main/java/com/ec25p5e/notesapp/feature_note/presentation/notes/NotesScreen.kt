@@ -594,6 +594,4 @@ fun NotesScreen(
             }
         }
     }
-
-    Log.d("test25", context.filesDir.toString())
 }

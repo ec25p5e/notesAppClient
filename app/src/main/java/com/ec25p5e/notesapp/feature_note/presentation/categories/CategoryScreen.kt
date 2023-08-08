@@ -1,22 +1,34 @@
 package com.ec25p5e.notesapp.feature_note.presentation.categories
 
 import android.widget.Toast
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.DismissValue
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,30 +37,44 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardDeleteItem
+import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
+import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.presentation.util.asString
+import com.ec25p5e.notesapp.core.util.Constants
 import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
+import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItemDetail
 import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
@@ -56,6 +82,7 @@ import com.ec25p5e.notesapp.feature_note.presentation.components.SwipeBackground
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +98,15 @@ fun CategoryScreen(
     val state = viewModel.state.value
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
+    val scaffoldBottomSheet = rememberBottomSheetScaffoldState()
+    var bottomSheet by rememberSaveable { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val categoryTitleState = viewModel.categoryTitle.value
+    val categoryBackgroundAnimatable = remember {
+        Animatable(
+            Color(viewModel.categoryColor.value)
+        )
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -180,6 +216,11 @@ fun CategoryScreen(
                             category = category,
                             onDeleteClick = {
                                 viewModel.onEvent(CategoryEvent.SetToDelete(category))
+                            },
+                            onEditClick = {
+                                scope.launch {
+                                    scaffoldBottomSheet.bottomSheetState.expand()
+                                }
                             }
                         )
                     }
@@ -198,4 +239,130 @@ fun CategoryScreen(
             }
         }
     }
+
+
+    /**
+     * Edit category section
+     */
+    BottomSheetScaffold(
+        scaffoldState = scaffoldBottomSheet,
+        sheetPeekHeight = 0.dp,
+        sheetContent = {
+            bottomSheet = true
+
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                if (scaffoldBottomSheet.bottomSheetState.hasExpandedState) {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                scaffoldBottomSheet.bottomSheetState.partialExpand()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+
+                    }
+                }
+
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(SpaceSmall),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                    ) {
+                        StandardTextFieldState(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = categoryTitleState.text,
+                            label = stringResource(id = R.string.label_category_title_input),
+                            maxLength = Constants.MAX_CATEGORY_TITLE_LENGTH,
+                            onValueChange = {
+                                viewModel.onEvent(CategoryEvent.EnteredTitle(it))
+                            },
+                            onFocusChange = {
+                                viewModel.onEvent(CategoryEvent.ChangeTitleFocus(it))
+                            },
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Text,
+                            error = when(categoryTitleState.error) {
+                                is AuthError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                                is AuthError.InputTooShort -> stringResource(id = R.string.input_too_short_text)
+                                else -> ""
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(2.dp)
+                            .background(Color.Black)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            items(Category.categoryColor) { noteColor ->
+                                val colorInt = noteColor.toArgb()
+
+                                Box(
+                                    modifier = Modifier
+                                        .size(25.dp)
+                                        .shadow(7.5.dp, CircleShape)
+                                        .clip(CircleShape)
+                                        .background(noteColor)
+                                        .border(
+                                            width = 1.5.dp,
+                                            color = if (viewModel.categoryColor.value == colorInt) {
+                                                Color.Black
+                                            } else Color.Transparent,
+                                            shape = CircleShape
+                                        )
+                                        .clickable {
+                                            scope.launch {
+                                                categoryBackgroundAnimatable.animateTo(
+                                                    targetValue = Color(colorInt),
+                                                    animationSpec = tween(
+                                                        durationMillis = 500
+                                                    )
+                                                )
+                                            }
+                                            viewModel.onEvent(
+                                                CategoryEvent.ChangeColor(
+                                                    colorInt
+                                                )
+                                            )
+                                        }
+                                )
+
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    ) {}
 }

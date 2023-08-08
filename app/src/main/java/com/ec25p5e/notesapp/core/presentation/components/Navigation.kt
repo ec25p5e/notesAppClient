@@ -23,6 +23,7 @@ import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteS
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryScreen
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesScreen
+import com.ec25p5e.notesapp.feature_profile.presentation.edit_profile.EditProfileScreen
 import com.ec25p5e.notesapp.feature_profile.presentation.profile.ProfileScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.choose_theme.ChooseThemeScreen
 import com.ec25p5e.notesapp.feature_settings.presentation.contact_me.ContactMeScreen
@@ -112,7 +113,7 @@ fun Navigation(
         }
 
         composable(
-            route = Screen.ProfileScreen.route/*,
+            route = Screen.ProfileScreen.route,
             arguments = listOf(
                 navArgument(name = "userId") {
                     type = NavType.StringType
@@ -120,9 +121,9 @@ fun Navigation(
                     defaultValue = null
                 }
             )
-        */) {
+        ) {
             ProfileScreen(
-                userId = null /* it.arguments?.getString("userId") */,
+                userId = it.arguments?.getString("userId"),
                 onLogout = {
                     navController.navigate(route = Screen.LoginScreen.route)
                 },
@@ -266,6 +267,22 @@ fun Navigation(
                 scaffoldState = scaffoldState,
                 imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,
+            )
+        }
+        
+        composable(
+            route = Screen.EditProfileScreen.route + "/{userId}",
+            arguments = listOf(
+                navArgument(name = "userId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            EditProfileScreen(
+                scaffoldState = scaffoldState,
+                imageLoader = imageLoader,
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp
             )
         }
     }

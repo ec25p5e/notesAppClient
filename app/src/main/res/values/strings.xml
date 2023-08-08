@@ -206,4 +206,7 @@
     <string name="delete_category_description" >This operation isn\'t reversible. After executing the category were be deleted from local database. When you push data from server the category inside server will be deleted. Do you continue?</string>
     <string name="category_deleted">Category successfully deleted</string>
     <string name="locked_note_found">Lock note was found! Cannot delete category</string>
+    <string name="enable_dynamic_color">Dynamic color</string>
+    <string name="save_changes">Save changes</string>
+    <string name="edit_your_profile">Edit your profile</string>
 </resources>
