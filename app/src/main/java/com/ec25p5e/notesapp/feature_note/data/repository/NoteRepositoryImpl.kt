@@ -6,6 +6,7 @@ import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceIm
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
+import com.ec25p5e.notesapp.feature_note.data.data_source.CategoryDao
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDao
 import com.ec25p5e.notesapp.feature_note.data.mapper.toNote
 import com.ec25p5e.notesapp.feature_note.data.remote.api.NoteApi
@@ -27,6 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class NoteRepositoryImpl(
     private val dao: NoteDao,
+    private val daoCategory: CategoryDao,
     private val api: NoteApi,
     dataStore: DataStorePreferenceImpl,
 ): NoteRepository {
@@ -114,7 +116,17 @@ class NoteRepositoryImpl(
     }
 
     override fun insertNote(note: Note) {
+        val categoryId = note.categoryId
+        val category = daoCategory.getCategoryById(categoryId)
+
+        // Incrementa il contatore
+        category.numNotesAssoc = category.numNotesAssoc + 1
+
+        // Inserisci la nota
         dao.insertNote(note)
+
+        // Fai la modifica del valore
+        daoCategory.insertCategory(category)
     }
 
     override fun deleteNote(note: Note) {

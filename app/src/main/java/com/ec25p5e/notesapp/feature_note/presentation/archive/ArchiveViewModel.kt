@@ -8,7 +8,7 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
-import com.ec25p5e.notesapp.feature_note.domain.util.ArchiveOrder
+import com.ec25p5e.notesapp.feature_note.domain.util.ArchiveNoteOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +35,7 @@ class ArchiveViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        getNotesForArchive(ArchiveOrder.Date(OrderType.Descending))
+        getNotesForArchive(ArchiveNoteOrder.Date(OrderType.Descending))
     }
 
     fun onEvent(event: ArchiveEvent){
@@ -62,7 +62,7 @@ class ArchiveViewModel @Inject constructor(
         }
     }
 
-    private fun getNotesForArchive(noteOrder: ArchiveOrder) {
+    private fun getNotesForArchive(noteOrder: ArchiveNoteOrder) {
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotesForArchive(noteOrder)
             .onEach { notes ->

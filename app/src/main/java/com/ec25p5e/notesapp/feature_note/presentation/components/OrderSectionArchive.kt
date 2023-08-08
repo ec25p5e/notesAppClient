@@ -15,15 +15,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.DefaultRadioButton
-import com.ec25p5e.notesapp.feature_note.domain.util.ArchiveOrder
-import com.ec25p5e.notesapp.feature_note.domain.util.NoteOrder
+import com.ec25p5e.notesapp.feature_note.domain.util.ArchiveNoteOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
 
 @Composable
 fun OrderSectionArchive(
     modifier: Modifier = Modifier,
-    noteOrder: ArchiveOrder = ArchiveOrder.Date(OrderType.Descending),
-    onOrderChange: (ArchiveOrder) -> Unit
+    noteOrder: ArchiveNoteOrder = ArchiveNoteOrder.Date(OrderType.Descending),
+    onOrderChange: (ArchiveNoteOrder) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -33,16 +32,16 @@ fun OrderSectionArchive(
         ) {
             DefaultRadioButton(
                 text = stringResource(id = R.string.order_section_title),
-                selected = noteOrder is ArchiveOrder.Title,
-                onSelect = { onOrderChange(ArchiveOrder.Title(noteOrder.orderType)) }
+                selected = noteOrder is ArchiveNoteOrder.Title,
+                onSelect = { onOrderChange(ArchiveNoteOrder.Title(noteOrder.orderType)) }
             )
 
             Spacer(modifier = Modifier.width(8.dp))
 
             DefaultRadioButton(
                 text = stringResource(id = R.string.order_section_date),
-                selected = noteOrder is ArchiveOrder.Date,
-                onSelect = { onOrderChange(ArchiveOrder.Date(noteOrder.orderType)) }
+                selected = noteOrder is ArchiveNoteOrder.Date,
+                onSelect = { onOrderChange(ArchiveNoteOrder.Date(noteOrder.orderType)) }
             )
         }
 
@@ -51,8 +50,8 @@ fun OrderSectionArchive(
         ) {
             DefaultRadioButton(
                 text = stringResource(id = R.string.order_section_color),
-                selected = noteOrder is ArchiveOrder.Color,
-                onSelect = { onOrderChange(ArchiveOrder.Color(noteOrder.orderType)) }
+                selected = noteOrder is ArchiveNoteOrder.Color,
+                onSelect = { onOrderChange(ArchiveNoteOrder.Color(noteOrder.orderType)) }
             )
         }
 

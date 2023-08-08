@@ -11,6 +11,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
+import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
+import com.ec25p5e.notesapp.core.data.util.getRandomString
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
@@ -23,6 +26,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -32,6 +38,7 @@ import javax.inject.Inject
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     private var dataStore: DataStore<AppSettings>,
+    private var aesEncryptor: AESEncryptor,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -95,7 +102,7 @@ class AddEditNoteViewModel @Inject constructor(
                             isHintVisible = false
                         )
                         _contentState.value = _contentState.value.copy(
-                            text = note.content,
+                            text = AESEncryptor.decrypt(note.content)!!,
                             isHintVisible = false
                         )
                         _isArchivedState.value = note.isArchived
@@ -249,7 +256,7 @@ class AddEditNoteViewModel @Inject constructor(
                     _chosenImageUri.value.forEach { uri -> imageArray.add(uri.toString()) }
 
                     val noteInsert = Note(
-                        title = titleState.value.text,
+                        title = _titleState.value.text,
                         content = contentState.value.text,
                         timestamp = System.currentTimeMillis(),
                         color = colorState.value,
@@ -257,7 +264,7 @@ class AddEditNoteViewModel @Inject constructor(
                         categoryId = _noteCategory.value,
                         image = imageArray,
                         background = _noteBackground.value,
-                        isLocked = _isLockedNote.value
+                        isLocked = _isLockedNote.value,
                     )
 
                     val addingResult = noteUseCases.addNote(noteInsert)
@@ -277,11 +284,11 @@ class AddEditNoteViewModel @Inject constructor(
                     if(addingResult.isCorrect()) {
                         _eventFlow.emit(UiEventNote.ShowLoader)
                         _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id =
-                        if(currentNoteId == null) {
-                            R.string.note_created_text
-                        } else {
-                            R.string.note_updated_text
-                        }
+                            if(currentNoteId == null) {
+                                R.string.note_created_text
+                            } else {
+                                R.string.note_updated_text
+                            }
                         )))
 
                         _eventFlow.emit(UiEventNote.SaveNote)

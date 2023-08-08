@@ -2,6 +2,7 @@ package com.ec25p5e.notesapp.feature_note.domain.use_case.category
 
 import android.content.res.Resources
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
@@ -19,7 +20,11 @@ class AddCategory(
         if(titleError != null)
             return CategoryResult(titleError)
 
-        repository.insertCategory(category)
+        val cryptedCategory = category.copy(
+            name = AESEncryptor.encrypt(category.name)!!
+        )
+
+        repository.insertCategory(cryptedCategory)
         return CategoryResult(
             result = true
         )

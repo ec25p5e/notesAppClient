@@ -62,7 +62,15 @@ class CategoryRepositoryImpl(
         return dao.getCategories()
     }
 
+    override fun getCategoryById(categoryId: Int): Category {
+        return dao.getCategoryById(categoryId)
+    }
+
     override fun insertCategory(category: Category) {
         dao.insertCategory(category)
+    }
+
+    override fun deleteCategory(category: Category) {
+        dao.deleteCategory(category)
     }
 }

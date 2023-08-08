@@ -197,5 +197,7 @@
     <string name="delete">Elimina</string>
     <string name="associated_notes">Note nella categoria:</string>
     <string name="dialog_delete_category_confirm">Elimina categoria</string>
-    <string name="delete_category_description">Questa operazzione è irreversibile!!! Confermando eliminerete la category localmente. Se precedentemente era stata caricata sul server si dovrà effettuare una sincronizzazione per applicare la modifica. Volete continuare?</string>
+    <string name="delete_category_description">Questa operazzione è irreversibile!!! Confermando eliminerete la categorie e le note associate localmente. Se precedentemente era stata caricata sul server si dovrà effettuare una sincronizzazione per applicare la modifica. Volete continuare?</string>
+    <string name="category_deleted">Categoria eliminata</string>
+    <string name="locked_note_found">Non è possibile eliminare la categoria: sbloccare le note prima di continuare</string>
 </resources>

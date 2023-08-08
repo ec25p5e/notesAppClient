@@ -22,6 +22,6 @@ interface NoteApi {
 
 
     companion object {
-        const val BASE_URL = "http://85.0.253.197:8080/"
+        const val BASE_URL = "http://192.168.183.107:8080/" // ""http://85.0.253.197:8080/"
     }
 }

@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.feature_note.data.data_source
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,11 +15,17 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getCategories(): Flow<List<Category>>
 
+    @Query("SELECT * FROM category WHERE id = :categoryId")
+    fun getCategoryById(categoryId: Int): Category
+
     @Upsert
     fun insertCategory(category: Category)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBulkCategories(categories: List<Category>?)
+
+    @Delete
+    fun deleteCategory(category: Category)
 
     @Query("DELETE FROM category")
     fun clearAll()

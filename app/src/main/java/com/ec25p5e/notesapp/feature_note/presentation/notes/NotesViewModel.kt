@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
@@ -105,10 +106,7 @@ class NotesViewModel @Inject constructor(
                 }
             }
             is NotesEvent.RestoreNote -> {
-                viewModelScope.launch {
-                    noteUseCases.addNote(recentlyDeletedNote ?: return@launch)
-                    recentlyDeletedNote = null
-                }
+
             }
             is NotesEvent.FilterNotesByCategory -> {
                 _filterCategory = event.categoryId

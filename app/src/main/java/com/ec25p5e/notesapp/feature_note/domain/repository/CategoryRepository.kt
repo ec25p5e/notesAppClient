@@ -8,5 +8,9 @@ interface CategoryRepository {
 
     suspend fun getAllCategories(fetchFromRemote: Boolean): Flow<List<Category>>
 
+    fun getCategoryById(categoryId: Int): Category
+
     fun insertCategory(category: Category)
+
+    fun deleteCategory(category: Category)
 }

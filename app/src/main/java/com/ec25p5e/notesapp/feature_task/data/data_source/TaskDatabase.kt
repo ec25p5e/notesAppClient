@@ -13,7 +13,7 @@ import com.ec25p5e.notesapp.feature_task.domain.models.Task
 @Database(
     entities = [Task::class, Checkable::class],
     version = 1,
-    exportSchema = false,
+    exportSchema = true,
     /*autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = TaskDatabase.Migration1To2::class)
     ] */

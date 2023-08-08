@@ -432,7 +432,7 @@ fun AddEditNoteScreen(
             StandardToolbar(
                 onNavigateUp = {
                     if (state.isAutoSaveEnabled) {
-                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote(context.filesDir))
                     }
 
                     onNavigateUp()
@@ -736,7 +736,7 @@ fun AddEditNoteScreen(
 
                 Button(
                     onClick = {
-                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote(context.filesDir))
                     },
                     enabled = (!state.isSaving && !state.isAutoSaveEnabled),
                 ) {

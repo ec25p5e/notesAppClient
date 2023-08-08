@@ -5,11 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
+import com.ec25p5e.notesapp.feature_note.domain.util.CategoryOrder
+import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -72,7 +75,15 @@ class CategoryViewModel @Inject constructor(
                 _categoryId.value = event.id
             }
             is CategoryEvent.DeleteCategory -> {
+                viewModelScope.launch {
+                    val resultDelete = categoryUseCases.deleteCategory(_state.value.categoryToDelete!!)
 
+                    if(resultDelete) {
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.category_deleted)))
+                    } else {
+                        _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.locked_note_found)))
+                    }
+                }
             }
             is CategoryEvent.RestoreCategory -> {
 
@@ -139,7 +150,7 @@ class CategoryViewModel @Inject constructor(
     fun loadCategories() {
         viewModelScope.launch {
             getCategoriesJob?.cancel()
-            getCategoriesJob = categoryUseCases.getCategories(false)
+            getCategoriesJob = categoryUseCases.getCategories(CategoryOrder.Date(OrderType.Ascending), false)
                 .onEach { category ->
                     _state.value = state.value.copy(
                         categories = category

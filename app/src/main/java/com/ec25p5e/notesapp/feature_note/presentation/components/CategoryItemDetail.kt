@@ -113,7 +113,7 @@ fun CategoryItemDetail(
             Divider()
 
             Text(
-                text = stringResource(id = R.string.associated_notes),
+                text = (stringResource(id = R.string.associated_notes) + " " + category.numNotesAssoc.toString()),
                 modifier = Modifier
                     .padding(vertical = 10.dp)
                     .padding(horizontal = 5.dp)

@@ -3,6 +3,7 @@ package com.ec25p5e.notesapp.di
 import android.app.Application
 import androidx.room.Room
 import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
 import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
 import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDatabase
 import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
@@ -13,7 +14,9 @@ import com.ec25p5e.notesapp.feature_note.domain.repository.CategoryRepository
 import com.ec25p5e.notesapp.feature_note.domain.repository.NoteRepository
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.AddCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCases
+import com.ec25p5e.notesapp.feature_note.domain.use_case.category.DeleteCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategories
+import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategoryById
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.AddNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.ArchiveNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.CopyNote
@@ -75,11 +78,12 @@ object NoteModule {
 
     @Provides
     @Singleton
-    fun provideNoteRepository(db: NoteDatabase,
-                              api: NoteApi,
-                              dataStore: DataStorePreferenceImpl
+    fun provideNoteRepository(
+        db: NoteDatabase,
+        api: NoteApi,
+        dataStore: DataStorePreferenceImpl
     ): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao, api, dataStore)
+        return NoteRepositoryImpl(db.noteDao, db.categoryDao, api, dataStore)
     }
 
     @Provides
@@ -112,10 +116,15 @@ object NoteModule {
 
     @Provides
     @Singleton
-    fun provideCategoryUseCases(repository: CategoryRepository): CategoryUseCases {
+    fun provideCategoryUseCases(
+        repository: CategoryRepository,
+        noteRepository: NoteRepository,
+    ): CategoryUseCases {
         return CategoryUseCases(
             getCategories = GetCategories(repository),
-            addCategory = AddCategory(repository)
+            addCategory = AddCategory(repository),
+            deleteCategory = DeleteCategory(repository, noteRepository),
+            getCategoryById = GetCategoryById(repository)
         )
     }
 }

@@ -13,6 +13,7 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.Nt_Third
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedOrange
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
 import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
+import java.io.FileOutputStream
 
 @Entity(
     foreignKeys = [
@@ -20,14 +21,14 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
     ]
 )
 data class Note(
-    val title: String,
-    val content: String,
+    var title: String,
+    var content: String,
     val timestamp: Long,
     val color: Int,
     val isArchived: Boolean = false,
     val categoryId: Int = 1,
     val remoteId: String = "",
-    val image: ArrayList<String> = ArrayList(),
+    var image: ArrayList<String> = ArrayList(),
     val background: Int,
     val isCopied: Int = 0,
     val isLocked: Boolean = false,

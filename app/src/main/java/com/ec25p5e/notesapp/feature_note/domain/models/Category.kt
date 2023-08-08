@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.domain.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Primary
@@ -16,10 +17,12 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
 
 @Entity
 data class Category(
-    val name: String,
+    var name: String,
     val color: Int,
     val timestamp: Long,
     val remoteId: String = "",
+    @ColumnInfo(name = "num_notes")
+    var numNotesAssoc: Int = 0,
     @PrimaryKey val id: Int? = null
 ) {
 

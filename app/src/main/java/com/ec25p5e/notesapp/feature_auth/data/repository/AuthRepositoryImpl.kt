@@ -63,28 +63,6 @@ class AuthRepositoryImpl(
                 response.data?.let { authResponse ->
                     dataStore.putPreference(USER_TOKEN, authResponse.token)
                     dataStore.putPreference(USER_ID, authResponse.userId)
-
-                    categoryRepository.insertCategory(
-                        Category(
-                            name = "All notes",
-                            color = -8266006,
-                            timestamp = System.currentTimeMillis()
-                        )
-                    )
-
-                    noteRepository.insertNote(
-                        Note(
-                            title = "Simple note",
-                            content = "This is a content of simple note",
-                            color = -8266006,
-                            timestamp = System.currentTimeMillis(),
-                            isArchived = false,
-                            categoryId = 1,
-                            image = ArrayList(),
-                            background = R.drawable.bg_note_0,
-                            isCopied = 0
-                        )
-                    )
                 }
 
                 Resource.Success(Unit)

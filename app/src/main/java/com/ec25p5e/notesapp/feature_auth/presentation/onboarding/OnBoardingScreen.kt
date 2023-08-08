@@ -54,6 +54,7 @@ fun OnBoardingScreen(
     val permissionsToRequest = arrayOf(
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
     )
     val activity = LocalContext.current as Activity
     val dialogQueue = viewModel.visiblePermissionDialogQueue

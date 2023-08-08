@@ -10,8 +10,8 @@ import com.ec25p5e.notesapp.feature_note.domain.models.Note
 
 @Database(
     entities = [Note::class, Category::class],
-    version = 2,
-    exportSchema = false
+    version = 1,
+    exportSchema = true,
 )
 @TypeConverters(ArrayListConverter::class)
 abstract class NoteDatabase: RoomDatabase() {

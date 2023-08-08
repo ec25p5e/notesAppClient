@@ -520,8 +520,12 @@ fun NotesScreen(
                                     confirmValueChange = {
                                         when (it) {
                                             DismissValue.DismissedToEnd -> {
-                                                viewModel.onEvent(NotesEvent.ArchiveNote(currentItem.id!!))
-                                                true
+                                                if(!currentItem.isLocked) {
+                                                    viewModel.onEvent(NotesEvent.ArchiveNote(currentItem.id!!))
+                                                    true
+                                                } else {
+                                                    false
+                                                }
                                             }
 
                                             DismissValue.DismissedToStart -> {
@@ -590,4 +594,6 @@ fun NotesScreen(
             }
         }
     }
+
+    Log.d("test25", context.filesDir.toString())
 }
