@@ -72,13 +72,21 @@ class CategoryViewModel @Inject constructor(
                 _categoryId.value = event.id
             }
             is CategoryEvent.DeleteCategory -> {
-                viewModelScope.launch {
-                    TODO("Implement delete of category")
-                    recentlyDeletedCategory = event.category
-                }
+
             }
             is CategoryEvent.RestoreCategory -> {
 
+            }
+            is CategoryEvent.SetToDelete -> {
+                _state.value = _state.value.copy(
+                    categoryToDelete = event.category,
+                    isDeleting = !_state.value.isDeleting
+                )
+            }
+            is CategoryEvent.ToggleCategoryDelete -> {
+                _state.value = _state.value.copy(
+                    isDeleting = !_state.value.isDeleting
+                )
             }
             is CategoryEvent.ToggleCategoryCreation -> {
                 _state.value = state.value.copy(

@@ -8,7 +8,7 @@ class CategoryResult(
 ) {
 
     fun isCorrect(): Boolean {
-        if(titleError != null)
+        if(titleError == null)
             return true
 
         return false

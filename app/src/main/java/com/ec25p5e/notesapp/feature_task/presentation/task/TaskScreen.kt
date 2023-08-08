@@ -32,10 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.components.StandardDeleteItem
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.asString
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.domain.models.TaskFilters
 import com.ec25p5e.notesapp.feature_task.presentation.components.TaskItem
@@ -80,6 +82,17 @@ fun TodoScreen(
         }
     }
 
+    if(state.isDeleting) {
+        StandardDeleteItem(
+            onDismissRequest = { viewModel.onEvent(TaskEvent.IsDeletingNote) },
+            icon = R.drawable.ic_delete,
+            title = R.string.dialog_delete_task_confirm,
+            text = R.string.delete_task_description,
+            confirmButtonClick = { viewModel.onEvent(TaskEvent.DeleteTask) },
+            dismissButton = { viewModel.onEvent(TaskEvent.IsDeletingNote) },
+        )
+    }
+
 
     Column(
         modifier = Modifier
@@ -97,48 +110,30 @@ fun TodoScreen(
             modifier = Modifier.fillMaxWidth(),
             showBackArrow = false,
             navActions = {
-                StandardOptionsMenu(
-                    menuItem = {
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.order_todo_title))
-                            },
-                            onClick = {
-
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_filter),
-                                    contentDescription = stringResource(id = R.string.order_todo_title)
-                                )
-                            }
-                        )
-                    }
-                )
             }
         )
 
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
             ){
                 ScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.primary,
                     indicator = {tabPositions ->
                         TabRowDefaults.Indicator(
                             Modifier
                                 .fillMaxWidth()
                                 .pagerTabIndicatorOffset(pagerState, tabPositions)
+                                .background(MaterialTheme.colorScheme.surface)
                         )
                     },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                 ){
                     TaskFilters.values().forEachIndexed{ index, filter ->
                         Tab(
@@ -164,15 +159,13 @@ fun TodoScreen(
                 HorizontalPager(
                     count = TaskFilters.values().size,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface),
+                        .fillMaxSize(),
                     state = pagerState
                 ) { page ->
                     when(TaskFilters.values()[page]){
                         TaskFilters.Today -> TaskFilter(state.tasksToday, viewModel)
                         TaskFilters.Upcoming -> TaskFilter(state.tasksUpcoming, viewModel)
                         TaskFilters.Regular -> TaskFilter(state.tasksRegular, viewModel)
-                        TaskFilters.CheckLists -> TaskFilter(state.tasksChecklist, viewModel)
                         TaskFilters.All -> TaskFilter(tasks = state.allTasks, viewModel)
                     }
                 }

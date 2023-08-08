@@ -58,6 +58,7 @@ import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
+import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
@@ -289,14 +290,15 @@ fun ArchiveScreen(
                     )
                 }
             } else {
-                Image(
-                    painter = painterResource(id = R.drawable.all_task_done),
-                    contentDescription = stringResource(id = R.string.cont_descr_image_all_task_done),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.CenterHorizontally)
-                        .scale(0.5f)
-                )
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    LottieView(
+                        json = R.raw.empty_archive,
+                        modifier = Modifier.fillMaxWidth()
+                            .height(200.dp)
+                    )
+                }
             }
         }
     }

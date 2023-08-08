@@ -36,6 +36,7 @@ import com.ec25p5e.notesapp.core.presentation.components.PermissionDialog
 import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.UiEvent
 import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.core.util.openSettings
 import com.ec25p5e.notesapp.feature_auth.presentation.util.OnBoardingPage
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.flow.collectLatest
@@ -106,8 +107,8 @@ fun OnBoardingScreen(
             modifier = Modifier.weight(1f),
             pagerState = pagerState,
             onClick = {
+                multiplePermissionResultLauncher.launch(permissionsToRequest)
                 viewModel.onEvent(OnBoardingEvent.SaveOnBoarding(true))
-                // multiplePermissionResultLauncher.launch(permissionsToRequest)
             }
         )
     }
@@ -138,10 +139,7 @@ fun OnBoardingScreen(
                         arrayOf(permission)
                     )
                 },
-                onGoToAppSettingsClick = {
-                    val i = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-                    context.startActivity(i)
-                }
+                onGoToAppSettingsClick = { context.openSettings() }
             )
         }
 }

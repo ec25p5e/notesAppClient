@@ -78,7 +78,7 @@
     <string name="dearchived_successfully">Note de-archived successfully</string>
     <string name="text_search_note_archive">Search note in archive...</string>
     <string name="dialog_delete_note_confirm">Delete note</string>
-    <string name="delete_note_description">This operation isn\'t reversible.\nAfter executing the note were be deleted from local database.\nWhen you push data from server the note inside server will be deleted.\nDo you continue?</string>
+    <string name="delete_note_description">This operation isn\'t reversible. After executing the note were be deleted from local database. When you push data from server the note inside server will be deleted. Do you continue?</string>
     <string name="confirm_btn_text">Confirm</string>
     <string name="is_image_present">An image is associated to note</string>
     <string name="is_document_present">A document is inserted into note</string>
@@ -196,4 +196,12 @@
     <string name="sync_to_server_tasks">Tasks</string>
     <string name="make_sync_text">Start sync</string>
     <string name="sync_in_time">Syncing...</string>
+    <string name="dialog_delete_task_confirm">Delete task</string>
+    <string name="delete_task_description" >This operation isn\'t reversible. After executing the task were be deleted from local database. When you push data from server the note inside server will be deleted. Do you continue?</string>
+    <string name="deleted_task">Task deleted successfully</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="associated_notes">Note in category:</string>
+    <string name="dialog_delete_category_confirm">Delete category</string>
+    <string name="delete_category_description" >This operation isn\'t reversible. After executing the category were be deleted from local database. When you push data from server the category inside server will be deleted. Do you continue?</string>
 </resources>

@@ -96,7 +96,7 @@ fun TaskItem(
                     }
                     IconButton(
                         onClick = {
-                            viewModel.onEvent(TaskEvent.DeleteTask(task))
+                            viewModel.onEvent(TaskEvent.SetTaskToDelete(task))
                         },
                         modifier = Modifier.size(24.dp)
                     ) {

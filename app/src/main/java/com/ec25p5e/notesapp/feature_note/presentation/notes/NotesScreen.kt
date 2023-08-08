@@ -66,6 +66,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.LoadingAnimation
+import com.ec25p5e.notesapp.core.presentation.components.StandardDeleteItem
 import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.util.Screen
@@ -524,8 +525,12 @@ fun NotesScreen(
                                             }
 
                                             DismissValue.DismissedToStart -> {
-                                                viewModel.onEvent(NotesEvent.SetNoteToDelete(currentItem))
-                                                state.isDeleting
+                                                if(!currentItem.isLocked) {
+                                                    viewModel.onEvent(NotesEvent.SetNoteToDelete(currentItem))
+                                                    state.isDeleting
+                                                } else {
+                                                    false
+                                                }
                                             }
 
                                             else -> {
@@ -561,48 +566,26 @@ fun NotesScreen(
                         )
                     }
                 } else {
-                    LottieView(
-                        json = R.raw.write_notes,
-                        modifier = Modifier.fillMaxWidth()
-                            .height(500.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        LottieView(
+                            json = R.raw.write_notes,
+                            modifier = Modifier.fillMaxWidth()
+                                .height(200.dp)
+                        )
+                    }
                 }
             }
 
             if(state.isDeleting) {
-                AlertDialog(
-                    onDismissRequest = {
-                        viewModel.onEvent(NotesEvent.IsDeletingNote)
-                    },
-                    icon = {
-                        Icon(painterResource(id = R.drawable.ic_delete), contentDescription = null) },
-                    title = {
-                        Text(text = stringResource(id = R.string.dialog_delete_note_confirm))
-                    },
-                    text = {
-                        Text(text = stringResource(id = R.string.delete_note_description))
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                viewModel.onEvent(NotesEvent.DeleteNote)
-                            }
-                        ) {
-                            Text(stringResource(id = R.string.confirm_btn_text))
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                viewModel.onEvent(NotesEvent.IsDeletingNote)
-                            }
-                        ) {
-                            Text(stringResource(id = R.string.dismiss_btn_text))
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
+                StandardDeleteItem(
+                    onDismissRequest = { viewModel.onEvent(NotesEvent.IsDeletingNote) },
+                    icon = R.drawable.ic_delete,
+                    title = R.string.dialog_delete_note_confirm,
+                    text = R.string.delete_note_description,
+                    confirmButtonClick = { viewModel.onEvent(NotesEvent.DeleteNote) },
+                    dismissButton = { viewModel.onEvent(NotesEvent.IsDeletingNote) },
                 )
             }
         }

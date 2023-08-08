@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.util.date
 import com.ec25p5e.notesapp.core.presentation.util.daysBetween
 import com.ec25p5e.notesapp.core.presentation.util.time
 import com.ec25p5e.notesapp.core.presentation.util.today
 import com.ec25p5e.notesapp.core.util.Screen
+import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUseCases
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
@@ -42,6 +44,7 @@ class TaskViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var getTasksJob: Job? = null
+    private var recentlyDeletedTask: Task? = null
 
     init {
         initTodaysTasks()
@@ -53,7 +56,31 @@ class TaskViewModel @Inject constructor(
                 markTaskDone(event.task)
             }
             is TaskEvent.DeleteTask -> {
+                if(_state.value.taskToDelete != null) {
+                    viewModelScope.launch {
+                        taskUseCases.deleteTask(_state.value.taskToDelete!!)
+                        recentlyDeletedTask = state.value.taskToDelete!!
 
+                        _state.value = _state.value.copy(
+                            isDeleting = false,
+                            taskToDelete = null,
+                        )
+
+                        _eventFlow.emit(UiEventTask.ShowSnackbar(UiText.StringResource(id = R.string.deleted_task)))
+                    }
+                }
+            }
+            is TaskEvent.IsDeletingNote -> {
+                _state.value = _state.value.copy(
+                    isDeleting = !_state.value.isDeleting,
+                    taskToDelete = null,
+                )
+            }
+            is TaskEvent.SetTaskToDelete -> {
+                _state.value = _state.value.copy(
+                    taskToDelete = event.task,
+                    isDeleting = true,
+                )
             }
             is TaskEvent.EditTask -> {
                 editTask(event.task)

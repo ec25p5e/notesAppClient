@@ -36,7 +36,7 @@ object AppModule {
     @Provides
     fun provideAppSettingsDataStore(@ApplicationContext appContext: Context): DataStore<AppSettings>  {
         return DataStoreFactory.create(
-            serializer = AppSettingsSerializer,
+            serializer = AppSettingsSerializer(CryptoManager()),
             produceFile = { appContext.dataStoreFile(Constants.DATA_STORE_FILE_NAME) },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())

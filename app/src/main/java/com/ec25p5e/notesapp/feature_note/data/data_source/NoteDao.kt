@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import kotlinx.coroutines.flow.Flow
 
@@ -44,7 +45,7 @@ interface NoteDao {
     @Query("UPDATE note SET isLocked = 0 WHERE id = :id")
     fun unLockNote(id: Int)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insertNote(note: Note)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -9,13 +9,13 @@ sealed class CategoryEvent {
     data class ChangeColor(val color: Int): CategoryEvent()
 
     data class ChangeCategorySelected(val id: Int): CategoryEvent()
+    data class SetToDelete(val category: Category): CategoryEvent()
 
-
-    data class DeleteCategory(val category: Category): CategoryEvent()
-
-    object RestoreCategory: CategoryEvent()
-    object ToggleCategoryCreation: CategoryEvent()
-    object SaveCategory: CategoryEvent()
-    object FetchCategory: CategoryEvent()
-    object IsCreateCategory: CategoryEvent()
+    data object RestoreCategory: CategoryEvent()
+    data object ToggleCategoryCreation: CategoryEvent()
+    data object SaveCategory: CategoryEvent()
+    data object FetchCategory: CategoryEvent()
+    data object IsCreateCategory: CategoryEvent()
+    data object ToggleCategoryDelete: CategoryEvent()
+    data object DeleteCategory: CategoryEvent()
 }
