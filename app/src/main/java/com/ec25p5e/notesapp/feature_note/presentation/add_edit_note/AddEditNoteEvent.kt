@@ -2,7 +2,10 @@ package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.graphics.Path
+import com.ec25p5e.notesapp.feature_note.domain.models.PathProperties
 import java.io.File
 
 sealed class AddEditNoteEvent {
@@ -20,6 +23,7 @@ sealed class AddEditNoteEvent {
     data class ConvertInAudio(val noteId: Int, val context: Context) : AddEditNoteEvent()
     data class ReadNote(val context: Context): AddEditNoteEvent()
     data class SaveNote(val file: File): AddEditNoteEvent()
+    data class SaveDraw(val paths: SnapshotStateList<Pair<Path, PathProperties>>): AddEditNoteEvent()
     data object UnlockNote: AddEditNoteEvent()
 
     data object IsSaveNote: AddEditNoteEvent()
@@ -28,4 +32,5 @@ sealed class AddEditNoteEvent {
     data object ToggleCategoryModal: AddEditNoteEvent()
     data object ToggleLockMode: AddEditNoteEvent()
     data object TogglePinError: AddEditNoteEvent()
+    data object DrawingMode: AddEditNoteEvent()
 }

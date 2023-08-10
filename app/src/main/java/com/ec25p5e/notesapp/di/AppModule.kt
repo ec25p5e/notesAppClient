@@ -12,6 +12,7 @@ import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
 import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
 import com.ec25p5e.notesapp.core.data.local.serializer.AppSettingsSerializer
 import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.feature_profile.domain.use_case.GetOwnUserIdCase
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.google.gson.Gson
 import dagger.Module
@@ -87,5 +88,11 @@ object AppModule {
                 }
             )
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetOwnUserIdUserCase(preferenceImpl: DataStorePreferenceImpl): GetOwnUserIdCase {
+        return GetOwnUserIdCase(preferenceImpl)
     }
 }

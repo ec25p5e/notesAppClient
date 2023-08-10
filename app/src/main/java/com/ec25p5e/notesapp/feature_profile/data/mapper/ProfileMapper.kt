@@ -8,5 +8,7 @@ fun ProfileResponse.toProfile(): Profile {
         userId = userId,
         email = email,
         username = username,
+        profilePictureUrl = profilePictureUrl,
+        bannerUrl = bannerUrl
     )
 }

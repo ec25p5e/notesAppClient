@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.feature_auth.data.remote
 
 import com.ec25p5e.notesapp.core.data.dto.response.BasicApiResponse
+import com.ec25p5e.notesapp.core.util.Constants.BASE_URL_SERVER
 import com.ec25p5e.notesapp.feature_auth.data.remote.request.CreateAccountRequest
 import com.ec25p5e.notesapp.feature_auth.data.remote.request.LoginRequest
 import com.ec25p5e.notesapp.feature_auth.data.remote.response.AuthResponse
@@ -24,6 +25,6 @@ interface AuthApi {
     suspend fun authenticate()
 
     companion object {
-        const val BASE_URL = "http://85.0.253.197:8080/"
+        const val BASE_URL = BASE_URL_SERVER
     }
 }

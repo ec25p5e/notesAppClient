@@ -17,6 +17,7 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCas
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.DeleteCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategories
 import com.ec25p5e.notesapp.feature_note.domain.use_case.category.GetCategoryById
+import com.ec25p5e.notesapp.feature_note.domain.use_case.category.PushCategory
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.AddNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.ArchiveNote
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.CopyNote
@@ -119,12 +120,14 @@ object NoteModule {
     fun provideCategoryUseCases(
         repository: CategoryRepository,
         noteRepository: NoteRepository,
+        preferenceImpl: DataStorePreferenceImpl
     ): CategoryUseCases {
         return CategoryUseCases(
             getCategories = GetCategories(repository),
-            addCategory = AddCategory(repository),
+            addCategory = AddCategory(repository, preferenceImpl),
             deleteCategory = DeleteCategory(repository, noteRepository),
-            getCategoryById = GetCategoryById(repository)
+            getCategoryById = GetCategoryById(repository),
+            pushCategory = PushCategory(repository)
         )
     }
 }

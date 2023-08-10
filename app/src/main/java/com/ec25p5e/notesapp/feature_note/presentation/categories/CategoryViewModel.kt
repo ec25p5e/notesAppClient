@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_ID
+import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
@@ -21,11 +23,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases
+    private val categoryUseCases: CategoryUseCases,
+    private val preferenceImpl: DataStorePreferenceImpl
 ): ViewModel() {
 
     private val _state = mutableStateOf(CategoriesState())
@@ -119,7 +123,8 @@ class CategoryViewModel @Inject constructor(
                             name = categoryTitle.value.text,
                             color = categoryColor.value,
                             timestamp = System.currentTimeMillis(),
-                            id = currentCategoryId
+                            id = currentCategoryId,
+                            userId = ""
                         )
                     )
 

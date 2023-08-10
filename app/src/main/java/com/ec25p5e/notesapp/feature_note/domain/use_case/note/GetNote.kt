@@ -10,8 +10,8 @@ class GetNote(
 
     suspend operator fun invoke(id: Int): Note? {
         val note = repository.getNoteById(id)
-        return note?.copy(
+        return note /* note?.copy(
             title = AESEncryptor.decrypt(note.title)!!
-        )
+        ) */
     }
 }

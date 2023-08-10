@@ -2,8 +2,6 @@ package com.ec25p5e.notesapp.feature_note.data.data_source
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
@@ -21,7 +19,7 @@ interface CategoryDao {
     @Upsert
     fun insertCategory(category: Category)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     fun insertBulkCategories(categories: List<Category>?)
 
     @Delete

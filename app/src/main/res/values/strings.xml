@@ -209,4 +209,9 @@
     <string name="enable_dynamic_color">Dynamic color</string>
     <string name="save_changes">Save changes</string>
     <string name="edit_your_profile">Edit your profile</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="logout">Logout</string>
+    <string name="message">Send message to</string>
+    <string name="banner_image">Banner image</string>
+    <string name="profile_image">Profile image</string>
 </resources>

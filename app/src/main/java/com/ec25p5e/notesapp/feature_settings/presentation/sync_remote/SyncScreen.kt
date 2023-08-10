@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_settings.presentation.sync_remote
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +17,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,8 +33,11 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceLarge
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.presentation.util.LottieView
+import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsGroup
 import com.ec25p5e.notesapp.feature_settings.presentation.components.SettingsSwitchComp
+import com.ec25p5e.notesapp.feature_settings.presentation.util.UiEventSettings
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SyncRemoteScreen(
@@ -42,6 +48,23 @@ fun SyncRemoteScreen(
 ) {
     val syncOptionState = viewModel.state.value.settingsLive.syncOptions
     val viewModelState = viewModel.viewModelState.value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEventSettings.ShowSnackbar -> {
+                    Toast.makeText(
+                        context,
+                        event.uiText!!.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                else -> {
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

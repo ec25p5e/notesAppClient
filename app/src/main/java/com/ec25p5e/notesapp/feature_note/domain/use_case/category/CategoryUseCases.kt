@@ -5,5 +5,6 @@ data class CategoryUseCases(
     val getCategories: GetCategories,
     val getCategoryById: GetCategoryById,
     val addCategory: AddCategory,
-    val deleteCategory: DeleteCategory
+    val deleteCategory: DeleteCategory,
+    val pushCategory: PushCategory,
 )

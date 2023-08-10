@@ -17,6 +17,7 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
 
 @Entity
 data class Category(
+    val userId: String,
     var name: String,
     val color: Int,
     val timestamp: Long,

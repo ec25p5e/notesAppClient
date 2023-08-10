@@ -23,6 +23,8 @@ object Constants {
     const val DEFAULT_PAGE_SIZE = 20
 
     const val DATA_STORE_FILE_NAME = "app-settings.json"
+    const val BASE_URL_SERVER = "http://192.168.249.107:8080/"
 
     const val RECONNECT_INTERVAL = 5000L
+    const val MAX_IMAGE_PAR_NOTE = 3
 }

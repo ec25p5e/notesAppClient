@@ -23,13 +23,12 @@ object SettingsModule {
     fun provideSettingsSyncUseCases(
         noteRepository: NoteRepository,
         categoryRepository: CategoryRepository,
-        taskRepository: TaskRepository,
-        dataStore: DataStorePreferenceImpl
+        taskRepository: TaskRepository
     ): SyncNoteUseCases {
         return SyncNoteUseCases(
             syncNote = SyncNotesUseCase(noteRepository),
-            syncCategories = SyncCategoriesUseCase(categoryRepository, dataStore),
-            syncTasks = SyncTasksUseCase(taskRepository, dataStore)
+            syncCategories = SyncCategoriesUseCase(categoryRepository),
+            syncTasks = SyncTasksUseCase(taskRepository)
         )
     }
 }

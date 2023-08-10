@@ -12,7 +12,6 @@ class SyncNotesUseCase(
     suspend operator fun invoke(options: SyncOption) {
         if(options.isSyncNotes) {
             val result = noteRepository.pushNotes()
-            Log.d("test2", result.data.toString())
         }
     }
 }

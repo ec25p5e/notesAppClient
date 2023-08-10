@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_note.domain.models
+package com.ec25p5e.notesapp.feature_note.presentation.util
 
 import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
 

@@ -1,12 +1,14 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.Manifest
+import android.graphics.Paint
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,8 +55,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.consumePositionChange
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -89,9 +100,14 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import coil.compose.rememberAsyncImagePainter
+import com.ec25p5e.notesapp.feature_note.data.local.gesture.MotionEvent
+import com.ec25p5e.notesapp.feature_note.data.local.gesture.dragMotionEvent
+import com.ec25p5e.notesapp.feature_note.domain.models.PathProperties
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveEvent
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
+import com.ec25p5e.notesapp.feature_note.presentation.components.DrawingPropertiesMenu
+import com.ec25p5e.notesapp.feature_note.presentation.util.DrawMode
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
@@ -148,6 +164,22 @@ fun AddEditNoteScreen(
         }
     }
     val permissionState = rememberPermissionState(permission = Manifest.permission.READ_EXTERNAL_STORAGE)
+    val paths = remember { mutableStateListOf<Pair<Path, PathProperties>>() }
+    val pathsUndone = remember { mutableStateListOf<Pair<Path, PathProperties>>() }
+    var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
+    var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
+    var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
+    var drawMode by remember { mutableStateOf(DrawMode.Draw) }
+    var currentPath by remember { mutableStateOf(Path()) }
+    var currentPathProperty by remember { mutableStateOf(PathProperties()) }
+    val canvasText = remember { StringBuilder() }
+    val paint = remember {
+        Paint().apply {
+            textSize = 40f
+            color = Color.Black.toArgb()
+        }
+    }
+
 
     SideEffect {
         permissionState.launchPermissionRequest()
@@ -431,11 +463,16 @@ fun AddEditNoteScreen(
         ) {
             StandardToolbar(
                 onNavigateUp = {
-                    if (state.isAutoSaveEnabled) {
-                        viewModel.onEvent(AddEditNoteEvent.SaveNote(context.filesDir))
-                    }
+                    if(state.isDrawing) {
+                        viewModel.onEvent(AddEditNoteEvent.SaveDraw(paths))
+                        viewModel.onEvent(AddEditNoteEvent.DrawingMode)
+                    } else {
+                        if (state.isAutoSaveEnabled) {
+                            viewModel.onEvent(AddEditNoteEvent.SaveNote(context.filesDir))
+                        }
 
-                    onNavigateUp()
+                        onNavigateUp()
+                    }
                 },
                 title = {
                     Text(
@@ -606,96 +643,286 @@ fun AddEditNoteScreen(
                 }
             )
 
-            Column(
-                modifier = Modifier
-                    .padding(SpaceMedium)
-            ) {
-                StandardTextFieldState(
+            if(!state.isDrawing) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    text = titleState.text,
-                    label = stringResource(id = R.string.label_note_title_input),
-                    maxLength = Constants.MAX_NOTE_TITLE_LENGTH,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-                    },
-                    onFocusChange = {
-                        viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                    },
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Text,
-                    error = when (titleState.error) {
-                        is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
-                        is AddEditNoteError.InputTooShort -> stringResource(
-                            id = R.string.field_too_short_text_error,
-                            MIN_NOTE_TITLE_LENGTH
-                        )
+                        .padding(SpaceMedium)
+                ) {
+                    StandardTextFieldState(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text = titleState.text,
+                        label = stringResource(id = R.string.label_note_title_input),
+                        maxLength = Constants.MAX_NOTE_TITLE_LENGTH,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                        },
+                        onFocusChange = {
+                            viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
+                        },
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text,
+                        error = when (titleState.error) {
+                            is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                            is AddEditNoteError.InputTooShort -> stringResource(
+                                id = R.string.field_too_short_text_error,
+                                MIN_NOTE_TITLE_LENGTH
+                            )
 
-                        else -> ""
-                    }
-                )
+                            else -> ""
+                        }
+                    )
 
-                Spacer(modifier = Modifier.height(SpaceMedium))
+                    Spacer(modifier = Modifier.height(SpaceMedium))
 
-                StandardTextFieldState(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.5f)
-                        .height(400.dp),
-                    text = contentState.text,
-                    label = stringResource(id = R.string.label_note_description_input),
-                    maxLength = Constants.MAX_NOTE_DESCRIPTION_LENGTH,
-                    maxLines = 20,
-                    onValueChange = {
-                        viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
-                    },
-                    onFocusChange = {
-                        viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                    },
-                    singleLine = false,
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Text,
-                    error = when (contentState.error) {
-                        is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
-                        is AddEditNoteError.InputTooShort -> stringResource(
-                            id = R.string.field_too_short_text_error,
-                            MIN_NOTE_TITLE_LENGTH
-                        )
-
-                        else -> ""
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(SpaceMedium))
-
-                if (imageUri.isNotEmpty()) {
-                    Row(
+                    StandardTextFieldState(
                         modifier = Modifier
                             .fillMaxWidth()
-                    ) {
-                        Box(
+                            .fillMaxHeight(0.5f)
+                            .height(400.dp),
+                        text = contentState.text,
+                        label = stringResource(id = R.string.label_note_description_input),
+                        maxLength = Constants.MAX_NOTE_DESCRIPTION_LENGTH,
+                        maxLines = 20,
+                        onValueChange = {
+                            viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+                        },
+                        onFocusChange = {
+                            viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                        },
+                        singleLine = false,
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Text,
+                        error = when (contentState.error) {
+                            is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
+                            is AddEditNoteError.InputTooShort -> stringResource(
+                                id = R.string.field_too_short_text_error,
+                                MIN_NOTE_TITLE_LENGTH
+                            )
+
+                            else -> ""
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(SpaceMedium))
+
+                    if (imageUri.isNotEmpty()) {
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fillMaxHeight(0.6f)
                         ) {
-                            LazyRow(
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .align(Alignment.Center)
+                                    .fillMaxHeight(0.6f)
                             ) {
-                                itemsIndexed(imageUri) { index, uri ->
-                                    ImagePreviewItem(uri = uri!!,
-                                        height = screenHeight * 0.5f,
-                                        width = screenWidth * 0.6f,
-                                        onClick = {
-                                            viewModel.onEvent(AddEditNoteEvent.DeleteImage(uri))
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(5.dp))
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .align(Alignment.Center)
+                                ) {
+                                    itemsIndexed(imageUri) { index, uri ->
+                                        ImagePreviewItem(uri = uri!!,
+                                            height = screenHeight * 0.5f,
+                                            width = screenWidth * 0.6f,
+                                            onClick = {
+                                                viewModel.onEvent(AddEditNoteEvent.DeleteImage(uri))
+                                            }
+                                        )
+                                        Spacer(modifier = Modifier.width(5.dp))
+                                    }
                                 }
                             }
                         }
                     }
+                }
+            } else if(state.isDrawing) { // Drawing mode
+                Column(
+                    modifier = Modifier
+                        .padding(SpaceMedium)
+                ) {
+                    val drawModifier = Modifier
+                        .padding(8.dp)
+                        .shadow(1.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(Color.White)
+                        .dragMotionEvent(
+                            onDragStart = { pointerInputChange ->
+                                motionEvent = MotionEvent.Down
+                                currentPosition = pointerInputChange.position
+                                pointerInputChange.consumeDownChange()
+
+                            },
+                            onDrag = { pointerInputChange ->
+                                motionEvent = MotionEvent.Move
+                                currentPosition = pointerInputChange.position
+
+                                if (drawMode == DrawMode.Touch) {
+                                    val change = pointerInputChange.positionChange()
+                                    paths.forEach { entry ->
+                                        val path: Path = entry.first
+                                        path.translate(change)
+                                    }
+                                    currentPath.translate(change)
+                                }
+                                pointerInputChange.consumePositionChange()
+
+                            },
+                            onDragEnd = { pointerInputChange ->
+                                motionEvent = MotionEvent.Up
+                                pointerInputChange.consumeDownChange()
+                            }
+                        )
+
+                    Canvas(modifier = drawModifier){
+                        when(motionEvent) {
+                            MotionEvent.Down -> {
+                                if(drawMode != DrawMode.Touch) {
+                                    currentPath.moveTo(currentPosition.x, currentPosition.y)
+                                }
+
+                                previousPosition = currentPosition
+                            }
+
+                            MotionEvent.Move -> {
+                                if (drawMode != DrawMode.Touch) {
+                                    currentPath.quadraticBezierTo(
+                                        previousPosition.x,
+                                        previousPosition.y,
+                                        (previousPosition.x + currentPosition.x) / 2,
+                                        (previousPosition.y + currentPosition.y) / 2
+                                    )
+                                }
+
+                                previousPosition = currentPosition
+                            }
+
+                            MotionEvent.Up -> {
+                                if (drawMode != DrawMode.Touch) {
+                                    currentPath.lineTo(currentPosition.x, currentPosition.y)
+                                    paths.add(Pair(currentPath, currentPathProperty))
+
+                                    currentPath = Path()
+
+                                    currentPathProperty = PathProperties(
+                                        strokeWidth = currentPathProperty.strokeWidth,
+                                        color = currentPathProperty.color,
+                                        strokeCap = currentPathProperty.strokeCap,
+                                        strokeJoin = currentPathProperty.strokeJoin,
+                                        eraseMode = currentPathProperty.eraseMode
+                                    )
+                                }
+
+                                pathsUndone.clear()
+
+                                currentPosition = Offset.Unspecified
+                                previousPosition = currentPosition
+                                motionEvent = MotionEvent.Idle
+                            }
+
+                            else -> Unit
+                        }
+
+                        with(drawContext.canvas.nativeCanvas) {
+                            val checkPoint = saveLayer(null, null)
+
+                            paths.forEach {
+                                val path = it.first
+                                val property = it.second
+
+                                if (!property.eraseMode) {
+                                    drawPath(
+                                        color = property.color,
+                                        path = path,
+                                        style = Stroke(
+                                            width = property.strokeWidth,
+                                            cap = property.strokeCap,
+                                            join = property.strokeJoin
+                                        )
+                                    )
+                                } else {
+                                    drawPath(
+                                        color = Color.Transparent,
+                                        path = path,
+                                        style = Stroke(
+                                            width = currentPathProperty.strokeWidth,
+                                            cap = currentPathProperty.strokeCap,
+                                            join = currentPathProperty.strokeJoin
+                                        ),
+                                        blendMode = BlendMode.Clear
+                                    )
+                                }
+                            }
+
+                            if (motionEvent != MotionEvent.Idle) {
+                                if (!currentPathProperty.eraseMode) {
+                                    drawPath(
+                                        color = currentPathProperty.color,
+                                        path = currentPath,
+                                        style = Stroke(
+                                            width = currentPathProperty.strokeWidth,
+                                            cap = currentPathProperty.strokeCap,
+                                            join = currentPathProperty.strokeJoin
+                                        )
+                                    )
+                                } else {
+                                    drawPath(
+                                        color = Color.Transparent,
+                                        path = currentPath,
+                                        style = Stroke(
+                                            width = currentPathProperty.strokeWidth,
+                                            cap = currentPathProperty.strokeCap,
+                                            join = currentPathProperty.strokeJoin
+                                        ),
+                                        blendMode = BlendMode.Clear
+                                    )
+                                }
+                            }
+
+                            restoreToCount(checkPoint)
+                        }
+                    }
+
+                    DrawingPropertiesMenu(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
+                            .shadow(1.dp, RoundedCornerShape(8.dp))
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(4.dp),
+                        pathProperties = currentPathProperty,
+                        drawMode = drawMode,
+                        onUndo = {
+                            if (paths.isNotEmpty()) {
+
+                                val lastItem = paths.last()
+                                val lastPath = lastItem.first
+                                val lastPathProperty = lastItem.second
+                                paths.remove(lastItem)
+
+                                pathsUndone.add(Pair(lastPath, lastPathProperty))
+
+                            }
+                        },
+                        onRedo = {
+                            if (pathsUndone.isNotEmpty()) {
+
+                                val lastPath = pathsUndone.last().first
+                                val lastPathProperty = pathsUndone.last().second
+                                pathsUndone.removeLast()
+                                paths.add(Pair(lastPath, lastPathProperty))
+                            }
+                        },
+                        onPathPropertiesChange = {
+                            motionEvent = MotionEvent.Idle
+                        },
+                        onDrawModeChanged = {
+                            motionEvent = MotionEvent.Idle
+                            drawMode = it
+                            currentPathProperty.eraseMode = (drawMode == DrawMode.Erase)
+                        }
+                    )
                 }
             }
 
@@ -865,7 +1092,7 @@ fun AddEditNoteScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 IconButton(
                                     onClick = {
-                                        galleryLauncher.launch("image/jpeg")
+                                        viewModel.onEvent(AddEditNoteEvent.DrawingMode)
                                     }
                                 ) {
                                     Icon(
@@ -1080,5 +1307,14 @@ fun ImagePreviewItem(
                 tint = Color.Red
             )
         }
+    }
+}
+
+private fun DrawScope.drawText(text: String, x: Float, y: Float, paint: Paint) {
+    val lines = text.split("\n")
+    val nativeCanvas = drawContext.canvas.nativeCanvas
+
+    lines.indices.withIndex().forEach { (posY, i) ->
+        nativeCanvas.drawText(lines[i], x, posY * 40 + y, paint)
     }
 }

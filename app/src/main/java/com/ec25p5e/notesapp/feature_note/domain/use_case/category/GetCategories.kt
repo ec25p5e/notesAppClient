@@ -17,9 +17,9 @@ class GetCategories(
         fetchFromRemote: Boolean
     ): Flow<List<Category>> {
         return repository.getAllCategories(fetchFromRemote).map { categories ->
-            categories.forEach { category ->
+            /* categories.forEach { category ->
                 category.name = AESEncryptor.decrypt(category.name)!!
-            }
+            } */
 
             when(categoryOrder.orderType) {
                 is OrderType.Ascending -> {

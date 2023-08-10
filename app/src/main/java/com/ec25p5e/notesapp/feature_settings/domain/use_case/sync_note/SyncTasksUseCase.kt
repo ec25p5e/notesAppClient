@@ -6,7 +6,6 @@ import com.ec25p5e.notesapp.feature_task.domain.repository.TaskRepository
 
 class SyncTasksUseCase(
     private val taskRepository: TaskRepository,
-    dataStore: DataStorePreferenceImpl,
 ) {
 
     suspend operator fun invoke(option: SyncOption) {

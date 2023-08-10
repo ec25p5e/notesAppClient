@@ -3,6 +3,7 @@ package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
@@ -102,7 +103,7 @@ class AddEditNoteViewModel @Inject constructor(
                             isHintVisible = false
                         )
                         _contentState.value = _contentState.value.copy(
-                            text = AESEncryptor.decrypt(note.content)!!,
+                            text = /* AESEncryptor.decrypt(note.content)!!, */ note.content,
                             isHintVisible = false
                         )
                         _isArchivedState.value = note.isArchived
@@ -154,6 +155,11 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.ConvertInAudio -> {
 
+            }
+            is AddEditNoteEvent.DrawingMode -> {
+                _state.value = _state.value.copy(
+                    isDrawing = !_state.value.isDrawing
+                )
             }
             is AddEditNoteEvent.UnlockNote -> {
                 viewModelScope.launch {
@@ -252,6 +258,8 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
+                    _eventFlow.emit(UiEventNote.ShowLoader)
+
                     val imageArray: ArrayList<String> = ArrayList()
                     _chosenImageUri.value.forEach { uri -> imageArray.add(uri.toString()) }
 
@@ -282,7 +290,6 @@ class AddEditNoteViewModel @Inject constructor(
                     }
 
                     if(addingResult.isCorrect()) {
-                        _eventFlow.emit(UiEventNote.ShowLoader)
                         _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id =
                             if(currentNoteId == null) {
                                 R.string.note_created_text
@@ -294,6 +301,9 @@ class AddEditNoteViewModel @Inject constructor(
                         _eventFlow.emit(UiEventNote.SaveNote)
                     }
                 }
+            }
+            is AddEditNoteEvent.SaveDraw -> {
+                Log.i("AddEditNoteViewModel", event.paths.toString())
             }
         }
     }

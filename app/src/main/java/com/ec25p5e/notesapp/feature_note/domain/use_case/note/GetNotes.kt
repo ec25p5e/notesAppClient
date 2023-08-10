@@ -22,10 +22,10 @@ class GetNotes(
         fetchFromRemote: Boolean = false,
     ): Flow<List<Note>> {
         return repository.getAllNotes(fetchFromRemote).data!!.map { notes ->
-            notes.forEach { note ->
+            /* notes.forEach { note ->
                 note.title = AESEncryptor.decrypt(note.title).toString()
                 note.content = AESEncryptor.decrypt(note.content).toString()
-            }
+            } */
 
             when(noteOrder.orderType) {
                 is OrderType.Ascending -> {

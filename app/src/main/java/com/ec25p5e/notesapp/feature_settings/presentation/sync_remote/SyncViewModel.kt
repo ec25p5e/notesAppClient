@@ -1,10 +1,12 @@
 package com.ec25p5e.notesapp.feature_settings.presentation.sync_remote
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_settings.domain.models.SyncOption
 import com.ec25p5e.notesapp.feature_settings.domain.use_case.sync_note.SyncNoteUseCases
@@ -109,8 +111,10 @@ class SyncViewModel @Inject constructor(
             delay(1500)
 
             syncNoteUseCases.syncNote(_state.value.settings.data.first().syncOptions)
-            syncNoteUseCases.syncCategories(_state.value.settings.data.first().syncOptions)
+            val syncCatResponse = syncNoteUseCases.syncCategories(_state.value.settings.data.first().syncOptions)
             syncNoteUseCases.syncTasks(_state.value.settings.data.first().syncOptions)
+
+            // Emit result
 
             delay(2500)
             _viewModelState.value = _viewModelState.value.copy(

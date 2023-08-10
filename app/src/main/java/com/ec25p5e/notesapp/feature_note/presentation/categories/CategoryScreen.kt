@@ -26,9 +26,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +39,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
@@ -55,6 +58,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
@@ -67,6 +71,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardDeleteItem
+import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
@@ -140,7 +145,36 @@ fun CategoryScreen(
             modifier = Modifier.fillMaxWidth(),
             showBackArrow = false,
             navActions = {
-
+                StandardOptionsMenu(
+                    menuItem = {
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.order_note_title)) },
+                            onClick = {
+                                // viewModel.onEvent(CategoryEvent.ToggleOrderSection)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_filter),
+                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.new_category_title)) },
+                            onClick = {
+                                viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_category),
+                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
+                                )
+                            }
+                        )
+                    }
+                )
             }
         )
 
@@ -218,9 +252,7 @@ fun CategoryScreen(
                                 viewModel.onEvent(CategoryEvent.SetToDelete(category))
                             },
                             onEditClick = {
-                                scope.launch {
-                                    scaffoldBottomSheet.bottomSheetState.expand()
-                                }
+                                viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
                             }
                         )
                     }
@@ -244,30 +276,17 @@ fun CategoryScreen(
     /**
      * Edit category section
      */
-    BottomSheetScaffold(
-        scaffoldState = scaffoldBottomSheet,
-        sheetPeekHeight = 0.dp,
-        sheetContent = {
-            bottomSheet = true
-
-            Box(
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                if (scaffoldBottomSheet.bottomSheetState.hasExpandedState) {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                scaffoldBottomSheet.bottomSheetState.partialExpand()
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-
-                    }
-                }
-
+    if (state.isCreationVisible) {
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
+            },
+            icon = {
+                Icon(painterResource(id = R.drawable.ic_category), contentDescription = null) },
+            title = {
+                Text(text = stringResource(id = R.string.dialog_new_category_title))
+            },
+            text = {
                 Column(
                     Modifier
                         .fillMaxWidth()
@@ -361,8 +380,19 @@ fun CategoryScreen(
                         }
                     }
                 }
-
-            }
-        }
-    ) {}
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onEvent(CategoryEvent.SaveCategory)
+                        viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
+                    }
+                ) {
+                    Text(stringResource(id = R.string.save_btn_text))
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
 }

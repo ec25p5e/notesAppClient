@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.feature_note.data.remote.api
 
 import com.ec25p5e.notesapp.core.data.dto.response.BasicApiResponse
+import com.ec25p5e.notesapp.core.util.Constants.BASE_URL_SERVER
 import com.ec25p5e.notesapp.feature_note.data.remote.request.SimpleNoteRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.response.NoteResponse
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
@@ -22,6 +23,6 @@ interface NoteApi {
 
 
     companion object {
-        const val BASE_URL = "http://192.168.183.107:8080/" // ""http://85.0.253.197:8080/"
+        const val BASE_URL = BASE_URL_SERVER
     }
 }
