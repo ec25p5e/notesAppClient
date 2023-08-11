@@ -45,6 +45,7 @@ interface NoteDao {
     @Query("UPDATE note SET isLocked = 0 WHERE id = :id")
     fun unLockNote(id: Int)
 
+
     @Upsert
     fun insertNote(note: Note)
 

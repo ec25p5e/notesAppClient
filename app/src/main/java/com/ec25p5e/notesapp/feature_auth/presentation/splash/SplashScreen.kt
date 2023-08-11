@@ -53,7 +53,7 @@ fun SplashScreen(
             scale.animateTo(
                 targetValue = 0.5f,
                 animationSpec = tween(
-                    durationMillis = 10000,
+                    durationMillis = 2000,
                     easing = {
                         overshootInterpolator.getInterpolation(it)
                     }
@@ -66,7 +66,7 @@ fun SplashScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.Navigate -> {
-                    delay(2000)
+                    delay(1500)
                     onPopBackStack()
                     onNavigate(event.route)
                 }

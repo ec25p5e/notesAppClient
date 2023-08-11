@@ -214,4 +214,5 @@
     <string name="message">Send message to</string>
     <string name="banner_image">Banner image</string>
     <string name="profile_image">Profile image</string>
+    <string name="ic_paint_presented">A paint was associated</string>
 </resources>

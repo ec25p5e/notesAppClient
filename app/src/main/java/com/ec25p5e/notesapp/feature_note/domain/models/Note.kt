@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_note.domain.models
 
+import androidx.compose.ui.graphics.Path
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Primary
@@ -13,7 +14,6 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.Nt_Third
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedOrange
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
 import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
-import java.io.FileOutputStream
 
 @Entity(
     foreignKeys = [
@@ -32,6 +32,7 @@ data class Note(
     val background: Int,
     val isCopied: Int = 0,
     val isLocked: Boolean = false,
+    val imagePath: List<Pair<Path, PathProperties>>? = null,
     @PrimaryKey val id: Int? = null
 ) {
 

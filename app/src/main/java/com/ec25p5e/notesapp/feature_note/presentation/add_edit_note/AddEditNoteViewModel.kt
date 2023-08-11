@@ -5,19 +5,23 @@ import android.net.Uri
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.toArgb
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.data.local.converters.ListPairConverter
 import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
-import com.ec25p5e.notesapp.core.data.local.encryption.CryptoManager
-import com.ec25p5e.notesapp.core.data.util.getRandomString
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
+import com.ec25p5e.notesapp.feature_note.domain.models.PathProperties
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
@@ -27,9 +31,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -67,6 +68,12 @@ class AddEditNoteViewModel @Inject constructor(
     private val _isLockedNote = mutableStateOf(false)
     val isLockedNote: State<Boolean> = _isLockedNote
 
+    private var _paths = mutableStateListOf<Pair<Path, PathProperties>>()
+    val paths: SnapshotStateList<Pair<Path, PathProperties>> = _paths
+
+    private val _pathsUndone = mutableStateListOf<Pair<Path, PathProperties>>()
+    val pathsUndone: SnapshotStateList<Pair<Path, PathProperties>> = _pathsUndone
+
     private val _state = mutableStateOf(AddEditNoteState(
         isAutoSaveEnabled = runBlocking { dataStore.data.first().isAutoSaveEnabled },
         isSharing = runBlocking { dataStore.data.first().isSharingEnabled },
@@ -103,15 +110,16 @@ class AddEditNoteViewModel @Inject constructor(
                             isHintVisible = false
                         )
                         _contentState.value = _contentState.value.copy(
-                            text = /* AESEncryptor.decrypt(note.content)!!, */ note.content,
+                            text = note.content,
                             isHintVisible = false
                         )
                         _isArchivedState.value = note.isArchived
                         _colorState.value = note.color
-                        _noteCategory.value = note.categoryId
+                        _noteCategory.value = 1 // note.categoryId
                         _chosenImageUri.value = uriArray
                         _noteBackground.value = note.background
                         _isLockedNote.value = note.isLocked
+                        // _paths = mutableStateListOf(note.imagePath!![0])
                     }
                 }
             }
@@ -273,6 +281,7 @@ class AddEditNoteViewModel @Inject constructor(
                         image = imageArray,
                         background = _noteBackground.value,
                         isLocked = _isLockedNote.value,
+                        imagePath = _paths.toList(),
                     )
 
                     val addingResult = noteUseCases.addNote(noteInsert)
@@ -301,9 +310,6 @@ class AddEditNoteViewModel @Inject constructor(
                         _eventFlow.emit(UiEventNote.SaveNote)
                     }
                 }
-            }
-            is AddEditNoteEvent.SaveDraw -> {
-                Log.i("AddEditNoteViewModel", event.paths.toString())
             }
         }
     }

@@ -296,7 +296,8 @@ fun ArchiveScreen(
                     LottieView(
                         json = R.raw.empty_archive,
                         modifier = Modifier.fillMaxWidth()
-                            .height(200.dp)
+                            .height(200.dp),
+                        iterations = 3
                     )
                 }
             }

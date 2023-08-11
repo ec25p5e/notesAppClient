@@ -107,6 +107,13 @@ fun NoteItem(
                         )
                     }
 
+                    if(note.imagePath!!.isNotEmpty()) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_paint),
+                            contentDescription = stringResource(id = R.string.ic_paint_presented),
+                        )
+                    }
+
                     if(false) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_attachment),

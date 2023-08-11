@@ -16,10 +16,10 @@ class GetNotesForArchive(
         noteOrder: ArchiveNoteOrder = ArchiveNoteOrder.Date(OrderType.Descending)
     ): Flow<List<Note>> {
         return repository.getNotesForArchive().map { notes ->
-            notes.forEach { note ->
+            /* notes.forEach { note ->
                 note.title = AESEncryptor.decrypt(note.title)!!
                 note.content = AESEncryptor.decrypt(note.content)!!
-            }
+            } */
 
             when(noteOrder.orderType) {
                 is OrderType.Ascending -> {

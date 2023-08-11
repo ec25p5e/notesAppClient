@@ -1,8 +1,10 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.Manifest
+import android.content.Intent
 import android.graphics.Paint
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -80,6 +82,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
@@ -100,6 +105,8 @@ import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.ec25p5e.notesapp.feature_note.data.local.gesture.MotionEvent
 import com.ec25p5e.notesapp.feature_note.data.local.gesture.dragMotionEvent
 import com.ec25p5e.notesapp.feature_note.domain.models.PathProperties
@@ -110,6 +117,8 @@ import com.ec25p5e.notesapp.feature_note.presentation.components.DrawingProperti
 import com.ec25p5e.notesapp.feature_note.presentation.util.DrawMode
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -164,8 +173,8 @@ fun AddEditNoteScreen(
         }
     }
     val permissionState = rememberPermissionState(permission = Manifest.permission.READ_EXTERNAL_STORAGE)
-    val paths = remember { mutableStateListOf<Pair<Path, PathProperties>>() }
-    val pathsUndone = remember { mutableStateListOf<Pair<Path, PathProperties>>() }
+    val paths = remember { viewModel.paths }
+    val pathsUndone = remember { viewModel.pathsUndone }
     var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
     var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
@@ -464,11 +473,10 @@ fun AddEditNoteScreen(
             StandardToolbar(
                 onNavigateUp = {
                     if(state.isDrawing) {
-                        viewModel.onEvent(AddEditNoteEvent.SaveDraw(paths))
                         viewModel.onEvent(AddEditNoteEvent.DrawingMode)
                     } else {
                         if (state.isAutoSaveEnabled) {
-                            viewModel.onEvent(AddEditNoteEvent.SaveNote(context.filesDir))
+                            viewModel.onEvent(AddEditNoteEvent.SaveNote)
                         }
 
                         onNavigateUp()
@@ -488,7 +496,7 @@ fun AddEditNoteScreen(
                 navActions = {
                     StandardOptionsMenu(
                         menuItem = {
-                            DropdownMenuItem(
+                            /* DropdownMenuItem(
                                 text = {
                                     Text(stringResource(id = R.string.convert_in_audio_text))
                                 },
@@ -506,7 +514,7 @@ fun AddEditNoteScreen(
                                         contentDescription = stringResource(id = R.string.convert_in_audio_text)
                                     )
                                 }
-                            )
+                            ) */
 
                             DropdownMenuItem(
                                 text = {
@@ -523,7 +531,7 @@ fun AddEditNoteScreen(
                                 }
                             )
 
-                            if (isArchived && noteId != -1) {
+                            /* if (isArchived && noteId != -1) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.dearchive_note))
@@ -555,10 +563,10 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            }
+                            } */
 
 
-                            DropdownMenuItem(
+                            /* DropdownMenuItem(
                                 text = {
                                     Text(stringResource(id = R.string.create_note_copy))
                                 },
@@ -571,9 +579,9 @@ fun AddEditNoteScreen(
                                         contentDescription = stringResource(id = R.string.create_note_copy)
                                     )
                                 }
-                            )
+                            ) */
 
-                            DropdownMenuItem(
+                             /* DropdownMenuItem(
                                 text = {
                                     Text(stringResource(id = R.string.categorize_note))
                                 },
@@ -586,9 +594,9 @@ fun AddEditNoteScreen(
                                         contentDescription = stringResource(id = R.string.categorize_note)
                                     )
                                 }
-                            )
+                            ) */
 
-                            if (isLockedNote) {
+                            /* if (isLockedNote) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.unlock_note_text))
@@ -620,9 +628,9 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            }
+                            } */
 
-                            if (state.isSharing) {
+                            /* if (state.isSharing) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.share_note_text))
@@ -637,7 +645,7 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            }
+                            } */
                         }
                     )
                 }
@@ -933,19 +941,20 @@ fun AddEditNoteScreen(
                 modifier = Modifier
                     .padding(SpaceSmall)
             ) {
-                IconButton(
+                /* IconButton(
                     onClick = {
                         scope.launch {
                             scaffoldAddingBottomSheet.bottomSheetState.expand()
                         }
-                    }
+                    },
+                    enabled = false
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = stringResource(id = R.string.add_options),
                         tint = MaterialTheme.colorScheme.onBackground
                     )
-                }
+                } */
 
                 IconButton(
                     onClick = {
@@ -963,7 +972,7 @@ fun AddEditNoteScreen(
 
                 Button(
                     onClick = {
-                        viewModel.onEvent(AddEditNoteEvent.SaveNote(context.filesDir))
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
                     },
                     enabled = (!state.isSaving && !state.isAutoSaveEnabled),
                 ) {
@@ -1285,28 +1294,26 @@ fun ImagePreviewItem(
     width: Dp,
     onClick: () -> Unit,
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         Image(
-            painter = rememberAsyncImagePainter(uri),
-            contentDescription = "",
+            painter = rememberAsyncImagePainter(
+                ImageRequest
+                    .Builder(LocalContext.current)
+                    .data(data = uri.toString())
+                    .build()
+            ),
+            contentDescription = null,
             modifier = Modifier
-                .width(width)
-                .height(height),
+                .size(100.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.Gray, CircleShape),
             contentScale = ContentScale.Crop
         )
-
-        IconButton(onClick = { onClick() }) {
-            Icon(imageVector = Icons.Default.Delete,
-                contentDescription = "",
-                modifier = Modifier
-                    .size(45.dp),
-                tint = Color.Red
-            )
-        }
     }
 }
 

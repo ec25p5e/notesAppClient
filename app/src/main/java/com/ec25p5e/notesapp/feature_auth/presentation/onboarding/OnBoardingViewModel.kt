@@ -54,7 +54,7 @@ class OnBoardingViewModel @Inject constructor(
             appSettings.updateData {
                 it.copy(isCompleteOnboarding = completed)
             }
-            _eventFlow.emit(UiEvent.Navigate(Screen.LoginScreen.route))
+            _eventFlow.emit(UiEvent.Navigate(Screen.NotesScreen.route))
         }
     }
 }

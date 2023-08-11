@@ -120,13 +120,13 @@ class NoteRepositoryImpl(
         val category = daoCategory.getCategoryById(categoryId)
 
         // Incrementa il contatore
-        category.numNotesAssoc = category.numNotesAssoc + 1
+        // category.numNotesAssoc = category.numNotesAssoc + 1
 
         // Inserisci la nota
         dao.insertNote(note)
 
         // Fai la modifica del valore
-        daoCategory.insertCategory(category)
+        // daoCategory.insertCategory(category)
     }
 
     override fun deleteNote(note: Note) {
@@ -134,13 +134,13 @@ class NoteRepositoryImpl(
         val category = daoCategory.getCategoryById(categoryId)
 
         // Decrementa il contatore, se inferiore a 0 imposta 0
-        category.numNotesAssoc = if(category.numNotesAssoc - 1 < 0) 0 else category.numNotesAssoc - 1
+        // category.numNotesAssoc = if(category.numNotesAssoc - 1 < 0) 0 else category.numNotesAssoc - 1
 
         // Elimina la nota
         dao.deleteNote(note)
 
         // Fai la modifica al contatore
-        daoCategory.insertCategory(category)
+        // daoCategory.insertCategory(category)
     }
 
     override fun archiveNote(id: Int) {
