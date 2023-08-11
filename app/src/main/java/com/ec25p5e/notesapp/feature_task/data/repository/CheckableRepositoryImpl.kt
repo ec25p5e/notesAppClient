@@ -17,4 +17,8 @@ class CheckableRepositoryImpl(
     override fun insertBulkCheckable(checkables: List<Checkable>) {
         dao.insertBulkCheckable(checkables)
     }
+
+    override fun insertCheckable(checkable: Checkable) {
+        dao.insertCheckable(checkable)
+    }
 }

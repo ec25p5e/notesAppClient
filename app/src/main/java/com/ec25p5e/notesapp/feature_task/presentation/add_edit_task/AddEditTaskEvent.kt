@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_task.presentation.add_edit_task
 
+import android.content.Context
 import androidx.compose.ui.focus.FocusState
 import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
 import java.time.LocalDate
@@ -13,12 +14,13 @@ sealed class AddEditTaskEvent {
     data class ChangeColor(val color: Int): AddEditTaskEvent()
     data class AddCheckable(val item: Checkable? = null): AddEditTaskEvent()
     data class DeleteCheckable(val item: Checkable): AddEditTaskEvent()
-    data class CheckableCheck(val item: Checkable, val checked: Boolean): AddEditTaskEvent()
+    data class CheckableCheck(val item: Checkable): AddEditTaskEvent()
     data class CheckableValueChange(val item: Checkable, val value: String): AddEditTaskEvent()
     data class BackOnValue(val item: Checkable, val currentPos: Int, val previousPos: Int): AddEditTaskEvent()
     data class FocusGot(val item: Checkable): AddEditTaskEvent()
     data class DateDialogDate(val date: LocalDate): AddEditTaskEvent()
     data class TimeDialogDate(val time: LocalTime): AddEditTaskEvent()
+    data class ReadTask(val context: Context): AddEditTaskEvent()
 
     data object SaveTask: AddEditTaskEvent()
     data object DateClick: AddEditTaskEvent()

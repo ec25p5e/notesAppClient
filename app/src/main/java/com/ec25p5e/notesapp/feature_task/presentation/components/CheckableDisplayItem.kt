@@ -16,13 +16,17 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.ui.theme.PantoneRed
 import com.ec25p5e.notesapp.core.presentation.ui.theme.checkable_checked_style
 import com.ec25p5e.notesapp.core.presentation.ui.theme.checkable_unchecked_style
 import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
+import com.ec25p5e.notesapp.feature_task.presentation.task.TaskEvent
 import com.ec25p5e.notesapp.feature_task.presentation.task.TaskViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -30,20 +34,22 @@ import com.ec25p5e.notesapp.feature_task.presentation.task.TaskViewModel
 fun CheckableDisplayItem(
     task: Task,
     checkable: Checkable,
-    vm: TaskViewModel = hiltViewModel()
+    viewModel: TaskViewModel = hiltViewModel()
 ) {
     var editing by remember { mutableStateOf(false) }
     var editingText by remember { mutableStateOf("") }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ){
         Checkbox(
             checked = checkable.checked,
-            onCheckedChange = {checked->
-                // vm.onCheckableCheck(task,checkable,checked)
+            onCheckedChange = { checked->
+                viewModel.onEvent(TaskEvent.CheckableCheck(checkable, checked))
             }
         )
+
         if(!editing){
             if(checkable.checked){
                 Text(
@@ -53,8 +59,7 @@ fun CheckableDisplayItem(
                         .fillMaxWidth()
                         .weight(1f)
                 )
-            }
-            else{
+            } else{
                 Text(
                     checkable.value,
                     style = checkable_unchecked_style,
@@ -63,15 +68,16 @@ fun CheckableDisplayItem(
                         .weight(1f)
                 )
             }
-        }
-        else{
+        } else {
             val (focusRequester) = FocusRequester.createRefs()
+
             LaunchedEffect(
                 key1 = editing){
                 if(editing){
                     focusRequester.requestFocus()
                 }
             }
+
             BasicTextField(
                 value = editingText,
                 onValueChange = {
@@ -84,9 +90,10 @@ fun CheckableDisplayItem(
                     .fillMaxWidth()
                     .weight(1f)
                     .focusRequester(focusRequester),
-                cursorBrush = SolidColor(Color.Red)
+                cursorBrush = SolidColor(PantoneRed)
             )
         }
+
         if(!editing){
             IconButton(
                 onClick = {
@@ -97,11 +104,10 @@ fun CheckableDisplayItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit"
+                    contentDescription = stringResource(id = R.string.edit)
                 )
             }
-        }
-        else{
+        } else{
             IconButton(
                 onClick = {
                     editing = false
@@ -110,21 +116,21 @@ fun CheckableDisplayItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Edit",
+                    contentDescription = stringResource(id = R.string.edit),
                     tint = Color.Red
                 )
             }
 
             IconButton(
                 onClick = {
-                    // vm.onCheckableValueChange(task,checkable,editingText)
+                    viewModel.onEvent(TaskEvent.OnCheckableValueChange(task,checkable,editingText))
                     editing = false
                 },
                 modifier = Modifier.size(24.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Done,
-                    contentDescription = "Edit",
+                    contentDescription = stringResource(id = R.string.edit),
                     tint = Color.Green
                 )
             }

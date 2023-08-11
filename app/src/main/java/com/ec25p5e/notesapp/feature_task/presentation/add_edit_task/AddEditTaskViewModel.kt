@@ -1,5 +1,7 @@
 package com.ec25p5e.notesapp.feature_task.presentation.add_edit_task
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -14,8 +16,8 @@ import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.util.date
 import com.ec25p5e.notesapp.core.presentation.util.formatted
 import com.ec25p5e.notesapp.core.presentation.util.time
-import com.ec25p5e.notesapp.core.presentation.util.today
 import com.ec25p5e.notesapp.core.util.UiText
+import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import com.ec25p5e.notesapp.feature_settings.domain.models.AppSettings
 import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
@@ -23,16 +25,16 @@ import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUse
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
 import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.Locale
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,6 +86,8 @@ class AddEditTaskViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEventTask>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    private var textToSpeech:TextToSpeech? = null
+
     var currentTaskId: Int? = null
 
     init {
@@ -101,7 +105,8 @@ class AddEditTaskViewModel @Inject constructor(
                             isHintVisible = false
                         )
                         _colorState.value = task.color
-                        _date.value = (task.dueDateTime.date + " " + task.dueDateTime.time)
+                        _date.value = task.dueDateTime.date
+                        _time.value = task.dueDateTime.time
                     }
                 }
             }
@@ -139,7 +144,7 @@ class AddEditTaskViewModel @Inject constructor(
                 onCheckableDelete(event.item)
             }
             is AddEditTaskEvent.CheckableCheck -> {
-                onCheckableCheck(event.item, event.checked)
+                onCheckableCheck(event.item)
             }
             is AddEditTaskEvent.CheckableValueChange -> {
                 onCheckableValueChange(event.item, event.value)
@@ -186,6 +191,9 @@ class AddEditTaskViewModel @Inject constructor(
             is AddEditTaskEvent.SaveTask -> {
                 saveTask()
             }
+            is AddEditTaskEvent.ReadTask -> {
+                readTask(event.context)
+            }
         }
     }
 
@@ -217,11 +225,12 @@ class AddEditTaskViewModel @Inject constructor(
         _checkables.remove(item)
     }
 
-    private fun onCheckableCheck(item: Checkable, checked: Boolean) {
+    private fun onCheckableCheck(item: Checkable) {
         val index = _checkables.indexOfFirst {
             item.uid == it.uid
         }
-        _checkables[index] = item.copy(checked = checked)
+
+        _checkables[index] = item.copy(checked = !_checkables[index].checked)
     }
 
     private fun onCheckableValueChange(item: Checkable, value: String) {
@@ -295,21 +304,59 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun saveTask() {
         viewModelScope.launch {
+            _eventFlow.emit(UiEventTask.ShowLoader)
+
             val taskId = taskUseCases.addTask(Task(
                 title = _titleState.value.text,
                 description = _contentState.value.text,
                 dueDateTime = (_date.value + " " + _time.value).trim(),
-                uid = newId,
                 color = _colorState.value,
                 done = false,
-                createdAt = System.currentTimeMillis(),
-                updatedAt = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis()
             ))
 
             checkables.map { checkable -> checkable.taskId = taskId.toInt() }
-            checkableUseCases.addCheckable(checkables)
+            checkableUseCases.addCheckableList(checkables)
 
-            _eventFlow.emit(UiEventTask.ShowSnackbar(UiText.StringResource(id = R.string.task_created_successfully)))
+            _eventFlow.emit(UiEventTask.ShowSnackbar(UiText.StringResource(id =
+                if(currentTaskId == null) {
+                    R.string.task_created_successfully
+                } else {
+                    R.string.task_updated_text
+                }
+            )))
+        }
+    }
+
+    private fun readTask(context: Context) {
+        textToSpeech = TextToSpeech(
+            context
+        ) {
+            if(it == TextToSpeech.SUCCESS) {
+                textToSpeech?.let { txtToSpeech ->
+                    txtToSpeech.language = Locale.ITALIAN
+                    txtToSpeech.setSpeechRate(1.0f)
+                    txtToSpeech.speak(
+                        _titleState.value.text,
+                        TextToSpeech.QUEUE_ADD,
+                        null,
+                        null
+                    )
+                }
+
+                Executors.newSingleThreadScheduledExecutor().schedule({
+                    textToSpeech?.let { txtToSpeech ->
+                        txtToSpeech.language = Locale.ITALIAN
+                        txtToSpeech.setSpeechRate(1.0f)
+                        txtToSpeech.speak(
+                            _contentState.value.text,
+                            TextToSpeech.QUEUE_ADD,
+                            null,
+                            null
+                        )
+                    }
+                }, 3, TimeUnit.SECONDS)
+            }
         }
     }
 }

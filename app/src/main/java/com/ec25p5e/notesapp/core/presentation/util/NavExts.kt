@@ -107,7 +107,8 @@ val LocalDate.formatted: String
         val y = this.year
         val m = this.monthValue
         val d = this.dayOfMonth
-        return String.format("%d-%02d-%04d",d,m,y)
+
+        return String.format("%02d-%02d-%04d", d, m, y)
     }
 
 val LocalTime.formatted: String

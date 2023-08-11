@@ -12,6 +12,7 @@ import com.ec25p5e.notesapp.core.presentation.util.time
 import com.ec25p5e.notesapp.core.presentation.util.today
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.core.util.UiText
+import com.ec25p5e.notesapp.feature_task.domain.models.Checkable
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.checkable.CheckableUseCases
 import com.ec25p5e.notesapp.feature_task.domain.use_cases.task.TaskUseCases
@@ -19,14 +20,10 @@ import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -92,18 +89,31 @@ class TaskViewModel @Inject constructor(
                     )
                 }
             }
+            is TaskEvent.CheckableCheck -> {
+                onCheckableCheck(event.checkable, event.checked)
+            }
+
+            is TaskEvent.OnCheckableValueChange -> {
+                onCheckableValueChange(event.task, event.checkable, event.editText)
+            }
         }
     }
 
     private fun markTaskDone(task: Task) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                isGreat = true
-            )
-            delay(3000)
-            _state.value = _state.value.copy(
-                isGreat = false
-            )
+            _state.value = _state.value.copy(isGreat = true)
+            val updatedTask = task.copy(done = !task.done)
+            val checkablesForTask = checkableUseCases.getCheckableByTask(task.id!!)
+
+            checkablesForTask.forEach { item ->
+                item.checked = true
+                checkableUseCases.addCheckable(item)
+            }
+
+            taskUseCases.addTask(updatedTask)
+
+            delay(2000)
+            _state.value = _state.value.copy(isGreat = false)
         }
     }
 
@@ -143,6 +153,16 @@ class TaskViewModel @Inject constructor(
         }
     }
 
-    suspend fun <T> Flow<List<T>>.flattenToList() =
-        flatMapConcat { it.asFlow() }.toList()
+    private fun onCheckableCheck(checkable: Checkable, checked: Boolean) {
+        checkable.checked = checked
+    }
+
+    private fun onCheckableValueChange(task: Task, checkable: Checkable, editText: String) {
+        val taskId = task.id
+        val checkablesForTask = checkableUseCases.getCheckableByTask(taskId!!)
+        var filteredCheckable = checkablesForTask.filter { check -> check.uid == checkable.uid }[0]
+        val updatedCheckable = filteredCheckable.copy(value = editText)
+
+        checkableUseCases.addCheckable(updatedCheckable)
+    }
 }

@@ -9,4 +9,5 @@ interface CheckableRepository {
 
     fun insertBulkCheckable(checkables: List<Checkable>)
 
+    fun insertCheckable(checkable: Checkable)
 }

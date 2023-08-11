@@ -98,7 +98,7 @@ fun CheckableItem(
                 Checkbox(
                     checked = item.checked,
                     onCheckedChange = {
-                        viewModel.onEvent(AddEditTaskEvent.CheckableCheck(item, it))
+                        viewModel.onEvent(AddEditTaskEvent.CheckableCheck(item))
                     }
                 )
 
@@ -124,15 +124,19 @@ fun CheckableItem(
                     modifier = Modifier
                         .padding(start = 0.dp)
                         .onKeyEvent {
-                            if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
-                                viewModel.onEvent(AddEditTaskEvent.AddCheckable(item))
-                                true
-                            } else if (it.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_DEL) {
-                                viewModel.onEvent(AddEditTaskEvent.BackOnValue(item, currentPos, textFieldValue.selection.start))
-                                currentPos = textFieldValue.selection.start
-                                true
-                            } else {
-                                false
+                            when (it.nativeKeyEvent.keyCode) {
+                                KeyEvent.KEYCODE_ENTER -> {
+                                    viewModel.onEvent(AddEditTaskEvent.AddCheckable(item))
+                                    true
+                                }
+                                KeyEvent.KEYCODE_DEL -> {
+                                    viewModel.onEvent(AddEditTaskEvent.BackOnValue(item, currentPos, textFieldValue.selection.start))
+                                    currentPos = textFieldValue.selection.start
+                                    true
+                                }
+                                else -> {
+                                    false
+                                }
                             }
 
                         }

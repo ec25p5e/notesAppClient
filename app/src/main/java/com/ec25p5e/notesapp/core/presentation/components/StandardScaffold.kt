@@ -51,12 +51,12 @@ fun StandardScaffold(
             contentDescription = stringResource(id = R.string.cont_archive_home),
             showFab = false
         ),
-        /* BottomNavItem(
+        BottomNavItem(
             route = Screen.CategoryScreen.route,
             icon = painterResource(id = R.drawable.ic_category),
             contentDescription = stringResource(id = R.string.menu_category_text),
             showFab = false
-        ), */
+        ),
         /* BottomNavItem(
             route = Screen.ProfileScreen.route,
             icon = painterResource(id = R.drawable.ic_profile),

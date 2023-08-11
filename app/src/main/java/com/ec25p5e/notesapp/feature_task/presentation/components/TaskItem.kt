@@ -13,6 +13,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -22,8 +23,13 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.ui.theme.PantoneBlue
+import com.ec25p5e.notesapp.core.presentation.ui.theme.PantoneGreen
+import com.ec25p5e.notesapp.core.presentation.ui.theme.PantoneRed
 import com.ec25p5e.notesapp.core.presentation.util.date
 import com.ec25p5e.notesapp.core.presentation.util.format12Hour
 import com.ec25p5e.notesapp.core.presentation.util.time
@@ -71,14 +77,14 @@ fun TaskItem(
                         if(task.done){
                             Icon(
                                 imageVector = Icons.Default.DoneAll,
-                                contentDescription = "Done",
+                                contentDescription = stringResource(id = R.string.cont_descr_image_all_task_done),
                             )
                         }
                         else{
                             Icon(
                                 imageVector = Icons.Default.Done,
-                                contentDescription = "Done",
-                                tint = Color.Green
+                                contentDescription = stringResource(id = R.string.cont_descr_image_all_task_done),
+                                tint = PantoneGreen
                             )
                         }
                     }
@@ -90,8 +96,8 @@ fun TaskItem(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit",
-                            tint = Color.Blue
+                            contentDescription = stringResource(id = R.string.edit),
+                            tint = PantoneBlue
                         )
                     }
                     IconButton(
@@ -102,8 +108,8 @@ fun TaskItem(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
-                            tint = Color.Red
+                            contentDescription = stringResource(id = R.string.delete),
+                            tint = PantoneRed
                         )
                     }
                 }

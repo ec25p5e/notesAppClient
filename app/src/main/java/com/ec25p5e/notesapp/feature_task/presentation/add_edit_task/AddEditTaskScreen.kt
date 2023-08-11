@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ColorLens
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,40 +65,26 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.ec25p5e.notesapp.R
+import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
 import com.ec25p5e.notesapp.core.presentation.components.StandardToolbar
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceMedium
 import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
+import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import com.ec25p5e.notesapp.feature_task.domain.models.Task
 import com.ec25p5e.notesapp.feature_task.presentation.components.CheckableItem
 import com.ec25p5e.notesapp.feature_task.presentation.components.TaskDateTime
+import com.ec25p5e.notesapp.feature_task.presentation.components.datetime.composematerialdialogs.MaterialDialog
+import com.ec25p5e.notesapp.feature_task.presentation.components.datetime.composematerialdialogs.rememberMaterialDialogState
+import com.ec25p5e.notesapp.feature_task.presentation.components.datetime.date.datepicker
+import com.ec25p5e.notesapp.feature_task.presentation.components.datetime.time.timepicker
 import com.ec25p5e.notesapp.feature_task.presentation.util.AddEditTaskError
 import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-/* Box(
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(100.dp),
-    contentAlignment = Alignment.Center
-){
-    Button(
-        onClick = {
-
-        },
-        colors = ButtonDefaults.buttonColors(
-            contentColor = MaterialTheme.colorScheme.primary
-        )
-    ) {
-        Text(stringResource(id = R.string.add_checkable))
-    }
-}
-
-Spacer(modifier = Modifier.height(SpaceMedium)) */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -160,7 +148,24 @@ fun AddEditTaskScreen(
                 .fillMaxWidth(),
             showBackArrow = true,
             navActions = {
-
+                StandardOptionsMenu(
+                    menuItem = {
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.read_task_text))
+                            },
+                            onClick = {
+                                viewModel.onEvent(AddEditTaskEvent.ReadTask(context))
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_speak),
+                                    contentDescription = stringResource(id = R.string.read_task_text)
+                                )
+                            }
+                        )
+                    }
+                )
             }
         )
 
@@ -216,7 +221,132 @@ fun AddEditTaskScreen(
 
             Spacer(modifier = Modifier.height(SpaceMedium))
 
-            TaskDateTime()
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                ){
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        androidx.compose.material.IconButton(onClick = {
+                            viewModel.onEvent(AddEditTaskEvent.DateClick)
+                        }) {
+                            androidx.compose.material.Icon(
+                                painter = painterResource(id = R.drawable.ic_calendar),
+                                contentDescription = "Date",
+                                tint = androidx.compose.material.MaterialTheme.colors.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        Text(
+                            text = if(viewModel.date.value.isEmpty()) stringResource(id = R.string.set_date) else viewModel.date.value,
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.onEvent(AddEditTaskEvent.DateClick)
+                                }
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            text = if(viewModel.time.value.isEmpty()) stringResource(id = R.string.set_time) else viewModel.time.value,
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.onEvent(AddEditTaskEvent.TimeClick)
+                                }
+                        )
+                        androidx.compose.material.IconButton(onClick = {
+                            viewModel.onEvent(AddEditTaskEvent.TimeClick)
+                        }) {
+                            androidx.compose.material.Icon(
+                                painter = painterResource(id = R.drawable.ic_calendar),
+                                contentDescription = "Date",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+            val dateDialogState = rememberMaterialDialogState()
+            LaunchedEffect(key1 = viewModel.dateDialogOpen.value){
+                if(viewModel.dateDialogOpen.value&&!dateDialogState.showing){
+                    dateDialogState.show()
+                }
+                else{
+                    if(dateDialogState.showing){
+                        dateDialogState.hide()
+                    }
+                }
+            }
+
+            MaterialDialog(
+                dialogState = dateDialogState,
+                buttons = {
+                    positiveButton(stringResource(id = R.string.ok)){
+                        viewModel.onEvent(AddEditTaskEvent.DateDialogOk)
+                    }
+                    negativeButton(stringResource(id = R.string.cancel)){
+                        viewModel.onEvent(AddEditTaskEvent.DateDialogCancel)
+                    }
+                    negativeButton(stringResource(id = R.string.clear)){
+                        viewModel.onEvent(AddEditTaskEvent.DateDialogClear)
+                    }
+                },
+                onCloseRequest = {
+                    viewModel.onEvent(AddEditTaskEvent.DateDialogCancel)
+                }
+            ) {
+                datepicker { date ->
+                    viewModel.onEvent(AddEditTaskEvent.DateDialogDate(date))
+                }
+            }
+
+            val timeDialogState = rememberMaterialDialogState()
+            LaunchedEffect(key1 = viewModel.timeDialogOpen.value){
+                if(viewModel.timeDialogOpen.value&&!timeDialogState.showing){
+                    timeDialogState.show()
+                } else{
+                    if(timeDialogState.showing){
+                        timeDialogState.hide()
+                    }
+                }
+            }
+
+            MaterialDialog(
+                dialogState = timeDialogState,
+                buttons = {
+                    positiveButton(stringResource(id = R.string.ok)){
+                        viewModel.onEvent(AddEditTaskEvent.TimeDialogOk)
+                    }
+                    negativeButton(stringResource(id = R.string.cancel)){
+                        viewModel.onEvent(AddEditTaskEvent.TimeDialogCancel)
+                    }
+                    negativeButton(stringResource(id = R.string.clear)){
+                        viewModel.onEvent(AddEditTaskEvent.TimeDialogClear)
+                    }
+                },
+                onCloseRequest = {
+                    viewModel.onEvent(AddEditTaskEvent.TimeDialogCancel)
+                }
+            ) {
+                timepicker { time ->
+                    viewModel.onEvent(AddEditTaskEvent.TimeDialogDate(time))
+                }
+            }
 
             Spacer(modifier = Modifier.height(SpaceMedium))
 
@@ -380,7 +510,7 @@ fun AddEditTaskScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(65.dp),
+                    .height(90.dp),
                 contentAlignment = Alignment.Center
             ) {
                 if (scaffoldColorBottomSheet.bottomSheetState.hasExpandedState) {
@@ -413,12 +543,12 @@ fun AddEditTaskScreen(
 
                                 Box(
                                     modifier = Modifier
-                                        .size(25.dp)
+                                        .size(50.dp)
                                         .shadow(7.5.dp, CircleShape)
                                         .clip(CircleShape)
                                         .background(taskColor)
                                         .border(
-                                            width = 1.5.dp,
+                                            width = 3.dp,
                                             color = if (viewModel.colorState.value == colorInt) {
                                                 Color.Black
                                             } else Color.Transparent,

@@ -215,4 +215,6 @@
     <string name="banner_image">Banner image</string>
     <string name="profile_image">Profile image</string>
     <string name="ic_paint_presented">A paint was associated</string>
+    <string name="read_task_text">Read tasks</string>
+    <string name="task_updated_text">Task updated successfully</string>
 </resources>

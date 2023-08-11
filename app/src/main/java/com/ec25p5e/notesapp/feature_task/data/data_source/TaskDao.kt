@@ -18,7 +18,7 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE id = :id")
     fun getTaskById(id: Int): Task
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTask(task: Task): Long
 
     @Delete
