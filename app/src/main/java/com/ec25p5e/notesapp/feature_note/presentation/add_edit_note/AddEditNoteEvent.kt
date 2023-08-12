@@ -22,6 +22,7 @@ sealed class AddEditNoteEvent {
     data class DeleteImage(val uri: Uri): AddEditNoteEvent()
     data class ConvertInAudio(val noteId: Int, val context: Context) : AddEditNoteEvent()
     data class ReadNote(val context: Context): AddEditNoteEvent()
+    data class PickDocument(val uri: Uri?): AddEditNoteEvent()
     data object UnlockNote: AddEditNoteEvent()
 
     data object IsSaveNote: AddEditNoteEvent()

@@ -110,14 +110,14 @@ fun CategoryItemDetail(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            Divider()
+            /* Divider()
 
             Text(
                 text = (stringResource(id = R.string.associated_notes) + " " + category.numNotesAssoc.toString()),
                 modifier = Modifier
                     .padding(vertical = 10.dp)
                     .padding(horizontal = 5.dp)
-            )
+            ) */
         }
     }
 

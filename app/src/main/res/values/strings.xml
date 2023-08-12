@@ -217,4 +217,5 @@
     <string name="ic_paint_presented">A paint was associated</string>
     <string name="read_task_text">Read tasks</string>
     <string name="task_updated_text">Task updated successfully</string>
+    <string name="category_updated_text">Category updated successfully</string>
 </resources>

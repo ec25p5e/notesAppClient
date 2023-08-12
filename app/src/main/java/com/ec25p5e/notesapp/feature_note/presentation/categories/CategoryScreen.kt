@@ -160,19 +160,6 @@ fun CategoryScreen(
                                 )
                             }
                         )
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(id = R.string.new_category_title)) },
-                            onClick = {
-                                viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_category),
-                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
-                                )
-                            }
-                        )
                     }
                 )
             }
@@ -252,7 +239,7 @@ fun CategoryScreen(
                                 viewModel.onEvent(CategoryEvent.SetToDelete(category))
                             },
                             onEditClick = {
-                                viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
+                                onNavigate(Screen.AddEditCategoryScreen.route + "?categoryId=${category.id}")
                             }
                         )
                     }
@@ -270,129 +257,5 @@ fun CategoryScreen(
                 )
             }
         }
-    }
-
-
-    /**
-     * Edit category section
-     */
-    if (state.isCreationVisible) {
-        AlertDialog(
-            onDismissRequest = {
-                viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
-            },
-            icon = {
-                Icon(painterResource(id = R.drawable.ic_category), contentDescription = null) },
-            title = {
-                Text(text = stringResource(id = R.string.dialog_new_category_title))
-            },
-            text = {
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(SpaceSmall),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                    ) {
-                        StandardTextFieldState(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = categoryTitleState.text,
-                            label = stringResource(id = R.string.label_category_title_input),
-                            maxLength = Constants.MAX_CATEGORY_TITLE_LENGTH,
-                            onValueChange = {
-                                viewModel.onEvent(CategoryEvent.EnteredTitle(it))
-                            },
-                            onFocusChange = {
-                                viewModel.onEvent(CategoryEvent.ChangeTitleFocus(it))
-                            },
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Text,
-                            error = when(categoryTitleState.error) {
-                                is AuthError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
-                                is AuthError.InputTooShort -> stringResource(id = R.string.input_too_short_text)
-                                else -> ""
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(2.dp)
-                            .background(Color.Black)
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            items(Category.categoryColor) { noteColor ->
-                                val colorInt = noteColor.toArgb()
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .shadow(7.5.dp, CircleShape)
-                                        .clip(CircleShape)
-                                        .background(noteColor)
-                                        .border(
-                                            width = 1.5.dp,
-                                            color = if (viewModel.categoryColor.value == colorInt) {
-                                                Color.Black
-                                            } else Color.Transparent,
-                                            shape = CircleShape
-                                        )
-                                        .clickable {
-                                            scope.launch {
-                                                categoryBackgroundAnimatable.animateTo(
-                                                    targetValue = Color(colorInt),
-                                                    animationSpec = tween(
-                                                        durationMillis = 500
-                                                    )
-                                                )
-                                            }
-                                            viewModel.onEvent(
-                                                CategoryEvent.ChangeColor(
-                                                    colorInt
-                                                )
-                                            )
-                                        }
-                                )
-
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.onEvent(CategoryEvent.SaveCategory)
-                        viewModel.onEvent(CategoryEvent.ToggleCategoryCreation)
-                    }
-                ) {
-                    Text(stringResource(id = R.string.save_btn_text))
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-        )
     }
 }

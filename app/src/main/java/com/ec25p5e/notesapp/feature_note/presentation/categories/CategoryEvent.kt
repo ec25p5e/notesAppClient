@@ -6,15 +6,12 @@ import com.ec25p5e.notesapp.feature_note.domain.models.Category
 sealed class CategoryEvent {
     data class EnteredTitle(val value: String): CategoryEvent()
     data class ChangeTitleFocus(val focusState: FocusState): CategoryEvent()
-    data class ChangeColor(val color: Int): CategoryEvent()
 
     data class ChangeCategorySelected(val id: Int): CategoryEvent()
     data class SetToDelete(val category: Category): CategoryEvent()
 
     data object RestoreCategory: CategoryEvent()
-    data object ToggleCategoryCreation: CategoryEvent()
     data object SaveCategory: CategoryEvent()
-    data object FetchCategory: CategoryEvent()
     data object IsCreateCategory: CategoryEvent()
     data object ToggleCategoryDelete: CategoryEvent()
     data object DeleteCategory: CategoryEvent()

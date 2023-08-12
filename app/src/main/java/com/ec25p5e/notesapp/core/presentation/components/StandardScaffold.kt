@@ -35,7 +35,7 @@ fun StandardScaffold(
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
-        /* BottomNavItem(
+        BottomNavItem(
             route = Screen.TodoScreen.route,
             icon = painterResource(id = R.drawable.ic_todo),
             contentDescription = stringResource(id = R.string.cont_todo_home),
@@ -44,24 +44,28 @@ fun StandardScaffold(
                 navController.navigate(Screen.AddEditTaskScreen.route)
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
-        ), */
+        ),
         BottomNavItem(
             route = Screen.ArchiveScreen.route,
             icon = painterResource(id = R.drawable.ic_baseline_archive_24),
             contentDescription = stringResource(id = R.string.cont_archive_home),
-            showFab = false
+            showFab = false,
         ),
         BottomNavItem(
             route = Screen.CategoryScreen.route,
             icon = painterResource(id = R.drawable.ic_category),
             contentDescription = stringResource(id = R.string.menu_category_text),
-            showFab = false
+            showFab = true,
+            fabClick = {
+                navController.navigate(Screen.AddEditCategoryScreen.route)
+            },
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
-        /* BottomNavItem(
+        BottomNavItem(
             route = Screen.ProfileScreen.route,
             icon = painterResource(id = R.drawable.ic_profile),
             contentDescription = stringResource(id = R.string.cont_profile_home)
-        ) */
+        )
     ),
     content: @Composable () -> Unit
 ) {

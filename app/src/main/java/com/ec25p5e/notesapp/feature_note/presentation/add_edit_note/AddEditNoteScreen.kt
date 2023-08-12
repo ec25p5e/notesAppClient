@@ -1,10 +1,8 @@
 package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 
 import android.Manifest
-import android.content.Intent
 import android.graphics.Paint
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,7 +23,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ColorLens
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
@@ -82,9 +79,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
-import coil.compose.AsyncImagePainter
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.StandardLoadingAlert
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
@@ -98,14 +92,12 @@ import com.ec25p5e.notesapp.core.util.Constants.MIN_NOTE_TITLE_LENGTH
 import com.ec25p5e.notesapp.feature_note.domain.models.Background
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
-import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
 import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.util.AddEditNoteError
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import coil.compose.rememberAsyncImagePainter
-import coil.imageLoader
 import coil.request.ImageRequest
 import com.ec25p5e.notesapp.feature_note.data.local.gesture.MotionEvent
 import com.ec25p5e.notesapp.feature_note.data.local.gesture.dragMotionEvent
@@ -114,11 +106,10 @@ import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveEvent
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
 import com.ec25p5e.notesapp.feature_note.presentation.components.DrawingPropertiesMenu
+import com.ec25p5e.notesapp.feature_note.presentation.notes.NotesEvent
 import com.ec25p5e.notesapp.feature_note.presentation.util.DrawMode
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -181,14 +172,11 @@ fun AddEditNoteScreen(
     var drawMode by remember { mutableStateOf(DrawMode.Draw) }
     var currentPath by remember { mutableStateOf(Path()) }
     var currentPathProperty by remember { mutableStateOf(PathProperties()) }
-    val canvasText = remember { StringBuilder() }
-    val paint = remember {
-        Paint().apply {
-            textSize = 40f
-            color = Color.Black.toArgb()
-        }
+    val resultDocument = remember { mutableStateOf<Uri?>(null) }
+    val launcherDocument = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+        resultDocument.value = it
+        viewModel.onEvent(AddEditNoteEvent.PickDocument(it))
     }
-
 
     SideEffect {
         permissionState.launchPermissionRequest()
@@ -204,7 +192,7 @@ fun AddEditNoteScreen(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                is UiEventNote.SaveNote -> {
+                is UiEventNote.Save -> {
                     onNavigateUp()
                 }
                 is UiEventNote.ShowLoader -> {
@@ -531,7 +519,7 @@ fun AddEditNoteScreen(
                                 }
                             )
 
-                            /* if (isArchived && noteId != -1) {
+                            if (isArchived && noteId != -1) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.dearchive_note))
@@ -563,8 +551,7 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            } */
-
+                            }
 
                             /* DropdownMenuItem(
                                 text = {
@@ -581,7 +568,7 @@ fun AddEditNoteScreen(
                                 }
                             ) */
 
-                             /* DropdownMenuItem(
+                            DropdownMenuItem(
                                 text = {
                                     Text(stringResource(id = R.string.categorize_note))
                                 },
@@ -594,7 +581,7 @@ fun AddEditNoteScreen(
                                         contentDescription = stringResource(id = R.string.categorize_note)
                                     )
                                 }
-                            ) */
+                            )
 
                             /* if (isLockedNote) {
                                 DropdownMenuItem(
@@ -628,9 +615,9 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            } */
+                            }
 
-                            /* if (state.isSharing) {
+                            if (state.isSharing) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.share_note_text))
@@ -703,11 +690,6 @@ fun AddEditNoteScreen(
                         keyboardType = KeyboardType.Text,
                         error = when (contentState.error) {
                             is AddEditNoteError.FieldEmpty -> stringResource(id = R.string.field_empty_text_error)
-                            is AddEditNoteError.InputTooShort -> stringResource(
-                                id = R.string.field_too_short_text_error,
-                                MIN_NOTE_TITLE_LENGTH
-                            )
-
                             else -> ""
                         }
                     )
@@ -941,7 +923,7 @@ fun AddEditNoteScreen(
                 modifier = Modifier
                     .padding(SpaceSmall)
             ) {
-                /* IconButton(
+                IconButton(
                     onClick = {
                         scope.launch {
                             scaffoldAddingBottomSheet.bottomSheetState.expand()
@@ -954,7 +936,7 @@ fun AddEditNoteScreen(
                         contentDescription = stringResource(id = R.string.add_options),
                         tint = MaterialTheme.colorScheme.onBackground
                     )
-                } */
+                }
 
                 IconButton(
                     onClick = {

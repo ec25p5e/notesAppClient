@@ -22,4 +22,5 @@ sealed class Screen(val route: String) {
     data object AddEditTaskScreen: Screen("add_edit_task_screen")
     data object OfflineScreen: Screen("offline_screen")
     data object EditProfileScreen: Screen("edit_profile_screen")
+    data object AddEditCategoryScreen: Screen("add_edit_category_screen")
 }

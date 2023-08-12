@@ -3,11 +3,9 @@ package com.ec25p5e.notesapp.feature_note.presentation.add_edit_note
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.toArgb
@@ -16,7 +14,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.core.data.local.converters.ListPairConverter
 import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
 import com.ec25p5e.notesapp.core.util.UiText
@@ -40,7 +37,6 @@ import javax.inject.Inject
 class AddEditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     private var dataStore: DataStore<AppSettings>,
-    private var aesEncryptor: AESEncryptor,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -115,7 +111,7 @@ class AddEditNoteViewModel @Inject constructor(
                         )
                         _isArchivedState.value = note.isArchived
                         _colorState.value = note.color
-                        _noteCategory.value = 1 // note.categoryId
+                        _noteCategory.value = note.categoryId
                         _chosenImageUri.value = uriArray
                         _noteBackground.value = note.background
                         _isLockedNote.value = note.isLocked
@@ -266,8 +262,6 @@ class AddEditNoteViewModel @Inject constructor(
             }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(UiEventNote.ShowLoader)
-
                     val imageArray: ArrayList<String> = ArrayList()
                     _chosenImageUri.value.forEach { uri -> imageArray.add(uri.toString()) }
 
@@ -299,6 +293,7 @@ class AddEditNoteViewModel @Inject constructor(
                     }
 
                     if(addingResult.isCorrect()) {
+                        _eventFlow.emit(UiEventNote.ShowLoader)
                         _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id =
                             if(currentNoteId == null) {
                                 R.string.note_created_text
@@ -307,9 +302,12 @@ class AddEditNoteViewModel @Inject constructor(
                             }
                         )))
 
-                        _eventFlow.emit(UiEventNote.SaveNote)
+                        _eventFlow.emit(UiEventNote.Save)
                     }
                 }
+            }
+            is AddEditNoteEvent.PickDocument -> {
+
             }
         }
     }

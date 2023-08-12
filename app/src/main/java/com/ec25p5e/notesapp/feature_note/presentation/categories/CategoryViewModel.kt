@@ -28,8 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases,
-    private val preferenceImpl: DataStorePreferenceImpl
+    private val categoryUseCases: CategoryUseCases
 ): ViewModel() {
 
     private val _state = mutableStateOf(CategoriesState())
@@ -52,7 +51,6 @@ class CategoryViewModel @Inject constructor(
 
     private var currentCategoryId: Int? = null
 
-    private var recentlyDeletedCategory: Category? = null
     private var getCategoriesJob: Job? = null
 
     init {
@@ -71,9 +69,6 @@ class CategoryViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused &&
                             categoryTitle.value.text.isBlank()
                 )
-            }
-            is CategoryEvent.ChangeColor -> {
-                _categoryColor.value = event.color
             }
             is CategoryEvent.ChangeCategorySelected -> {
                 _categoryId.value = event.id
@@ -102,14 +97,6 @@ class CategoryViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isDeleting = !_state.value.isDeleting
                 )
-            }
-            is CategoryEvent.ToggleCategoryCreation -> {
-                _state.value = state.value.copy(
-                    isCreationVisible = !state.value.isCreationVisible
-                )
-            }
-            is CategoryEvent.FetchCategory -> {
-
             }
             is CategoryEvent.IsCreateCategory -> {
                 _isCreating.value = !_isCreating.value

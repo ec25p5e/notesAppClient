@@ -120,11 +120,10 @@ object NoteModule {
     fun provideCategoryUseCases(
         repository: CategoryRepository,
         noteRepository: NoteRepository,
-        preferenceImpl: DataStorePreferenceImpl
     ): CategoryUseCases {
         return CategoryUseCases(
             getCategories = GetCategories(repository),
-            addCategory = AddCategory(repository, preferenceImpl),
+            addCategory = AddCategory(repository),
             deleteCategory = DeleteCategory(repository, noteRepository),
             getCategoryById = GetCategoryById(repository),
             pushCategory = PushCategory(repository)

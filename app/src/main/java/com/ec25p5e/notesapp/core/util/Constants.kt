@@ -9,6 +9,7 @@ object Constants {
     const val MAX_NOTE_TITLE_LENGTH: Int = 20
     const val MAX_PIN_LENGTH = 8
     const val MAX_CATEGORY_TITLE_LENGTH = 16
+    const val MIN_CATEGORY_TITLE_LENGTH = 3
     const val MAX_TASK_TITLE_LENGTH = 16
     const val SPLASH_SCREEN_DURATION = 2000L
 

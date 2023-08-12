@@ -9,6 +9,6 @@ sealed class UiEventNote: Event() {
     object ShowLoader: UiEventNote()
 
     object NavigateUp: UiEventNote()
-    object SaveNote: UiEventNote()
+    object Save: UiEventNote()
     object IsLoadingPage: UiEventNote()
 }

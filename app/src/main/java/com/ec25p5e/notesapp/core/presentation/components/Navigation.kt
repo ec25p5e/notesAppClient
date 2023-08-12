@@ -19,6 +19,7 @@ import com.ec25p5e.notesapp.feature_auth.presentation.offline.OfflineScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.onboarding.OnBoardingScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
+import com.ec25p5e.notesapp.feature_note.presentation.add_edit_category.AddEditCategoryScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryScreen
@@ -171,6 +172,28 @@ fun Navigation(
                 imageLoader = imageLoader,
                 scaffoldState = scaffoldState,
                 noteId = noteId
+            )
+        }
+
+        composable(
+            route = Screen.AddEditCategoryScreen.route + "?categoryId={categoryId}",
+            arguments = listOf(
+                navArgument(
+                    name = "categoryId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            )
+        ) {
+            val categoryId = it.arguments?.getInt("categoryId") ?: -1
+
+            AddEditCategoryScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState,
+                categoryId = categoryId
             )
         }
 

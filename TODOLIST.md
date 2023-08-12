@@ -1,8 +1,4 @@
 ### ToDo:
-- Implementare il datastore invece delle shared preferences
-- Criptare il datastore
-- Aggiungere pulsante per eliminare il testo nella barra di ricerca (notes screen)
-- Aggiungere pulsante per eliminare il testo nella barra di ricerca (archive screen)
 - Implementare possibilità di scattare un'immagine
 - Implementare la onboarding screen
 - Implementare pulsante di logout
@@ -25,7 +21,7 @@
 
 
 ### In corso:
-- Deprecare le shared preferences
+
   
 
 
@@ -35,6 +31,7 @@
 
 
 ### Completato:
+- Deprecare le shared preferences
 - Implementare la disarchiviazione
 - Permettere di categorizzare le note in fase di creazione
 - Implementare un popup di conferma per l'eliminazione (Modal)
@@ -50,3 +47,7 @@
   - Implementare la schermata "impostazioni"
 - Implementare il salvataggio automatico
 - Implementare LazyRow nel mostrare i colori nella creazione della categoria
+- Implementare il datastore invece delle shared preferences
+- Criptare il datastore
+- Aggiungere pulsante per eliminare il testo nella barra di ricerca (notes screen)
+- Aggiungere pulsante per eliminare il testo nella barra di ricerca (archive screen)

@@ -18,28 +18,15 @@ class DeleteCategory(
         val categoryId = category.id!!
         val noteByCategoryFlow = noteRepository.getNotesByCategory(categoryId)
         val noteByCategory: List<Note> = emptyList()
-        var responseDeleteNote = false
 
         noteByCategory.apply {
             noteByCategoryFlow.map {
-                it.asFlow().toList()
+                it.toList()
             }
         }
 
-        val protectedNotes: List<Note> = noteByCategory
-        protectedNotes.filter { !it.isLocked }
-
-
-        noteByCategory.forEach { note ->
-            noteRepository.deleteNote(note)
-            responseDeleteNote = true
-        }
-
-        if(responseDeleteNote) {
-            categoryRepository.deleteCategory(category)
-            return true
-        }
-
-        return false
+        noteByCategory.forEach { note -> noteRepository.deleteNote(note) }
+        categoryRepository.deleteCategory(category)
+        return true
     }
 }
