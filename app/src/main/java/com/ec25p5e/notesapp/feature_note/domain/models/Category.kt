@@ -2,6 +2,8 @@ package com.ec25p5e.notesapp.feature_note.domain.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Primary
 import com.ec25p5e.notesapp.core.presentation.ui.theme.At_Secondary

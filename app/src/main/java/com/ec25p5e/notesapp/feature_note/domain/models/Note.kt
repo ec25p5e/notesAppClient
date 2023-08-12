@@ -15,11 +15,7 @@ import com.ec25p5e.notesapp.core.presentation.ui.theme.RedOrange
 import com.ec25p5e.notesapp.core.presentation.ui.theme.RedPink
 import com.ec25p5e.notesapp.core.presentation.ui.theme.Violet
 
-@Entity(
-    foreignKeys = [
-
-    ]
-)
+@Entity
 data class Note(
     var title: String,
     var content: String,
