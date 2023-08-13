@@ -13,9 +13,9 @@ sealed class NotesEvent {
     data class SetNoteToDelete(val note: Note): NotesEvent()
     data class CopyNote(val noteId: Int): NotesEvent()
 
-    object RestoreNote: NotesEvent()
-    object ToggleOrderSection: NotesEvent()
-    object IsLoadingPage: NotesEvent()
-    object IsDeletingNote: NotesEvent()
-    object DeleteNote: NotesEvent()
+    data object RestoreNote: NotesEvent()
+    data object ToggleOrderSection: NotesEvent()
+    data object IsLoadingPage: NotesEvent()
+    data object IsDeletingNote: NotesEvent()
+    data object DeleteNote: NotesEvent()
 }

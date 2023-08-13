@@ -372,7 +372,7 @@ fun AddEditTaskScreen(
             modifier = Modifier
                 .padding(SpaceSmall)
         ) {
-            IconButton(
+            /* IconButton(
                 onClick = {
                     scope.launch {
                         scaffoldAddingBottomSheet.bottomSheetState.expand()
@@ -384,7 +384,7 @@ fun AddEditTaskScreen(
                     contentDescription = stringResource(id = R.string.add_options),
                     tint = MaterialTheme.colorScheme.onBackground
                 )
-            }
+            } */
 
             IconButton(
                 onClick = {

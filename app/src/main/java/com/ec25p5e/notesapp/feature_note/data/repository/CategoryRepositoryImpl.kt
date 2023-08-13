@@ -9,6 +9,7 @@ import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.SimpleResource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.data.data_source.CategoryDao
+import com.ec25p5e.notesapp.feature_note.data.data_source.NoteDao
 import com.ec25p5e.notesapp.feature_note.data.mapper.toCategory
 import com.ec25p5e.notesapp.feature_note.data.mapper.toCreateCategoryRequest
 import com.ec25p5e.notesapp.feature_note.data.remote.api.CategoryApi
@@ -29,6 +30,7 @@ import java.io.IOException
 
 class CategoryRepositoryImpl(
     private val dao: CategoryDao,
+    private val daoNotes: NoteDao,
     private val api: CategoryApi,
     dataStore: DataStorePreferenceImpl,
 ): CategoryRepository {
@@ -113,5 +115,8 @@ class CategoryRepositoryImpl(
 
     override fun deleteCategory(category: Category) {
         dao.deleteCategory(category)
+
+        val notesByCategory = daoNotes.getNotesByCategoryList(category.id!!)
+        notesByCategory.forEach { note -> daoNotes.deleteNote(note) }
     }
 }

@@ -3,11 +3,6 @@ package com.ec25p5e.notesapp.core.presentation.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Message
-import androidx.compose.material.icons.outlined.Notes
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,7 +30,7 @@ fun StandardScaffold(
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
-        /* BottomNavItem(
+        BottomNavItem(
             route = Screen.TodoScreen.route,
             icon = painterResource(id = R.drawable.ic_todo),
             contentDescription = stringResource(id = R.string.cont_todo_home),
@@ -44,7 +39,7 @@ fun StandardScaffold(
                 navController.navigate(Screen.AddEditTaskScreen.route)
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
-        ), */
+        ),
         BottomNavItem(
             route = Screen.ArchiveScreen.route,
             icon = painterResource(id = R.drawable.ic_baseline_archive_24),

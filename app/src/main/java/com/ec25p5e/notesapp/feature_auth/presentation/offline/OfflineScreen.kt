@@ -9,7 +9,6 @@ import com.ec25p5e.notesapp.core.util.Screen
 fun OfflineScreen(
     onPopBackStack: () -> Unit = {},
     onNavigate: (String) -> Unit = {},
-    networkStatus: ConnectivityObserver.Status
 ) {
 
 }

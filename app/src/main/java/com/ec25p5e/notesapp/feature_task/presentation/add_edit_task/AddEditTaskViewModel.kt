@@ -312,6 +312,7 @@ class AddEditTaskViewModel @Inject constructor(
                 dueDateTime = (_date.value + " " + _time.value).trim(),
                 color = _colorState.value,
                 done = false,
+                uid = newId,
                 timestamp = System.currentTimeMillis()
             ))
 

@@ -1,12 +1,15 @@
 package com.ec25p5e.notesapp.feature_note.presentation.notes
 
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.data.local.encryption.AESEncryptor
+import com.ec25p5e.notesapp.core.data.local.scheduler.AndroidAlarmScheduler
+import com.ec25p5e.notesapp.core.domain.models.AlarmItem
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.models.Note
 import com.ec25p5e.notesapp.feature_note.domain.use_case.note.NoteUseCases
@@ -20,12 +23,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val noteUseCases: NoteUseCases
+    private val noteUseCases: NoteUseCases,
+    private val alarmScheduler: AndroidAlarmScheduler,
 ) : ViewModel() {
 
     private val _state = mutableStateOf(NotesState())

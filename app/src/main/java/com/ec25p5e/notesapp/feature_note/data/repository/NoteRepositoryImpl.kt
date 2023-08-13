@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
@@ -116,31 +117,13 @@ class NoteRepositoryImpl(
     }
 
     override fun insertNote(note: Note) {
-        val categoryId = note.categoryId
-        val category = daoCategory.getCategoryById(categoryId)
-
-        // Incrementa il contatore
-        category.numNotesAssoc = category.numNotesAssoc + 1
-
-        // Inserisci la nota
         dao.insertNote(note)
-
-        // Fai la modifica del valore
-        daoCategory.insertCategory(category)
+        updateCounter()
     }
 
     override fun deleteNote(note: Note) {
-        val categoryId = note.categoryId
-        val category = daoCategory.getCategoryById(categoryId)
-
-        // Decrementa il contatore, se inferiore a 0 imposta 0
-        category.numNotesAssoc = if(category.numNotesAssoc - 1 < 0) 0 else category.numNotesAssoc - 1
-
-        // Elimina la nota
         dao.deleteNote(note)
-
-        // Fai la modifica al contatore
-        daoCategory.insertCategory(category)
+        updateCounter()
     }
 
     override fun archiveNote(id: Int) {
@@ -172,5 +155,16 @@ class NoteRepositoryImpl(
 
     override fun unLockNote(id: Int) {
         dao.unLockNote(id)
+    }
+
+    private fun updateCounter() {
+        daoCategory.getCategories().map { categories ->
+            categories.forEach { category ->
+                val catId = category.id!!
+                val numOfNoteForCategory = dao.getCountNoteForCategory(catId)
+                category.numNotesAssoc = numOfNoteForCategory
+                daoCategory.insertCategory(category)
+            }
+        }
     }
 }

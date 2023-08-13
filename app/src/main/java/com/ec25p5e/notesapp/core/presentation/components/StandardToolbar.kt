@@ -52,16 +52,7 @@ fun StandardToolbar(
                         )
                     }
                 }
-            } else {
-                IconButton(onClick = {
-                    coroutineScope.launch { drawerState.open() }
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = stringResource(id = R.string.drawer_navigation),
-                    )
-                }
-            }
+            } else null
         },
         actions = navActions
     )

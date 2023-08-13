@@ -1,6 +1,9 @@
 package com.ec25p5e.notesapp.core.presentation
 
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -42,13 +45,21 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
 
-    private lateinit var connectivityObserver: ConnectivityObserver
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        connectivityObserver = NetworkConnectivityObserver(applicationContext)
 
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+
+        val channelId = "alarm_id"
+        val channelName = "alarm_name"
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        notificationManager.createNotificationChannel(channel)
 
         setContent {
             NotesAppTheme {
@@ -59,16 +70,13 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val scaffoldState = remember { SnackbarHostState() }
-                    val status by connectivityObserver.observe().collectAsState(
-                        initial = ConnectivityObserver.Status.Unavailable
-                    )
 
                     StandardScaffold(
                         navController = navController,
                         showBottomBar = shouldShowBottomBar(navBackStackEntry),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Navigation(navController, scaffoldState, imageLoader, status)
+                        Navigation(navController, scaffoldState, imageLoader)
                     }
                 }
             }

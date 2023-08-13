@@ -41,7 +41,6 @@ fun Navigation(
     navController: NavHostController,
     scaffoldState: SnackbarHostState,
     imageLoader: ImageLoader,
-    status: ConnectivityObserver.Status
 ) {
     NavHost(
         navController = navController,
@@ -52,7 +51,6 @@ fun Navigation(
             SplashScreen(
                 onPopBackStack = navController::popBackStack,
                 onNavigate = navController::navigate,
-                networkStatus = status
             )
         }
 
@@ -60,7 +58,6 @@ fun Navigation(
             OfflineScreen(
                 onPopBackStack = navController::popBackStack,
                 onNavigate = navController::navigate,
-                networkStatus = status
             )
         }
 

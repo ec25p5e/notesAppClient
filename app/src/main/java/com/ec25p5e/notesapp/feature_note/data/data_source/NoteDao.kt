@@ -27,6 +27,9 @@ interface NoteDao {
     @Query("SELECT * FROM note WHERE categoryId = :categoryId and isArchived = 0")
     fun getNotesByCategory(categoryId: Int): Flow<List<Note>>
 
+    @Query("SELECT * FROM note WHERE categoryId = :categoryId")
+    fun getNotesByCategoryList(categoryId: Int): List<Note>
+
     @Query("SELECT * FROM note WHERE id = :id")
     fun getNoteById(id: Int): Note?
 
@@ -45,6 +48,8 @@ interface NoteDao {
     @Query("UPDATE note SET isLocked = 0 WHERE id = :id")
     fun unLockNote(id: Int)
 
+    @Query("SELECT COUNT(id) FROM note WHERE categoryId = :categoryId")
+    fun getCountNoteForCategory(categoryId: Int): Int
 
     @Upsert
     fun insertNote(note: Note)

@@ -3,6 +3,7 @@ package com.ec25p5e.notesapp.di
 import android.app.Application
 import androidx.room.Room
 import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
+import com.ec25p5e.notesapp.core.data.local.scheduler.AndroidAlarmScheduler
 import com.ec25p5e.notesapp.feature_task.data.data_source.TaskDatabase
 import com.ec25p5e.notesapp.feature_task.data.repository.CheckableRepositoryImpl
 import com.ec25p5e.notesapp.feature_task.data.repository.TaskRepositoryImpl
@@ -43,9 +44,9 @@ object TaskModule {
     @Singleton
     fun provideTaskRepository(
         db: TaskDatabase,
-        dataStore: DataStorePreferenceImpl
+        alarmScheduler: AndroidAlarmScheduler
     ): TaskRepository {
-        return TaskRepositoryImpl(db.taskDao, dataStore)
+        return TaskRepositoryImpl(db.taskDao, alarmScheduler)
     }
 
     @Provides

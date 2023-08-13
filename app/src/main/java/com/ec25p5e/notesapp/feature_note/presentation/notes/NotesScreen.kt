@@ -1,28 +1,21 @@
 package com.ec25p5e.notesapp.feature_note.presentation.notes
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DismissValue
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,21 +38,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isContainer
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,14 +58,8 @@ import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_note.presentation.components.CategoryItem
 import com.ec25p5e.notesapp.feature_note.presentation.components.NoteItem
 import com.ec25p5e.notesapp.core.presentation.components.StandardOptionsMenu
-import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
-import com.ec25p5e.notesapp.core.presentation.ui.theme.SpaceSmall
 import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.asString
-import com.ec25p5e.notesapp.core.util.Constants
-import com.ec25p5e.notesapp.feature_auth.presentation.util.AuthError
-import com.ec25p5e.notesapp.feature_note.domain.models.Category
-import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryEvent
 import com.ec25p5e.notesapp.feature_note.presentation.categories.CategoryViewModel
 import com.ec25p5e.notesapp.feature_note.presentation.components.OrderSection
@@ -104,7 +83,6 @@ fun NotesScreen(
     val state = viewModel.state.value
     val categoryState = viewModelCategory.state.value
     val isCreatingCategory = viewModelCategory.isCreating.value
-    val categoryTitleState = viewModelCategory.categoryTitle.value
 
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
@@ -147,7 +125,7 @@ fun NotesScreen(
                     ).show()
                 }
                 is UiEventNote.ShowLoader -> {
-                    viewModelCategory.onEvent(CategoryEvent.IsCreateCategory)
+
                 }
                 else -> {
                 }

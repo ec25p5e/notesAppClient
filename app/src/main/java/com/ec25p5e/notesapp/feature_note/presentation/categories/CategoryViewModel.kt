@@ -9,6 +9,7 @@ import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_ID
 import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceImpl
 import com.ec25p5e.notesapp.core.domain.states.StandardTextFieldState
+import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_note.domain.exceptions.InvalidCategoryException
 import com.ec25p5e.notesapp.feature_note.domain.models.Category
@@ -16,6 +17,7 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.category.CategoryUseCas
 import com.ec25p5e.notesapp.feature_note.domain.util.CategoryOrder
 import com.ec25p5e.notesapp.feature_note.domain.util.OrderType
 import com.ec25p5e.notesapp.feature_note.presentation.util.UiEventNote
+import com.ec25p5e.notesapp.feature_task.presentation.util.UiEventTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -82,10 +84,20 @@ class CategoryViewModel @Inject constructor(
                     } else {
                         _eventFlow.emit(UiEventNote.ShowSnackbar(UiText.StringResource(id = R.string.locked_note_found)))
                     }
+
+                    _state.value = _state.value.copy(
+                        isDeleting = false,
+                        categoryToDelete = null
+                    )
                 }
             }
             is CategoryEvent.RestoreCategory -> {
 
+            }
+            is CategoryEvent.EditCategory -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEventNote.Navigate(Screen.AddEditCategoryScreen.route + "?categoryId=${event.category.id!!}"))
+                }
             }
             is CategoryEvent.SetToDelete -> {
                 _state.value = _state.value.copy(
@@ -97,9 +109,6 @@ class CategoryViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isDeleting = !_state.value.isDeleting
                 )
-            }
-            is CategoryEvent.IsCreateCategory -> {
-                _isCreating.value = !_isCreating.value
             }
             is CategoryEvent.SaveCategory -> {
                 viewModelScope.launch {

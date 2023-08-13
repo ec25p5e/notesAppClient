@@ -94,7 +94,7 @@ object NoteModule {
         api: CategoryApi,
         dataStore: DataStorePreferenceImpl
     ): CategoryRepository {
-        return CategoryRepositoryImpl(db.categoryDao, api, dataStore)
+        return CategoryRepositoryImpl(db.categoryDao, db.noteDao, api, dataStore)
     }
 
     @Provides

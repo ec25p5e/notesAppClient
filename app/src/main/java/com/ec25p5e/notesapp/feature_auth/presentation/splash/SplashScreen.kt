@@ -37,7 +37,6 @@ fun SplashScreen(
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     onPopBackStack: () -> Unit = {},
     onNavigate: (String) -> Unit = {},
-    networkStatus: ConnectivityObserver.Status,
     viewModel: SplashScreenViewModel = hiltViewModel()
 ) {
     val scale = remember {

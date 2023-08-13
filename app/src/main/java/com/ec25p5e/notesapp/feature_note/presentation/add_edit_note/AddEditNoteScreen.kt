@@ -484,7 +484,7 @@ fun AddEditNoteScreen(
                 navActions = {
                     StandardOptionsMenu(
                         menuItem = {
-                            /* DropdownMenuItem(
+                            DropdownMenuItem(
                                 text = {
                                     Text(stringResource(id = R.string.convert_in_audio_text))
                                 },
@@ -502,7 +502,7 @@ fun AddEditNoteScreen(
                                         contentDescription = stringResource(id = R.string.convert_in_audio_text)
                                     )
                                 }
-                            ) */
+                            )
 
                             DropdownMenuItem(
                                 text = {
@@ -929,7 +929,6 @@ fun AddEditNoteScreen(
                             scaffoldAddingBottomSheet.bottomSheetState.expand()
                         }
                     },
-                    enabled = false
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
