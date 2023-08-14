@@ -87,8 +87,7 @@ class MainActivity : ComponentActivity() {
         val doesRouteMatch = backStackEntry?.destination?.route in listOf(
             Screen.NotesScreen.route,
             Screen.TodoScreen.route,
-            Screen.ArchiveScreen.route,
-            Screen.CategoryScreen.route,
+            Screen.ChatScreen.route,
             Screen.ProfileScreen.route,
         )
 

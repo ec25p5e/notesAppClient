@@ -2,8 +2,10 @@ package com.ec25p5e.notesapp.core.presentation.components
 
 import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -12,13 +14,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import coil.ImageLoader
-import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
-import com.ec25p5e.notesapp.feature_auth.presentation.offline.OfflineScreen
-import com.ec25p5e.notesapp.feature_auth.presentation.onboarding.OnBoardingScreen
-import com.ec25p5e.notesapp.feature_auth.presentation.register.RegisterScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
+import com.ec25p5e.notesapp.feature_calc.presentation.calculator.CalculatorScreen
+import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
+import com.ec25p5e.notesapp.feature_chat.presentation.message.MessageScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_category.AddEditCategoryScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
@@ -36,6 +37,7 @@ import com.ec25p5e.notesapp.feature_settings.presentation.unlock_method.UnlockMe
 import com.ec25p5e.notesapp.feature_task.presentation.add_edit_task.AddEditTaskScreen
 import com.ec25p5e.notesapp.feature_task.presentation.task.TodoScreen
 
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun Navigation(
     navController: NavHostController,
@@ -44,7 +46,7 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SplashScreen.route,
+        startDestination = Screen.CalculatorScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         composable(Screen.SplashScreen.route) {
@@ -54,10 +56,12 @@ fun Navigation(
             )
         }
 
-        composable(Screen.OfflineScreen.route) {
-            OfflineScreen(
-                onPopBackStack = navController::popBackStack,
+        composable(Screen.CalculatorScreen.route) {
+            CalculatorScreen(
+                onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
             )
         }
 
@@ -75,20 +79,20 @@ fun Navigation(
             )
         }
 
-        composable(Screen.RegisterScreen.route) {
-            RegisterScreen(
-                navController = navController,
-                scaffoldState = scaffoldState,
-                onPopBackStack = navController::popBackStack
-            )
-        }
-
         composable(Screen.NotesScreen.route) {
             NotesScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,
                 scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.ChatScreen.route) {
+            ChatScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
             )
         }
 
@@ -274,14 +278,6 @@ fun Navigation(
             )
         }
 
-        composable(Screen.OnBoardingScreen.route) {
-            OnBoardingScreen(
-                scaffoldState = scaffoldState,
-                imageLoader = imageLoader,
-                onNavigate = navController::navigate,
-            )
-        }
-
         composable(Screen.CategoryScreen.route) {
             CategoryScreen(
                 scaffoldState = scaffoldState,
@@ -303,6 +299,38 @@ fun Navigation(
                 imageLoader = imageLoader,
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp
+            )
+        }
+
+        composable(
+            route = Screen.MessageScreen.route + "/{remoteUserId}/{remoteUsername}/{remoteUserProfilePictureUrl}?chatId={chatId}",
+            arguments = listOf(
+                navArgument("chatId") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("remoteUserId") {
+                    type = NavType.StringType
+                },
+                navArgument("remoteUsername") {
+                    type = NavType.StringType
+                },
+                navArgument("remoteUserProfilePictureUrl") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val remoteUserId = it.arguments?.getString("remoteUserId")!!
+            val remoteUsername = it.arguments?.getString("remoteUsername")!!
+            val remoteUserProfilePictureUrl = it.arguments?.getString("remoteUserProfilePictureUrl")!!
+
+            MessageScreen(
+                remoteUserId = remoteUserId,
+                remoteUsername = remoteUsername,
+                encodedRemoteUserProfilePictureUrl = remoteUserProfilePictureUrl,
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
             )
         }
     }

@@ -44,7 +44,7 @@ fun SplashScreen(
     }
 
     val overshootInterpolator = remember {
-        OvershootInterpolator(2f)
+        OvershootInterpolator(1f)
     }
 
     LaunchedEffect(key1 = true) {
@@ -52,7 +52,7 @@ fun SplashScreen(
             scale.animateTo(
                 targetValue = 0.5f,
                 animationSpec = tween(
-                    durationMillis = 2000,
+                    durationMillis = 1000,
                     easing = {
                         overshootInterpolator.getInterpolation(it)
                     }
@@ -65,7 +65,6 @@ fun SplashScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.Navigate -> {
-                    delay(1500)
                     onPopBackStack()
                     onNavigate(event.route)
                 }

@@ -40,7 +40,7 @@ fun StandardScaffold(
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
-        BottomNavItem(
+        /* BottomNavItem(
             route = Screen.ArchiveScreen.route,
             icon = painterResource(id = R.drawable.ic_baseline_archive_24),
             contentDescription = stringResource(id = R.string.cont_archive_home),
@@ -55,6 +55,18 @@ fun StandardScaffold(
                 navController.navigate(Screen.AddEditCategoryScreen.route)
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
+        ), */
+        BottomNavItem(
+            route = Screen.ChatScreen.route,
+            icon = painterResource(id = R.drawable.ic_chat),
+            contentDescription = stringResource(id = R.string.menu_chat_text),
+            showFab = false,
+        ),
+        BottomNavItem(
+            route = Screen.ProfileScreen.route,
+            icon = painterResource(id = R.drawable.ic_profile),
+            contentDescription = stringResource(id = R.string.cont_profile_home),
+            showFab = false,
         )
     ),
     content: @Composable () -> Unit

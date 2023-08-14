@@ -31,8 +31,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
     private val authenticateUseCase: AuthenticateUseCase,
-    private val appSettings: DataStore<AppSettings>,
-    private val networkConnectivityObserver: NetworkConnectivityObserver,
 ): ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -40,28 +38,16 @@ class SplashScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            /* when(authenticateUseCase()) {
+            when(authenticateUseCase()) {
                 is Resource.Success -> {
                     _eventFlow.emit(UiEvent.Navigate(Screen.NotesScreen.route))
                 }
                 is Resource.Error -> {
-                    if(appSettings.data.first().isCompleteOnboarding) {
-                        _eventFlow.emit(UiEvent.Navigate(Screen.LoginScreen.route))
-                    } else {
-                        _eventFlow.emit(UiEvent.Navigate(Screen.OnBoardingScreen.route))
-                    }
+                    _eventFlow.emit(UiEvent.Navigate(Screen.LoginScreen.route))
                 }
                 else -> {
                 }
-            } */
-
-            // if(appSettings.data.first().isCompleteOnboarding) {
-                networkConnectivityObserver.observe().collectLatest {
-                    Log.i("test456", it.toString())
-                }
-            /* } else {
-                _eventFlow.emit(UiEvent.Navigate(Screen.OnBoardingScreen.route))
-            } */
+            }
         }
     }
 }

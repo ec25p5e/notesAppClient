@@ -51,6 +51,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ec25p5e.notesapp.R
 import com.ec25p5e.notesapp.core.presentation.components.GradientButton
 import com.ec25p5e.notesapp.core.presentation.components.StandardTextFieldState
+import com.ec25p5e.notesapp.core.presentation.util.LottieView
 import com.ec25p5e.notesapp.core.presentation.util.UiEvent
 import com.ec25p5e.notesapp.core.presentation.util.asString
 import com.ec25p5e.notesapp.core.util.Constants
@@ -102,22 +103,17 @@ fun LoginScreen(
     ) {
         Box(
             modifier = Modifier
-                .background(
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    shape = RoundedCornerShape(25.dp, 5.dp, 25.dp, 5.dp)
-                )
-                .align(Alignment.BottomCenter),
+                .align(Alignment.Center),
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.user_sign_in),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
+            LottieView(
+                json = R.raw.sign_in,
                 modifier = Modifier
                     .height(180.dp)
                     .fillMaxWidth(),
 
-                )
+            )
+
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -200,7 +196,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 TextButton(onClick = {
-                    onNavigate(Screen.RegisterScreen.route)
+
                 }) {
                     Text(
                         text = stringResource(id = R.string.create_account_button),
