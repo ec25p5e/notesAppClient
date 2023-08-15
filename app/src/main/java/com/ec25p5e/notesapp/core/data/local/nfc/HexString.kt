@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_calc.data.local
+package com.ec25p5e.notesapp.core.data.local.nfc
 
 private val characters = "0123456789ABCDEF".toCharArray()
 

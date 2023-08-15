@@ -1,4 +1,4 @@
-package com.ec25p5e.notesapp.feature_calc.data.local
+package com.ec25p5e.notesapp.core.data.local.nfc
 
 import android.content.res.Resources
 import android.nfc.FormatException
@@ -10,7 +10,7 @@ import android.nfc.tech.NfcA
 import android.nfc.tech.TagTechnology
 import android.util.Log
 import com.ec25p5e.notesapp.R
-import com.ec25p5e.notesapp.feature_calc.domain.models.WriteResultData
+import com.ec25p5e.notesapp.core.domain.models.WriteResultData
 import java.io.IOException
 import java.lang.Math.ceil
 
@@ -256,7 +256,8 @@ fun writeTag(tag: MifareUltralight, data: UByteArray): WriteResult {
         val next = current + MifareUltralight.PAGE_SIZE
         val part = block.slice(current until next).toByteArray()
         tag.writePage(8 + index, part)
-        Log.i(TAG,
+        Log.i(
+            TAG,
             "Wrote ${byteArrayToHex(part.toUByteArray())} to tag ${tagIdAsString(tag.tag)}"
         )
         current = next

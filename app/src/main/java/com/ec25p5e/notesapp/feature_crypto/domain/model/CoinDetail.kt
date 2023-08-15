@@ -1,5 +1,7 @@
 package com.ec25p5e.notesapp.feature_crypto.domain.model
 
+import com.ec25p5e.notesapp.feature_crypto.data.remote.dto.TeamMember
+
 data class CoinDetail(
     val coinId: String,
     val name: String,

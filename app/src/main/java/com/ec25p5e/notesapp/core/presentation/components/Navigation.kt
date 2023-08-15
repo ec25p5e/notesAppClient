@@ -21,6 +21,8 @@ import com.ec25p5e.notesapp.feature_bluetooth.presentation.list.BluetoothScreen
 import com.ec25p5e.notesapp.feature_calc.presentation.calculator.CalculatorScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.message.MessageScreen
+import com.ec25p5e.notesapp.feature_crypto.presentation.coin_detail.CoinDetailScreen
+import com.ec25p5e.notesapp.feature_crypto.presentation.coin_list.CoinListScreen
 import com.ec25p5e.notesapp.feature_profile.presentation.search.SearchScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_category.AddEditCategoryScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
@@ -87,6 +89,14 @@ fun Navigation(
                     navController.navigate(route = Screen.NotesScreen.route)
                 },
                 scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.CoinListScreen.route) {
+            CoinListScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
             )
         }
 
@@ -193,6 +203,16 @@ fun Navigation(
                 imageLoader = imageLoader,
                 scaffoldState = scaffoldState,
                 noteId = noteId
+            )
+        }
+
+        composable(
+            route = Screen.CoinDetailScreen.route + "?coinId={coinId}"
+        ) {
+            CoinDetailScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader
             )
         }
 

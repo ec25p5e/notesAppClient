@@ -9,10 +9,13 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,9 +36,12 @@ import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
 import com.ec25p5e.notesapp.core.data.local.connectivity.NetworkConnectivityObserver
+import com.ec25p5e.notesapp.core.data.local.nfc.byteArrayToHex
+import com.ec25p5e.notesapp.core.data.local.nfc.readFromTag
 import com.ec25p5e.notesapp.core.presentation.components.Navigation
 import com.ec25p5e.notesapp.core.presentation.components.StandardScaffold
 import com.ec25p5e.notesapp.core.presentation.ui.theme.NotesAppTheme
+import com.ec25p5e.notesapp.core.presentation.util.NfcIntentActivity
 import com.ec25p5e.notesapp.core.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,7 +51,9 @@ import javax.inject.Inject
 @ExperimentalCoilApi
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : NfcIntentActivity() {
+
+    override val TAG = "MainActivity"
 
     @Inject
     lateinit var imageLoader: ImageLoader
@@ -126,13 +134,28 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onNfcTag(tag: Tag) {
+        val bytes = readFromTag(tag)
+        Log.d(TAG, "bytes: ${byteArrayToHex(bytes).joinToString(" ")}")
+
+        if (bytes.isNotEmpty()) {
+            /* val intent = Intent(this, ReadActivity::class.java).apply {
+                putExtra(PARCEL_TAG, tag)
+                putExtra(PARCEL_TAGDATA, TagData(bytes))
+            }
+            startActivity(intent) */
+            Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show()
+        } else {
+            showReadErrorModalDialog(tag)
+        }
+    }
+
     private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean {
         val doesRouteMatch = backStackEntry?.destination?.route in listOf(
             Screen.NotesScreen.route,
             Screen.TodoScreen.route,
             Screen.ChatScreen.route,
-            Screen.BluetoothScreen.route,
-            Screen.ProfileScreen.route,
+            Screen.CoinListScreen.route,
         )
 
         return doesRouteMatch

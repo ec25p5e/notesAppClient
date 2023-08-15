@@ -23,12 +23,13 @@ import com.ec25p5e.notesapp.feature_note.domain.use_case.note.UnLockNote
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn
+@InstallIn(SingletonComponent::class)
 object CoinModule {
 
     @Provides

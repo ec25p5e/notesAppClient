@@ -57,9 +57,9 @@ fun StandardScaffold(
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ), */
         BottomNavItem(
-            route = Screen.BluetoothScreen.route,
-            icon = painterResource(id = R.drawable.ic_bluetooth),
-            contentDescription = stringResource(id = R.string.menu_bt_text),
+            route = Screen.CoinListScreen.route,
+            icon = painterResource(id = R.drawable.ic_crypto),
+            contentDescription = stringResource(id = R.string.menu_crypto_text),
             showFab = false,
         ),
         BottomNavItem(
@@ -72,12 +72,12 @@ fun StandardScaffold(
             },
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
-        BottomNavItem(
+        /* BottomNavItem(
             route = Screen.ProfileScreen.route,
             icon = painterResource(id = R.drawable.ic_profile),
             contentDescription = stringResource(id = R.string.cont_profile_home),
             showFab = false,
-        )
+        ) */
     ),
     content: @Composable () -> Unit
 ) {

@@ -229,4 +229,9 @@
     <string name="text_search_user">Search user...</string>
     <string name="identify_unsupported_type">Unsupported type of tag</string>
     <string name="identify_unknown_type">Unknown type</string>
+    <string name="nfc_tag_found">NFC Tag Found</string>
+    <string name="nfc_read_tag_failure">NFC Reading Failure</string>
+    <string name="nfc_tag_technologies">NFC Tag Technologies</string>
+    <string name="menu_crypto_text">Crypto</string>
+    <string name="your_chats">Your chats</string>
 </resources>

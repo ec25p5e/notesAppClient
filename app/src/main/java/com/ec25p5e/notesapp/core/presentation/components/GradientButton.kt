@@ -51,10 +51,10 @@ fun GradientButton(
                     shape = roundedCornerShape
                 )
                 .clip(roundedCornerShape)
-                /*.background(
+                .background(
                     brush = Brush.linearGradient(colors = gradientColors),
                     shape = RoundedCornerShape(cornerRadius)
-                )*/
+                )
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {

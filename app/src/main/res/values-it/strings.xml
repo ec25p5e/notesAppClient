@@ -218,4 +218,11 @@
     <string name="menu_bt_text">Scanner Bluetooth</string>
     <string name="all_users">Tutti gli utenti</string>
     <string name="text_search_user">Ricerca utente...</string>
+    <string name="identify_unsupported_type">TIpo di TAG non supportato</string>
+    <string name="identify_unknown_type">Tipo sconosciuto</string>
+    <string name="nfc_tag_found">Tag NFC trovato</string>
+    <string name="nfc_read_tag_failure">Lettura NFC fallita</string>
+    <string name="nfc_tag_technologies">NFC Tag Technologies</string>
+    <string name="menu_crypto_text">Crypto monete</string>
+    <string name="your_chats">Le tue chat</string>
 </resources>
