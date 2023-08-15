@@ -115,7 +115,7 @@ fun ArchiveScreen(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            showBackArrow = false,
+            showBackArrow = true,
             navActions = {
                 StandardOptionsMenu(
                     menuItem = {

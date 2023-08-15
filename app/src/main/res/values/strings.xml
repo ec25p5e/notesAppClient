@@ -220,7 +220,13 @@
     <string name="category_updated_text">Category updated successfully</string>
     <string name="settings">Settings</string>
     <string name="note">Notes</string>
-    <string name="drawer_navigation">Toggle drawer</string>
+    <string name="drawer_navigation" translatable="false">Toggle drawer</string>
     <string name="task_notification_title">A programmed task appened now</string>
-    <string name="menu_chat_text">Chat</string>
+    <string name="menu_chat_text" translatable="false">Chat</string>
+    <string name="bt_scanner" translatable="false">BT scanner</string>
+    <string name="menu_bt_text">Bluetooth scanner</string>
+    <string name="all_users">All users</string>
+    <string name="text_search_user">Search user...</string>
+    <string name="identify_unsupported_type">Unsupported type of tag</string>
+    <string name="identify_unknown_type">Unknown type</string>
 </resources>

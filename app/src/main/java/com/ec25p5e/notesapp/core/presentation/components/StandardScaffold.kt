@@ -57,10 +57,20 @@ fun StandardScaffold(
             modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ), */
         BottomNavItem(
+            route = Screen.BluetoothScreen.route,
+            icon = painterResource(id = R.drawable.ic_bluetooth),
+            contentDescription = stringResource(id = R.string.menu_bt_text),
+            showFab = false,
+        ),
+        BottomNavItem(
             route = Screen.ChatScreen.route,
             icon = painterResource(id = R.drawable.ic_chat),
             contentDescription = stringResource(id = R.string.menu_chat_text),
-            showFab = false,
+            showFab = true,
+            fabClick = {
+                navController.navigate(Screen.SearchUserScreen.route)
+            },
+            modifierFab = Modifier.background(MaterialTheme.colorScheme.surface)
         ),
         BottomNavItem(
             route = Screen.ProfileScreen.route,

@@ -17,9 +17,11 @@ import coil.ImageLoader
 import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_auth.presentation.login.LoginScreen
 import com.ec25p5e.notesapp.feature_auth.presentation.splash.SplashScreen
+import com.ec25p5e.notesapp.feature_bluetooth.presentation.list.BluetoothScreen
 import com.ec25p5e.notesapp.feature_calc.presentation.calculator.CalculatorScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.message.MessageScreen
+import com.ec25p5e.notesapp.feature_profile.presentation.search.SearchScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_category.AddEditCategoryScreen
 import com.ec25p5e.notesapp.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import com.ec25p5e.notesapp.feature_note.presentation.archive.ArchiveScreen
@@ -58,6 +60,15 @@ fun Navigation(
 
         composable(Screen.CalculatorScreen.route) {
             CalculatorScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.SearchUserScreen.route) {
+            SearchScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,
@@ -107,6 +118,15 @@ fun Navigation(
 
         composable(Screen.ArchiveScreen.route) {
             ArchiveScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate,
+                imageLoader = imageLoader,
+                scaffoldState = scaffoldState
+            )
+        }
+
+        composable(Screen.BluetoothScreen.route) {
+            BluetoothScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,

@@ -201,4 +201,21 @@
     <string name="category_deleted">Categoria eliminata</string>
     <string name="locked_note_found">Non è possibile eliminare la categoria: sbloccare le note prima di continuare</string>
     <string name="enable_dynamic_color">Colori dinamici</string>
+    <string name="save_changes">Salva modifiche</string>
+    <string name="edit_your_profile">Modifica il tuo profilo</string>
+    <string name="edit_profile">Modifica profilo</string>
+    <string name="logout">Disconnessione</string>
+    <string name="message">Invia messaggio a</string>
+    <string name="banner_image">Banner image</string>
+    <string name="profile_image">Immagine profilo</string>
+    <string name="ic_paint_presented">Un disegno è stato associato</string>
+    <string name="read_task_text">Leggi task</string>
+    <string name="task_updated_text">Task aggiornata</string>
+    <string name="category_updated_text">Categoria creata</string>
+    <string name="settings">Impostazioni</string>
+    <string name="note">Note</string>
+    <string name="task_notification_title">Una task programmata richiede la tua attenzione</string>
+    <string name="menu_bt_text">Scanner Bluetooth</string>
+    <string name="all_users">Tutti gli utenti</string>
+    <string name="text_search_user">Ricerca utente...</string>
 </resources>

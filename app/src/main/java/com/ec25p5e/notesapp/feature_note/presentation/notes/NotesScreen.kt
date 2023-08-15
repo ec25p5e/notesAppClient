@@ -178,6 +178,32 @@ fun NotesScreen(
                                 )
                             }
                         )
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.cont_archive_home)) },
+                            onClick = {
+                                onNavigate(Screen.ArchiveScreen.route)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_baseline_archive_24),
+                                    contentDescription = stringResource(id = R.string.cont_archive_home)
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(id = R.string.cont_descr_new_category_menu)) },
+                            onClick = {
+                                onNavigate(Screen.CategoryScreen.route)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_category),
+                                    contentDescription = stringResource(id = R.string.cont_descr_new_category_menu)
+                                )
+                            }
+                        )
                     }
                 )
             }

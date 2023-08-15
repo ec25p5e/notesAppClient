@@ -5,8 +5,10 @@ import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceIm
 import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.core.util.UiText
 import com.ec25p5e.notesapp.feature_profile.data.mapper.toProfile
+import com.ec25p5e.notesapp.feature_profile.data.mapper.toUserItem
 import com.ec25p5e.notesapp.feature_profile.data.remote.ProfileApi
 import com.ec25p5e.notesapp.feature_profile.domain.models.Profile
+import com.ec25p5e.notesapp.feature_profile.domain.models.UserItem
 import com.ec25p5e.notesapp.feature_profile.domain.repository.ProfileRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
@@ -30,6 +32,23 @@ class ProfileRepositoryImpl(
                     Resource.Error(UiText.DynamicString(msg))
                 } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
             }
+        } catch(e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server)
+            )
+        } catch(e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun searchUser(query: String): Resource<List<UserItem>> {
+        return try {
+            val response = profileApi.searchUser(query)
+            Resource.Success(
+                data = response.map { it.toUserItem() }
+            )
         } catch(e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_couldnt_reach_server)

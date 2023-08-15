@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface ChatApi {
 
-    @GET("/apu/chats")
+    @GET("/api/chats")
     suspend fun getChatsForUser(): List<ChatDto>
 
     @GET("/api/chat/messages")

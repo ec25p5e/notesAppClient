@@ -42,12 +42,6 @@ object ChatModule {
 
     @Provides
     @Singleton
-    fun provideBluetoothController(@ApplicationContext context: Context): BluetoothController {
-        return AndroidBluetoothController(context)
-    }
-
-    @Provides
-    @Singleton
     fun provideChatApi(client: OkHttpClient): ChatApi {
         return Retrofit.Builder()
             .baseUrl(ChatApi.BASE_URL)
