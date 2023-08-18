@@ -119,20 +119,6 @@ fun CamListScreen(
                     menuItem = {
                         DropdownMenuItem(
                             text = {
-                                Text(stringResource(id = R.string.show_webcam_map_text))
-                            },
-                            onClick = {
-                                viewModel.onEvent(CamListEvent.ToggleMapScreen)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_filter),
-                                    contentDescription = stringResource(id = R.string.cont_descr_filter_menu)
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
                                 Text(stringResource(id = R.string.show_filter_webcams))
                             },
                             onClick = {

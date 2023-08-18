@@ -7,6 +7,7 @@ import com.ec25p5e.notesapp.feature_cam.domain.use_case.CameraUseCases
 import com.ec25p5e.notesapp.feature_cam.domain.use_case.GetCameraDetail
 import com.ec25p5e.notesapp.feature_cam.domain.use_case.GetCameraForGlobalMap
 import com.ec25p5e.notesapp.feature_cam.domain.use_case.GetCameraForRegions
+import com.ec25p5e.notesapp.feature_cam.domain.use_case.GetCategories
 import com.ec25p5e.notesapp.feature_cam.domain.use_case.GetContinents
 import dagger.Module
 import dagger.Provides
@@ -49,6 +50,7 @@ object CamModule {
             getCameraDetail = GetCameraDetail(repository),
             getCameraForGlobalMap = GetCameraForGlobalMap(repository),
             getContinents = GetContinents(repository),
+            getCategories = GetCategories(repository)
         )
     }
 }

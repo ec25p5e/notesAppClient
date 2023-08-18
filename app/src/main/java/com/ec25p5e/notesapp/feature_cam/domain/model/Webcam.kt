@@ -1,6 +1,6 @@
 package com.ec25p5e.notesapp.feature_cam.domain.model
 
-import com.ec25p5e.notesapp.feature_cam.data.remote.dto.CategoryCam
+import com.ec25p5e.notesapp.feature_cam.data.remote.dto.CategoryCamDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.City
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.Player
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.Url
@@ -12,7 +12,7 @@ data class Webcam(
     val webcamId: Int,
     val status: String,
     val lastUpdatedOn: String,
-    val categories: List<CategoryCam>?,
+    val categories: List<CategoryCamDto>?,
     val location: City,
     val images: WebcamImage,
     val player: Player,

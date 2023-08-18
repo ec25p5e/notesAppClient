@@ -21,7 +21,6 @@ import com.ec25p5e.notesapp.feature_bluetooth.presentation.list.BluetoothScreen
 import com.ec25p5e.notesapp.feature_calc.presentation.calculator.CalculatorScreen
 import com.ec25p5e.notesapp.feature_cam.presentation.cam_detail.CameraDetailScreen
 import com.ec25p5e.notesapp.feature_cam.presentation.cam_list.CamListScreen
-import com.ec25p5e.notesapp.feature_cam.presentation.cam_map.CameraMapScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.chat.ChatScreen
 import com.ec25p5e.notesapp.feature_chat.presentation.message.MessageScreen
 import com.ec25p5e.notesapp.feature_crypto.presentation.coin_detail.CoinDetailScreen
@@ -232,15 +231,6 @@ fun Navigation(
             val webcamId = it.arguments?.getInt("webcamId") ?: -1
 
             CameraDetailScreen(
-                onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate,
-                imageLoader = imageLoader,
-                scaffoldState = scaffoldState,
-            )
-        }
-
-        composable(Screen.CameraMapScreen.route) {
-            CameraMapScreen(
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate,
                 imageLoader = imageLoader,

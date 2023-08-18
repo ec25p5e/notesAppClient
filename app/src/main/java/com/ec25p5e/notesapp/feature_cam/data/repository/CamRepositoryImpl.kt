@@ -1,6 +1,7 @@
 package com.ec25p5e.notesapp.feature_cam.data.repository
 
 import com.ec25p5e.notesapp.feature_cam.data.remote.CamApi
+import com.ec25p5e.notesapp.feature_cam.data.remote.dto.CategoryCamDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.ContinentDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.OverviewDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.WebcamDto
@@ -56,5 +57,12 @@ class CamRepositoryImpl(
      */
     override suspend fun getContinents(): List<ContinentDto> {
         return api.getContinents()
+    }
+
+    /**
+     * METHOD: getCategories ==> Get all categories
+     */
+    override suspend fun getCategories(): List<CategoryCamDto> {
+        return api.getCategories()
     }
 }

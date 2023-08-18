@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_cam.data.remote
 
+import com.ec25p5e.notesapp.feature_cam.data.remote.dto.CategoryCamDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.ContinentDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.OverviewDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.WebcamDto
@@ -39,6 +40,13 @@ interface CamApi {
      */
     @GET("/webcams/api/v3/continents")
     suspend fun getContinents(): List<ContinentDto>
+
+    /**
+     * METHOD: getCategories ==> Get all categories
+     */
+    @GET("/webcams/api/v3/categories")
+    suspend fun getCategories(): List<CategoryCamDto>
+
 
     @GET("/webcams/api/v3/webcams/{webcamId}")
     suspend fun getCameraDetail(

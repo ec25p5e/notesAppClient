@@ -6,18 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.core.domain.states.StandardDropdownMenu
 import com.ec25p5e.notesapp.core.presentation.util.UiEvent
-import com.ec25p5e.notesapp.core.util.Screen
 import com.ec25p5e.notesapp.feature_cam.data.mapper.toWebcam
+import com.ec25p5e.notesapp.feature_cam.domain.model.Webcam
 import com.ec25p5e.notesapp.feature_cam.domain.use_case.CameraUseCases
-import com.ec25p5e.notesapp.feature_cam.presentation.cam_map.CameraMapEvent
 import com.ec25p5e.notesapp.feature_cam.presentation.components.MapStyle
 import com.google.android.gms.maps.model.MapStyleOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,11 +40,6 @@ class CamListViewModel @Inject constructor(
 
     fun onEvent(event: CamListEvent) {
         when(event) {
-            is CamListEvent.ToggleMapScreen -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.Navigate(Screen.CameraMapScreen.route))
-                }
-            }
             is CamListEvent.ContinentValueChange -> {
                 _continentState.value = _continentState.value.copy(
                     text = event.value.name
@@ -82,11 +74,13 @@ class CamListViewModel @Inject constructor(
         }
     }
 
+
     private fun initCamera() {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 webcams = cameraUseCases.getCameraForRegions().webcams.map { it.toWebcam() },
                 continents = cameraUseCases.getContinents(),
+                categories = cameraUseCases.getCategories(),
                 isLoading = false
             )
         }

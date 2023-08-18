@@ -5,5 +5,6 @@ data class CameraUseCases(
     val getCameraDetail: GetCameraDetail,
     val getCameraForGlobalMap: GetCameraForGlobalMap,
 
-    val getContinents: GetContinents
+    val getContinents: GetContinents,
+    val getCategories: GetCategories,
 )

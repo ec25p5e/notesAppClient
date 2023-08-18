@@ -30,5 +30,4 @@ sealed class Screen(val route: String) {
     data object CoinListScreen: Screen("coin_list_screen")
     data object CamListScreen: Screen("camera_list_screen")
     data object CameraDetailScreen: Screen("camera_detail_screen")
-    data object CameraMapScreen: Screen("camera_map_screen")
 }

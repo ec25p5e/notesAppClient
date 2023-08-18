@@ -6,7 +6,7 @@ data class OverviewDto(
     val webcamId: Int,
     val status: String,
     val lastUpdatedOn: String,
-    val categories: List<CategoryCam>?,
+    val categories: List<CategoryCamDto>?,
     val location: City,
     val images: WebcamImage,
     val player: Player,
