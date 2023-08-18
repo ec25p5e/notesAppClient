@@ -220,10 +220,10 @@
     <string name="category_updated_text">Category updated successfully</string>
     <string name="settings">Settings</string>
     <string name="note">Notes</string>
-    <string name="drawer_navigation" translatable="false">Toggle drawer</string>
+    <string name="drawer_navigation">Toggle drawer</string>
     <string name="task_notification_title">A programmed task appened now</string>
     <string name="menu_chat_text" translatable="false">Chat</string>
-    <string name="bt_scanner" translatable="false">BT scanner</string>
+    <string name="bt_scanner">BT scanner</string>
     <string name="menu_bt_text">Bluetooth scanner</string>
     <string name="all_users">All users</string>
     <string name="text_search_user">Search user...</string>
@@ -234,4 +234,26 @@
     <string name="nfc_tag_technologies">NFC Tag Technologies</string>
     <string name="menu_crypto_text">Crypto</string>
     <string name="your_chats">Your chats</string>
+    <string name="menu_cam_text">Discovery cameras</string>
+    <string name="localization_info_text">Localization info</string>
+    <string name="city_label">City:</string>
+    <string name="longitude_label">Longitude:</string>
+    <string name="latitude_label">Latitude:</string>
+    <string name="continent_label">Continent:</string>
+    <string name="continent_code_label">Continent code:</string>
+    <string name="country_code_label">Country code:</string>
+    <string name="country_label">"Country: "</string>
+    <string name="region_code_label">"Region code: "</string>
+    <string name="region_label">"Region: "</string>
+    <string name="webcam_info_text">Webcam information</string>
+    <string name="viewcount_label">"View count: "</string>
+    <string name="webcamId_label">"Webcam Id: "</string>
+    <string name="status_label">"Status webcam: "</string>
+    <string name="lastupdate_on_label">"Last updated on: "</string>
+    <string name="show_detail_webcam_info">Long click to show details</string>
+    <string name="close_btn_text">Close info</string>
+    <string name="show_webcam_map_text">Show on maps</string>
+    <string name="all_webcams_by_filter">All filtered webcams on maps</string>
+    <string name="filter_webcams">Filter webcams</string>
+    <string name="show_filter_webcams">Show webcams filter</string>
 </resources>

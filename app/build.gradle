@@ -207,4 +207,15 @@ dependencies {
 
     // AES Encryption
     implementation 'org.bouncycastle:bcprov-jdk15on:1.67'
+
+    // Media explorer
+    implementation 'androidx.media3:media3-exoplayer:1.0.0-beta02'
+    implementation 'androidx.media3:media3-ui:1.0.0-beta02'
+
+    // Google Maps
+    implementation "com.google.maps.android:maps-compose:1.0.0"
+    implementation "com.google.android.gms:play-services-maps:18.0.2"
+
+    // GMS - Google Mobile Services
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

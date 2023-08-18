@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        Google Maps API Key: AIzaSyA8mLuOP3cvvsw7piYyrRxyjLasWdXfc3Y
+    -->
+
     <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,6 +25,11 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
         android:name=".NotesApplication"
@@ -60,7 +69,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Google maps -->
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA8mLuOP3cvvsw7piYyrRxyjLasWdXfc3Y"/>
+
+        <!-- Notification receiver -->
         <receiver android:name=".core.data.local.scheduler.AlarmReceiver" />
+
     </application>
 
 </manifest>

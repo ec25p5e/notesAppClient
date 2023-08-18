@@ -63,6 +63,12 @@ fun StandardScaffold(
             showFab = false,
         ),
         BottomNavItem(
+            route = Screen.CamListScreen.route,
+            icon = painterResource(id = R.drawable.ic_cam),
+            contentDescription = stringResource(id = R.string.menu_cam_text),
+            showFab = false,
+        ),
+        BottomNavItem(
             route = Screen.ChatScreen.route,
             icon = painterResource(id = R.drawable.ic_chat),
             contentDescription = stringResource(id = R.string.menu_chat_text),

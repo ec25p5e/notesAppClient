@@ -97,6 +97,7 @@ object AppModule {
                     val token = dataStore.getFirstPreference(USER_TOKEN, "")
                     val modifiedRequest = it.request().newBuilder()
                         .addHeader("Authorization", "Bearer $token")
+                        .addHeader("x-windy-api-key", "DGj7oNfEUA8UMU9hCuGZQbqi9tQyJjcZ")
                         .build()
                     it.proceed(modifiedRequest)
                 }

@@ -24,7 +24,7 @@ object Constants {
     const val DEFAULT_PAGE_SIZE = 20
 
     const val DATA_STORE_FILE_NAME = "app-settings.json"
-    const val BASE_URL_SERVER = "http://192.168.63.107:8080/"
+    const val BASE_URL_SERVER = "http://85.0.253.197:8080/" // ""http://192.168.63.107:8080/"
     const val COIN_BASE_URL = "https://api.coinpaprika.com/"
     const val PARAM_COIN_ID = "coinId"
 

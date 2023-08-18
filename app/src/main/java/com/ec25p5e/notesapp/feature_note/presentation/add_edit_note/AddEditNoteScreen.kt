@@ -553,7 +553,7 @@ fun AddEditNoteScreen(
                                 )
                             }
 
-                            /* DropdownMenuItem(
+                            DropdownMenuItem(
                                 text = {
                                     Text(stringResource(id = R.string.create_note_copy))
                                 },
@@ -566,7 +566,7 @@ fun AddEditNoteScreen(
                                         contentDescription = stringResource(id = R.string.create_note_copy)
                                     )
                                 }
-                            ) */
+                            )
 
                             DropdownMenuItem(
                                 text = {
@@ -583,7 +583,7 @@ fun AddEditNoteScreen(
                                 }
                             )
 
-                            /* if (isLockedNote) {
+                            if (isLockedNote) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(stringResource(id = R.string.unlock_note_text))
@@ -632,7 +632,7 @@ fun AddEditNoteScreen(
                                         )
                                     }
                                 )
-                            } */
+                            }
                         }
                     )
                 }

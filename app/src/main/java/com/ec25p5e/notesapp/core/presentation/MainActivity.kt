@@ -155,6 +155,7 @@ class MainActivity : NfcIntentActivity() {
             Screen.NotesScreen.route,
             Screen.TodoScreen.route,
             Screen.ChatScreen.route,
+            Screen.CamListScreen.route,
             Screen.CoinListScreen.route,
         )
 
