@@ -38,7 +38,7 @@ class CamRepositoryImpl(
         include: String,
         regions: String
     ): WebcamDto {
-        if(limit in 51..-1)
+        if(limit in 51 downTo -1)
             throw RuntimeException("Limit is major of 0 and loser than 50")
 
         if(offset < 0)

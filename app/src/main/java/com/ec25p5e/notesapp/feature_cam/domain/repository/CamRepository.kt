@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_cam.domain.repository
 
+import com.ec25p5e.notesapp.core.util.Resource
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.CategoryCamDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.ContinentDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.OverviewDto

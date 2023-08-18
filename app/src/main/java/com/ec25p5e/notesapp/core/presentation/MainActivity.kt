@@ -34,6 +34,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
+import com.ec25p5e.notesapp.core.data.local.background_location.LocationService
 import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
 import com.ec25p5e.notesapp.core.data.local.connectivity.NetworkConnectivityObserver
 import com.ec25p5e.notesapp.core.data.local.nfc.byteArrayToHex
@@ -112,6 +113,16 @@ class MainActivity : NfcIntentActivity() {
             )
         }
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "location",
+                "Location",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
         setContent {
             NotesAppTheme {
                 Surface(
@@ -121,6 +132,11 @@ class MainActivity : NfcIntentActivity() {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val scaffoldState = remember { SnackbarHostState() }
+
+                    Intent(applicationContext, LocationService::class.java).apply {
+                        action = LocationService.ACTION_START
+                        startService(this)
+                    }
 
                     StandardScaffold(
                         navController = navController,

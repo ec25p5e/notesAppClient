@@ -1,5 +1,6 @@
 package com.ec25p5e.notesapp.feature_cam.data.remote
 
+import com.ec25p5e.notesapp.core.data.dto.response.BasicApiResponse
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.CategoryCamDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.ContinentDto
 import com.ec25p5e.notesapp.feature_cam.data.remote.dto.OverviewDto

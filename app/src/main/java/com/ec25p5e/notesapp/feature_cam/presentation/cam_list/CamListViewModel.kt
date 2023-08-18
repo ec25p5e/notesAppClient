@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.ec25p5e.notesapp.core.domain.states.StandardDropdownMenu
 import com.ec25p5e.notesapp.core.presentation.util.UiEvent
 import com.ec25p5e.notesapp.feature_cam.data.mapper.toWebcam
-import com.ec25p5e.notesapp.feature_cam.domain.model.Webcam
 import com.ec25p5e.notesapp.feature_cam.domain.use_case.CameraUseCases
 import com.ec25p5e.notesapp.feature_cam.presentation.components.MapStyle
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -31,8 +30,6 @@ class CamListViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
-
-    private var getWebcamJob: Job? = null
 
     init {
         initCamera()

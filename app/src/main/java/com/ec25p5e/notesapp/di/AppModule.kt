@@ -2,12 +2,14 @@ package com.ec25p5e.notesapp.di
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import coil.ImageLoader
+import com.ec25p5e.notesapp.core.data.local.background_location.LocationService
 import com.ec25p5e.notesapp.core.data.local.connectivity.ConnectivityObserver
 import com.ec25p5e.notesapp.core.data.local.connectivity.NetworkConnectivityObserver
 import com.ec25p5e.notesapp.core.data.local.datastore_pref.DataStorePreferenceConstants.USER_TOKEN
