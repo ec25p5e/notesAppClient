@@ -28,6 +28,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var imageLoader: ImageLoader
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     showBottomBar = shouldShowBottomBar(navBackStackEntry),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    Navigation(navController, scaffoldState)
+                    Navigation(navController, scaffoldState, imageLoader)
                 }
             }
         }
