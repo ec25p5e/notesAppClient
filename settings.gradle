@@ -16,3 +16,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "NotesApp"
 include ':app'
+include ':feature:note:data'
+include ':feature:note:domain'
+include ':feature:note:presentation'
+include ':feature:webcam:data'
+include ':feature:webcam:domain'
+include ':feature:webcam:presentation'
